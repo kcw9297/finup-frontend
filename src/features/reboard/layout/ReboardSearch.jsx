@@ -18,22 +18,29 @@ import {
   Chip,
   Stack,
   Pagination,
-  CircularProgress
+  CircularProgress,
+  Skeleton
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { useReboardSearch } from "../hooks/useReboardSearch"
+import Loading from '../../../base/components/layout/Loading'
 
 export default function ReboardSearch() {
 
   // [1] 게시글 검색 커스텀 Hook
   const {
     searchRq, searchRp, loading, 
-    setLoading, updateSearchRq, handleSearch, handlePage 
+    updateSearchRq, handleSearch, handleFilter, handlePage, handleOrder
   } = useReboardSearch()
 
   // [2] 필요 데이터 정의
   const rows = searchRp ? searchRp.data : []
   const pagination = searchRp ? searchRp.pagination : {}
+
+  // 아직 요청 데이터가 로드되지 않은 경우, 로딩 처리
+  //if (!searchRp) return (<Loading />)
+
+
 
   return (
     <Box>
@@ -46,15 +53,16 @@ export default function ReboardSearch() {
       <Paper sx={{ p: 3, mb: 3 }}>
         <Box 
           component="form" 
-          onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
+          onSubmit={(e) => { handleSearch(e); }}
           sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
         >
           <FormControl sx={{ minWidth: 150 }}>
             <Select
               name="filter"
               value={searchRq.filter}
-              onChange={e => updateSearchRq({ filter: e.target.value })}
+              onChange={e => handleFilter(e.target.value)}
               size="small"
+              displayEmpty
             >
               <MenuItem value="">선택</MenuItem>
               <MenuItem value="name">이름</MenuItem>
@@ -88,37 +96,49 @@ export default function ReboardSearch() {
       <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
         <Chip
           label="최신순"
-          onClick={() => updateSearchRq({ order: 'latest' })}
-          color={searchRq.order === 'latest' ? 'primary' : 'default'}
-          variant={searchRq.order === 'latest' ? 'filled' : 'outlined'}
+          onClick={() => handleOrder('latest')}
+          color="base"
+          variant={searchRq.order === 'latest' ? 'filled' : 'outlined'} // 초기 선택 값
         />
         <Chip
           label="과거순"
-          onClick={() => updateSearchRq({ order: 'oldest' })}
-          color={searchRq.order === 'oldest' ? 'primary' : 'default'}
+          onClick={() => handleOrder('oldest')}
+          color="base"
           variant={searchRq.order === 'oldest' ? 'filled' : 'outlined'}
         />
       </Box>
 
       {/* 게시글 목록 테이블 */}
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ tableLayout: 'fixed' }}>
           <TableHead>
             <TableRow sx={{ backgroundColor: 'grey.100' }}>
-              <TableCell align="center" sx={{ fontWeight: 'bold' }}>번호</TableCell>
-              <TableCell align="center" sx={{ fontWeight: 'bold' }}>이름</TableCell>
-              <TableCell align="center" sx={{ fontWeight: 'bold' }}>제목</TableCell>
-              <TableCell align="center" sx={{ fontWeight: 'bold' }}>날짜</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold', width: '10%' }}>번호</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold', width: '20%' }}>이름</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold', width: '50%' }}>제목</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold', width: '20%' }}>날짜</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {loading ? (
-              <TableRow>
-                <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            ) : !searchRp || searchRp.length === 0 ? (
+              Array.from({ length: searchRq.pageSize }).map((_, idx) => (
+                <TableRow key={idx}>
+                  <TableCell align="center" sx={{ width: '10%' }}>
+                    <Skeleton width="100%" />
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: '20%' }}>
+                    <Skeleton width="100%" />
+                  </TableCell>
+                  <TableCell align="left" sx={{ width: '50%' }}>
+                    <Skeleton width="100%" />
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: '20%' }}>
+                    <Skeleton width="100%" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : rows.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center" sx={{ py: 8, color: 'text.secondary' }}>
                   검색 결과가 없습니다.
@@ -126,15 +146,10 @@ export default function ReboardSearch() {
               </TableRow>
             ) : (
               rows.map(row => (
-                <TableRow 
-                  key={row.idx}
-                  hover
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => console.log(`상세 페이지로 이동: ${row.idx}`)}
-                >
+                <TableRow key={row.idx} hover sx={{ cursor: 'pointer' }}>
                   <TableCell align="center">{row.idx}</TableCell>
                   <TableCell align="center">{row.name}</TableCell>
-                  <TableCell align="center">{row.subject}</TableCell>
+                  <TableCell align="left">{row.subject}</TableCell>
                   <TableCell align="center">{row.regdate}</TableCell>
                 </TableRow>
               ))

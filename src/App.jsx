@@ -15,8 +15,8 @@ import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
-  { path: '/', element: <HomePage />},
-  { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> },
+  { path: '/', element: <HomePage />}, // 모두 공개
+  { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
 ]
 
 // 자식이 있는 라우팅 리스트
