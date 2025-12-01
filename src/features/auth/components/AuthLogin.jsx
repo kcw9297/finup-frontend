@@ -1,13 +1,21 @@
 import { Box, TextField, Button, Paper, Typography, Snackbar, Alert } from '@mui/material';
-import SocialBtn from '../../../base/components/button/SocialBtn.jsx';
+import AuthSocialBtn from './AuthSocialBtn.jsx';
 import { GoogleIcon } from '../../../base/components/icon/icon.jsx';
-import { useLogin } from '../../../base/hooks/useLogin.js';
+import { useAuthLogin } from '../hooks/useAuthLogin.js';
 
-export default function LoginForm() {
+/**
+ * 로그인 페이지 컴포넌트
+ */
+
+export default function AuthLogin() {
   
-  // 로그인 custom hook
-  const { loginRq, updateLoginRq, handleLogin } = useLogin()
+  // [1] 로그인 custom hook
+  const { 
+    authloginRq, changeAuthLoginRq, // 상태 (1번째 줄)
+    handleLogin // 함수 (2번째 줄)
+  } = useAuthLogin()
 
+  // [2] 반환할 컴포넌트
   return (
 
     <Paper sx={{ 
@@ -26,8 +34,8 @@ export default function LoginForm() {
         label="이메일"
         type="email"
         name="email"
-        value={loginRq.email}
-        onChange={(e) => updateLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
+        value={authloginRq.email}
+        onChange={(e) => changeAuthLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
         onKeyDown={(e) => e.key === 'Enter' && handleLogin()}  // 엔터 입력 시 로그인 시도
         autoComplete="off" // 자동완성 기능 제거
         sx={{ marginBottom: 2 }}
@@ -38,8 +46,8 @@ export default function LoginForm() {
         label="비밀번호"
         type="password"
         name="password"
-        value={loginRq.password}
-        onChange={(e) => updateLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
+        value={authloginRq.password}
+        onChange={(e) => changeAuthLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
         onKeyDown={(e) => e.key === 'Enter' && handleLogin()}  // 엔터 입력 시 로그인 시도
         autoComplete="off" // 자동완성 기능 제거
         sx={{ marginBottom: 3 }}
@@ -55,7 +63,7 @@ export default function LoginForm() {
         로그인
       </Button>
 
-      <SocialBtn icon={<GoogleIcon />} text="구글 계정으로 로그인" onClick={() => alert('구글 로그인')} />
+      <AuthSocialBtn icon={<GoogleIcon />} text="구글 계정으로 로그인" onClick={() => alert('구글 로그인')} />
 
     </Paper>
   );

@@ -4,7 +4,7 @@ import { Box, TextField, Button, Paper, Typography, Divider, Stack } from '@mui/
  * 소셜 로그인 버튼 컴포넌트
  */
 
-export default function SocialBtn ({ icon, text, onClick, ...props }) {
+export default function AuthSocialBtn ({ icon, text, onClick, ...props }) {
   return (
     <Button
       fullWidth

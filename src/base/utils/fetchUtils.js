@@ -17,7 +17,6 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     method: 'GET',      // HTTP Method
     params: {},         // URL 등에 존재하는 파라미터
     headers : {},       // HTTP Header
-    body: {},           // HTTP Body
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
     handleError: true,  // 기본 에러 처리 활성화 
@@ -157,7 +156,6 @@ async function fetchEx(endpoint, options = {}, body = {}) {
   const baseOptions = {
     method: 'GET',
     headers : {},
-    //body: {},
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
     handleError: true,  // 기본 에러 처리 활성화 
@@ -336,7 +334,7 @@ async function toJson(response) {
 export const api = {
 
   get: (endpoint, options) => fetchInner(endpoint, options, {}),
-  getExApi: (endpoint, options) => fetchEx(endpoint, options, {}), // 외부 API GET 요청
+  getEx: (endpoint, options) => fetchEx(endpoint, options, {}), // 외부 API GET 요청
   post: (endpoint, options, body = {}) => fetchInner(endpoint, { method: "POST", ...options }, body),
   put: (endpoint, options, body = {}) => fetchInner(endpoint, { method: "PUT", ...options }, body),
   patch: (endpoint, options, body = {}) => fetchInner(endpoint, { method: "PATCH", ...options }, body),

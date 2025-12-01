@@ -1,5 +1,5 @@
 import MainLayout from "../../base/layouts/MainLayout"
-import ReboardSearch from "../../features/reboard/layout/ReboardSearch"
+import ReboardSearch from "../../features/reboard/components/ReboardSearch"
 
 /**
  * 예시 Reboard 페이지 컴포넌트
