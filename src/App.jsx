@@ -10,6 +10,7 @@ import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
 import NewsPage from './pages/news/NewsPage'
+import NewsModalPage from './pages/news/NewsModalPage'
 
 
 
@@ -35,6 +36,7 @@ const nastedRoutes = [
     path: '/news/*', // url : 뉴스
     children: [
       { path: 'list', element: <NewsPage /> }, // 모두 공개
+      { path: 'detail', element: <NewsModalPage />}, // 회원공개로 전환예정
     ]
   },
 

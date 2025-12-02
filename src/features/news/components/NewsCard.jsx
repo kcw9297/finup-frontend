@@ -5,7 +5,7 @@
 import { Box, Card, CardMedia, Typography } from "@mui/material";
 import { useNewsCard } from "../hooks/useNewsCard";
 
-export default function NewsCard({ title, summary, thumbnail, publisher, publishedAt, link }) {
+export default function NewsCard({ title, summary, thumbnail, publisher, publishedAt, link, onClick }) {
   const {detailDate} = useNewsCard()
   return (
     <Card
@@ -20,7 +20,7 @@ export default function NewsCard({ title, summary, thumbnail, publisher, publish
         cursor: "pointer",
         "&:hover": { backgroundColor: "#fafafa" }
       }}
-      onClick={() => window.open(link, "_blank")}
+      onClick={onClick}
     >
       {/* 썸네일 */}
       <CardMedia

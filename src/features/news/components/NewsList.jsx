@@ -11,6 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
  */
 
 import { useNewsPage } from "../hooks/useNewsPage"
+import NewsDetailModal from "./NewsDetailModal";
 
 export default function NewsPage(){
   //(1)커스텀 훅
@@ -19,7 +20,9 @@ export default function NewsPage(){
     news,
     bottomRef, 
     loading,
-    CATEGORY_LIST
+    CATEGORY_LIST,
+    modalOpen, setModalOpen,
+    selectedNews, setSelectedNews
   } = useNewsPage()
 
   //(2)반환활 컴포넌트
@@ -63,7 +66,7 @@ export default function NewsPage(){
       {/* 뉴스 리스트 */}
       <Box sx={{ mt: 2 }}>
         {news.map((item, idx) => (
-          <NewsCard key={idx} {...item} />
+          <NewsCard key={idx} {...item} onClick={() => {setSelectedNews(item); setModalOpen(true)}}/>
         ))}
 
         {loading && (
@@ -71,9 +74,16 @@ export default function NewsPage(){
             <CircularProgress size={32} />
           </Box>
         )}
-
+        
         <div ref={bottomRef} style={{ height: 40 }}></div>
       </Box>
+      {/* 뉴스 상세 모달 */}
+      <NewsDetailModal 
+        open={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        data={selectedNews}
+      />
     </Box>
+    
   )
 }

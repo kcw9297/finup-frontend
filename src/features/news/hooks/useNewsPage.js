@@ -7,7 +7,8 @@ export function useNewsPage(){
   const [news, setNews] = useState([])
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false)
-  
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedNews, setSelectedNews] = useState(null)
   const bottomRef = useRef(null)
   
   const CATEGORY_LIST = [
@@ -69,12 +70,15 @@ export function useNewsPage(){
       observer.observe(bottomRef.current)
     return () => observer.disconnect()
   },[loading])
-// [5] 반환
+
+  // [5] 반환
   return {
     category, setCategory : changeCategory,
     news,
     bottomRef,
     loading,
-    CATEGORY_LIST
+    CATEGORY_LIST,
+    modalOpen, setModalOpen,
+    selectedNews, setSelectedNews
   }
 }
