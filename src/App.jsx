@@ -9,7 +9,12 @@ import { useEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
+import NoticeSummaryPage from './pages/notice/NoticeSummaryPage'
+import NoticeDetailPage from './pages/notice/NoticeDetailPage'
+import NewsPage from './pages/news/NewsPage'
+import NewsModalPage from './pages/news/NewsModalPage'
 import NoticeListPage from './pages/notice/NoticeListPage'
+import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 
@@ -17,6 +22,8 @@ import StocksDetailPage from './pages/stocks/StocksDetailPage'
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
+  { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
+
 ]
 
 // 자식이 있는 라우팅 리스트
@@ -31,12 +38,19 @@ const nastedRoutes = [
       { path: 'edit/:idx', element: <ProtectedRoute><AuthLoginPage /></ProtectedRoute> }, // 회원 공개 (작성자 검증은 Page 컴포넌트 내에서)
     ]
   },
+  { 
+    path: '/news/*', // url : 뉴스
+    children: [
+      { path: 'list', element: <NewsPage /> }, // 모두 공개
+      { path: 'detail', element: <NewsModalPage />}, // 회원공개로 전환예정
+    ]
+  },
 
   {
     path: '/admin/*', // url : 관리자
     children: [
-      { path: 'notices', element: <NoticeListPage /> },
-      { path: 'notices/search', element: <NoticeListPage /> },
+      { path: 'notices', element: <ProtectedRoute><NoticeSummaryPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> }
     ]
   },
   
@@ -49,6 +63,7 @@ const nastedRoutes = [
   }
     
 ]
+
 
 export default function App() {
 
@@ -81,6 +96,7 @@ export default function App() {
             {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
           </Route>
         )}
+        
 
       </Routes>
     </>

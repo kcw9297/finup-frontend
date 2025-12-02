@@ -15,13 +15,13 @@ export default function MainLayout({ children }) {
       <Header />
 
       {/* 중앙 메인 영역 (너비 관리) */}
-      <Box 
+      <Box
         component="main"
-        sx={{ 
+        sx={{
           flex: 1, // 남은 공간 차지
-          
+
           // 너비 설정
-          maxWidth: 1200, 
+          maxWidth: 1440, 
           margin: '0 auto', 
           padding: 2,
           width: '100%',
