@@ -34,8 +34,8 @@ export default function Header() {
     >
       <Toolbar 
         sx={{ 
-          minHeight: '10px !important', // 최소 높이 조절 (height 와 값이 일치해야 함)
-          height: 10,
+          minHeight: '80px !important', // 최소 높이 조절 (height 와 값이 일치해야 함)
+          height: 80,
           py: 0,
           px: 3, 
         }}
@@ -45,12 +45,12 @@ export default function Header() {
           
           {/* 로고 */}
           <Box component={Link} to="/" sx={{ cursor: 'pointer' }} >
-            <img src={logo} alt="로고" style={{ height: 40 }} />
+            <img src={logo} alt="로고" style={{ height: 50 }} />
           </Box>
           
           
           {/* 메뉴 */}
-          <Box sx={{ display: { md: 'flex' }, gap: 3, mt: 2, mx: 2 }}>
+          <Box sx={{ display: { md: 'flex' }, gap: 3, mx: 2 }}>
             {manuItems.map((menu) => (
               <Typography
                 key={menu}

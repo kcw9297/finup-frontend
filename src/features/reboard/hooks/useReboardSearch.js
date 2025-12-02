@@ -27,7 +27,7 @@ export function useReboardSearch() {
 
   // [2] 필요 함수 선언
   // Object 생성 함수 (파라미터로부터 직접 뽑아옴)
-  const getSearchRq = () => ({
+  const getSearchParams = () => ({
     filter: searchParams.get('filter') || '',
     keyword: searchParams.get('keyword') || '',
     order: searchParams.get('order') || DEFAULT_ORDER,
@@ -36,10 +36,10 @@ export function useReboardSearch() {
   })
   
   // 검색 요청 (현재 URL 기반 초기화 필수)
-  const [ searchRq, setSearchRq ] = useState(() => getSearchRq())
+  const [ searchRq, setSearchRq ] = useState(() => getSearchParams())
 
   // 파라미터 일치 여부 비교 함수
-  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(getSearchRq());
+  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(getSearchParams());
 
   // 입력 데이터 상태 변경 함수
   const updateSearchRq = rq => {
@@ -64,12 +64,12 @@ export function useReboardSearch() {
   const handleFilter = filter => {
 
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...getSearchRq(), filter };
-    if (isSameRq(nextRq)) return
-
+    const nextRq = { ...getSearchParams(), keyword: searchRq.keyword, filter };
+    if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
+    
     // 검색 수행
     setLoading(true)
-    updateSearchRq(nextRq)  // 필터가 변경되는 즉시 반영하려면, 추가해야 함
+    updateSearchRq(nextRq)  // 상태 변경
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
@@ -77,7 +77,7 @@ export function useReboardSearch() {
   const handlePage = pageNum => {
 
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...getSearchRq(), pageNum };
+    const nextRq = { ...getSearchParams(), pageNum };
     if (isSameRq(nextRq)) return
 
     // 페이징 파라미터 갱신
@@ -89,7 +89,7 @@ export function useReboardSearch() {
   const handleOrder = order => {
     
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...getSearchRq(), order, pageNum: DEFAULT_PAGE_NUM };
+    const nextRq = { ...getSearchParams(), order, pageNum: DEFAULT_PAGE_NUM };
     if (isSameRq(nextRq)) return
 
     // 페이징 파라미터 갱신
@@ -116,7 +116,7 @@ export function useReboardSearch() {
 
   // [4] REST API 요청 함수 정의
   useEffect(() => { // 검색의 경우, 페이지 입장 시 초기 값이 필요하므로, useEffect 사용
-    api.get('/reboards/search', { params: getSearchRq(), onSuccess, onFinally, public: true })
+    api.get('/reboards/search', { params: getSearchParams(), onSuccess, onFinally, public: true })
   }, [searchParams])
   
 

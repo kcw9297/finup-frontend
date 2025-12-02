@@ -21,11 +21,15 @@ export default function AuthLogin() {
     <Paper sx={{ 
       width: '100%', 
       maxWidth: 450, 
+      borderWidth: 3, // 테두리 선 굵기
+      borderStyle: 'solid', // 테두리 스타일
+      borderColor: 'base.main', // 테두리 색상
+      padding: 5,
       transform: 'scale(1.3)',  // 배율 
       transformOrigin: 'center' // 배율 확대 시 정렬
     }}>
       
-      <Typography component="h1" variant="h5" >
+      <Typography component="h1" variant="h5" sx={{mb: 3}} >
         로그인
       </Typography>
 
