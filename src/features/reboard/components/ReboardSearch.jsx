@@ -1,12 +1,6 @@
-import { useSearchParams } from "react-router-dom"
-import { useEffect, useState } from 'react'
 import { 
   Box, 
   Typography, 
-  TextField, 
-  Select, 
-  MenuItem, 
-  Button, 
   Table,
   TableBody,
   TableCell,
@@ -14,16 +8,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  FormControl,
   Chip,
-  Stack,
-  Pagination,
   CircularProgress,
-  Skeleton
 } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
 import { useReboardSearch } from "../hooks/useReboardSearch"
-import Loading from '../../../base/components/layout/Loading'
+import PageBar from "../../../base/components/bar/PageBar"
+import SearchBar from "../../../base/components/bar/SearchBar"
 
 export default function ReboardSearch() {
 
@@ -50,47 +40,7 @@ export default function ReboardSearch() {
       </Typography>
 
       {/* 검색 바 */}
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Box 
-          component="form" 
-          onSubmit={(e) => { handleSearch(e); }}
-          sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
-        >
-          <FormControl sx={{ minWidth: 150 }}>
-            <Select
-              name="filter"
-              value={searchRq.filter}
-              onChange={e => handleFilter(e.target.value)}
-              size="small"
-              displayEmpty
-            >
-              <MenuItem value="">선택</MenuItem>
-              <MenuItem value="name">이름</MenuItem>
-              <MenuItem value="subject">제목</MenuItem>
-              <MenuItem value="content">내용</MenuItem>
-              <MenuItem value="subjectContent">제목+내용</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            name="keyword"
-            placeholder="검색어 입력"
-            value={searchRq.keyword}
-            onChange={e => updateSearchRq({ keyword: e.target.value })}
-            size="small"
-            sx={{ flex: 1 }}
-          />
-
-          <Button 
-            type="submit" 
-            variant="contained" 
-            startIcon={<SearchIcon />}
-            sx={{ px: 3 }}
-          >
-            검색
-          </Button>
-        </Box>
-      </Paper>
+      < SearchBar searchRq={searchRq} onSubmit={handleSearch} onChange={updateSearchRq} filterOnChange={handleFilter} />
 
       {/* 정렬 바 */}
       <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
@@ -122,25 +72,14 @@ export default function ReboardSearch() {
 
           <TableBody>
             {loading ? (
-              Array.from({ length: searchRq.pageSize }).map((_, idx) => (
-                <TableRow key={idx}>
-                  <TableCell align="center" sx={{ width: '10%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                  <TableCell align="center" sx={{ width: '20%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                  <TableCell align="left" sx={{ width: '50%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                  <TableCell align="center" sx={{ width: '20%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                </TableRow>
-              ))
+              <TableRow>
+                <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
             ) : rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} align="center" sx={{ py: 8, color: 'text.secondary' }}>
+                <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
                   검색 결과가 없습니다.
                 </TableCell>
               </TableRow>
@@ -159,19 +98,7 @@ export default function ReboardSearch() {
       </TableContainer>
 
       {/* 하단 페이징 */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <Pagination 
-          count={10} // 총 페이지 수 (실제로는 searchRp에서 받아온 totalPages 사용)
-          page={pagination.page || 1}
-          onChange={(event, pageNum) => {
-            console.log('페이지 번호:', pageNum);
-            handlePage(pageNum);
-          }}
-          color="primary"
-          showFirstButton
-          showLastButton
-        />
-      </Box>
+      <PageBar pagination={pagination} onChange={handlePage}/>
     </Box>
   )
 }

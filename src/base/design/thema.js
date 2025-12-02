@@ -19,9 +19,14 @@ const theme = createTheme({
     // 사이트 텍스트 색상
     text: {
       main: '#000000',  
-      light: '#003fbf',
+      light: '#6f6f70ff',
       dark: '#002f8f',
       contrastText: '#ffffff',
+    },
+
+    line: {
+      main: '#E0E0E0',
+      dark: '#717783ff',
     },
 
     // 사이트 에러 색상
@@ -34,17 +39,18 @@ const theme = createTheme({
 
     // 색상 - background (배경)
     background: {
-      //default: '#f5f5f5' // 기본 색상
+      base: '#ffffff', // 기본 색상
+      dark: '#717783ff',
     },
 
 
     // action - hover, active, disabled, ...
     action: {
-      hover: '#ede7f6',
-      selected: '#d1c4e9',
+      hover: '#e1eafcff', // 대부분 호버 이벤트에 적용
+      selected: '#003fbf', // 현재 페이지 버튼 등에 적용
       disabled: '#bdbdbd',
       disabledBackground: '#e0e0e0',
-      active: '#7e57c2',
+      active: '#003fbf',
     }
   },
 
@@ -73,23 +79,61 @@ const theme = createTheme({
         // 항상 적용
         root: ({ theme }) => ({
 
-          backgroundColor: '#ffffff', // 배경색
+          backgroundColor: theme.palette.background.base, // 배경색
           borderRadius: 16, // 모서리
-          padding: 40, // 여백
-
-          borderWidth: 2, // 테두리 선 굵기
-          borderStyle: 'solid', // 테두리 스타일
-          borderColor: theme.palette.base.main, // 테두리 색상
+          //padding: 40, // 여백
+          //borderWidth: 2, // 테두리 선 굵기
+          //borderStyle: 'solid', // 테두리 스타일
+          //borderColor: theme.palette.line.main, // 테두리 색상
+          boxShadow: 'none',  // 그림자 제거
         }),
         
       },
 
       // 기본 프롭스
       defaultProps: {
-        elevation: 8, // 기본 elevation(그림자) 값
+        //elevation: 8, // 기본 elevation(그림자) 값
       },
 
     },
+
+    
+    // TableContainer
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,  // 테이블은 모서리 없음
+        }
+      }
+    },
+
+
+    // TableHead (테이블 헤드 영역)
+    MuiTableHead: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '& .MuiTableRow-root': {
+            backgroundColor: theme.palette.background.dark, // 배경 색상
+          },
+          '& .MuiTableCell-root': {
+            fontWeight: 'bold',
+            fontSize: '15px',
+            color: theme.palette.base.contrastText, // 글씨 색상
+          }
+        })
+      }
+    },
+
+    // TableCell (본문)
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          fontSize: '14px',      // 글씨 크기
+          fontWeight: 500,       // 글씨 굵기 (400=normal, 500=medium, 700=bold)
+        },
+      },
+    },
+    
 
     // Typography
     MuiTypography: {
@@ -98,13 +142,12 @@ const theme = createTheme({
         root: ({ theme }) => ({
 
           color: theme.palette.text.light, // 버튼 색
-          marginBottom: 24, 
           textAlign: 'center',
           fontWeight: 'bold'
         }),
       },
     },
-    
+
 
     // Button
     MuiButton: {
@@ -132,9 +175,22 @@ const theme = createTheme({
     // TextField - Outlined
     MuiOutlinedInput: {
       styleOverrides: {
-        root: {
-          borderRadius: 10,
-        }
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.background.base,
+          borderRadius: 8, // 모서리
+
+          // 기본 테두리 색상 및 두께
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.base.main,  // 파란색 테두리
+            borderWidth: '3px',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.base.dark,  // 호버
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.base.dark,  // 포커스 시 색상
+          },
+        }),
       }
     },
 
@@ -145,7 +201,6 @@ const theme = createTheme({
         color: 'inherit', // 모든 IconButton의 기본 색상
       },
     },
-
 
 
     // Snackbar

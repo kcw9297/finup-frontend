@@ -11,19 +11,20 @@ import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
 import NewsPage from './pages/news/NewsPage'
 import NewsModalPage from './pages/news/NewsModalPage'
-
-
+import NoticeListPage from './pages/notice/NoticeListPage'
+import StocksListPage from './pages/stocks/StocksListPage'
+import StocksDetailPage from './pages/stocks/StocksDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
-  { path: '/', element: <HomePage />}, // 모두 공개
+  { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
 ]
 
 // 자식이 있는 라우팅 리스트
 const nastedRoutes = [
 
-  { 
+  {
     path: '/reboard/*', // url : 게시판
     children: [
       { path: 'search', element: <ReboardSearchPage /> }, // 모두 공개
@@ -40,6 +41,22 @@ const nastedRoutes = [
     ]
   },
 
+  {
+    path: '/admin/*', // url : 관리자
+    children: [
+      { path: 'notices', element: <NoticeListPage /> },
+      { path: 'notices/search', element: <NoticeListPage /> },
+    ]
+  },
+  
+  {
+    path: '/stocks/*', //url : 종목 +
+    children: [
+      { path: '', element: <StocksListPage />}, // 모두 공개
+      { path: 'detail', element: <StocksDetailPage />},
+    ]
+  }
+    
 ]
 
 
