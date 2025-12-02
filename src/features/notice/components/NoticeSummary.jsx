@@ -6,7 +6,6 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PageBar from "../../../base/components/bar/PageBar";
-import thema from "../../../base/design/thema";
 
 export default function NoticeSummary() {
 
@@ -109,7 +108,6 @@ export default function NoticeSummary() {
             />
           </Box>
         )}
-
 
       </Box>
     </Box>

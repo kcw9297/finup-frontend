@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useNoticeDetail } from "../hooks/useNoticeDetail"
 import { useEffect } from "react"
-import { IconButton, Typography, Box, Paper, Divider } from "@mui/material"
+import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import thema from "../../../base/design/thema";
 export default function NoticeDetail() {
@@ -82,6 +82,15 @@ export default function NoticeDetail() {
           </Typography>
 
         </Paper>
+        {/* 버튼 정렬 박스 */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+          <Button
+            variant="contained"
+            onClick={() => navigate(`/admin/notices/${noticeId}/edit`)}
+          >
+            수정하기
+          </Button>
+        </Box>
       </Box>
     </Box>
   )
