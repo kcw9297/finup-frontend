@@ -9,6 +9,8 @@ import { useEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
+import NoticeSummaryPage from './pages/notice/NoticeSummaryPage'
+import NoticeDetailPage from './pages/notice/NoticeDetailPage'
 import NewsPage from './pages/news/NewsPage'
 import NewsModalPage from './pages/news/NewsModalPage'
 import NoticeListPage from './pages/notice/NoticeListPage'
@@ -44,8 +46,8 @@ const nastedRoutes = [
   {
     path: '/admin/*', // url : 관리자
     children: [
-      { path: 'notices', element: <NoticeListPage /> },
-      { path: 'notices/search', element: <NoticeListPage /> },
+      { path: 'notices', element: <ProtectedRoute><NoticeSummaryPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> }
     ]
   },
   

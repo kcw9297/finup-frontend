@@ -1,14 +1,14 @@
 /**
- * /admin/notices 대응 페이지 컴포넌트
+ * /admin/notices/{noticeId} 대응 페이지 컴포넌트
  */
 
 import MainLayout from "../../base/layouts/MainLayout";
-import NoticeList from "../../features/notice/components/NoticeList";
+import NoticeDetail from "../../features/notice/components/NoticeDetail";
 
 export default function NoticeListPage() {
   return (
     <MainLayout>
-      <NoticeList />
+      <NoticeDetail />
     </MainLayout>
   );
 }
