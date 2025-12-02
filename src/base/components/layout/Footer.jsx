@@ -1,55 +1,45 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, Link, TextField, Button, IconButton, Stack} from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 
+/**
+ * 홈페이지 Footer
+ */
 
 export default function Footer() {
-
-  // 하단 아이콘 리스트
-  const iconList = [ GitHubIcon, TwitterIcon, LinkedInIcon, YouTubeIcon]
 
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: '#fafafa',
-        borderTop: '1px solid #e0e0e0',
-        py: 2,
-        mt: 8,
+        width:'100%',
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        gap:'25px',
+        margin:'auto',
+        padding:'30px',
+        backgroundColor:'white',
+        "& p": {
+            margin:0,
+            color:"text.light",
+            fontSize:"16px",
+          }
       }}
     >
-      <Container maxWidth="lg">
 
-        {/* Copyright & Social */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5, whiteSpace: 'pre-line', textAlign: 'left' }}  >
-              {`Copyright © 2025 FinUp All Right Reservered.
-                Some Additional Text
-                Some Additional Text`}
-            </Typography>
+      <Box sx={{display:'flex', gap:'10px'}}>
+        <Link underline="none" href=''>개인정보 처리방침</Link>
+        <p>ㅣ</p>
+        <Link underline="none" href=''>공지사항</Link>
+        <p>ㅣ</p>
+        <Link underline="none" href='https://www.chunjae.co.kr'>(주)천재교육</Link>
+      </Box>
 
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            {iconList.map((Icon, idx) => (
-              <IconButton  key={idx} size="small" color="inherit" sx={{ p: 0.5 }}>
-                <Icon fontSize="small" />
-              </IconButton>
-            ))}
-          </Box>
-        </Box>
-
-      </Container>
+      <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', gap:'5px'}}>
+        <p>사업자등록번호: 119-81-19350 &nbsp; | &nbsp; 서울특별시 디지털로 9길 23 마리오아울렛2관 11층 천재IT교육센터</p>
+        <p>본 플랫폼에서 제공하는 정보는 투자 판단을 위한 참고 자료일 뿐이며, 어떠한 경우에도 투자 권유·종목 추천·자문에 해당하지 않습니다.</p>
+      </Box>
     </Box>
   );
 }
