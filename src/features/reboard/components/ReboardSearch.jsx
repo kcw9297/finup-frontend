@@ -1,12 +1,6 @@
-import { useSearchParams } from "react-router-dom"
-import { useEffect, useState } from 'react'
 import { 
   Box, 
   Typography, 
-  TextField, 
-  Select, 
-  MenuItem, 
-  Button, 
   Table,
   TableBody,
   TableCell,
@@ -14,18 +8,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  FormControl,
   Chip,
-  Stack,
-  Pagination,
   CircularProgress,
-  Skeleton
 } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
 import { useReboardSearch } from "../hooks/useReboardSearch"
-import Loading from '../../../base/components/layout/Loading'
 import PageBar from "../../../base/components/bar/PageBar"
-import InputLabel from '@mui/material/InputLabel';
+import SearchBar from "../../../base/components/bar/SearchBar"
 
 export default function ReboardSearch() {
 
@@ -52,54 +40,7 @@ export default function ReboardSearch() {
       </Typography>
 
       {/* 검색 바 */}
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Box 
-          component="form" 
-          onSubmit={(e) => { handleSearch(e); }}
-          sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}
-        >
-          <FormControl size="small" sx={{ minWidth: 120, }}>
-            <InputLabel>필터</InputLabel>
-            <Select
-              value={searchRq.filter}
-              onChange={e => handleFilter(e.target.value)}
-              autoWidth
-              label="필터"
-              sx={{ minWidth: 100, height: 40, }}
-            >
-              <MenuItem value=""><em>선택</em></MenuItem>
-              <MenuItem value="name">이름</MenuItem>
-              <MenuItem value="subject">제목</MenuItem>
-              <MenuItem value="content">내용</MenuItem>
-              <MenuItem value="subjectContent">제목+내용</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            name="keyword"
-            placeholder="검색어 입력"
-            value={searchRq.keyword}
-            onChange={e => updateSearchRq({ keyword: e.target.value })}
-            size="small"
-            sx={{ width: 500 }}
-          />
-
-          <Button 
-            type="submit" 
-            variant="contained"
-            sx={{ 
-              minWidth: 40,
-              width: 40,
-              height: 40,
-              borderRadius: 1,
-              p: 0,
-              boxShadow: 'none' // 그림자 제거
-            }}
-          >
-            <SearchIcon />
-          </Button>
-        </Box>
-      </Paper>
+      < SearchBar searchRq={searchRq} onSubmit={handleSearch} onChange={updateSearchRq} filterOnChange={handleFilter} />
 
       {/* 정렬 바 */}
       <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
