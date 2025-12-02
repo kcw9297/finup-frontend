@@ -21,7 +21,7 @@ export default function MainLayout({ children }) {
           flex: 1, // 남은 공간 차지
           
           // 너비 설정
-          maxWidth: 1200, 
+          maxWidth: 1440, 
           margin: '0 auto', 
           padding: 2,
           width: '100%',

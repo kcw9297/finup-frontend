@@ -11,16 +11,15 @@ const theme = createTheme({
     // 사이트 기본 색상
     base: {
       main: '#003fbf',  // 메인 색상. focus 등 이벤트에 적용
-      light: '#3064ccff',
-      dark: '#002f8f', // hover 시 적용
+      light: '#F1F4F7', //채우기 적용
+      dark: '#002f8f', // hover, 선 적용
       contrastText: '#ffffff', // primary 배경 적용 시 글씨 색상
     },
 
     // 사이트 텍스트 색상
     text: {
       main: '#000000',  
-      light: '#6f6f70ff',
-      dark: '#002f8f',
+      light: '#8F959E',
       contrastText: '#ffffff',
     },
 
@@ -40,6 +39,7 @@ const theme = createTheme({
     // 색상 - background (배경)
     background: {
       base: '#ffffff', // 기본 색상
+      light: '#F6F7F9',
       dark: '#717783ff',
     },
 
@@ -143,7 +143,6 @@ const theme = createTheme({
 
           color: theme.palette.text.light, // 버튼 색
           textAlign: 'center',
-          fontWeight: 'bold'
         }),
       },
     },
@@ -198,8 +197,15 @@ const theme = createTheme({
     // IconButton
     MuiIconButton: {
       defaultProps: {
-        color: 'inherit', // 모든 IconButton의 기본 색상
+        color: 'inherit',
       },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          "&:hover": {
+            backgroundColor: `${theme.palette.background.light} !important`,
+          }
+        })
+      }
     },
 
 

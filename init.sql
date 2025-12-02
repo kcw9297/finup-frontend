@@ -1,0 +1,3 @@
+ALTER USER 'root'@'localhost' IDENTIFIED BY '1q2w3e4r!';
+FLUSH PRIVILEGES;
+USE finup
