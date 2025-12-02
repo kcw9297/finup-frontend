@@ -24,6 +24,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search'
 import { useReboardSearch } from "../hooks/useReboardSearch"
 import Loading from '../../../base/components/layout/Loading'
+import PageBar from "../../../base/components/bar/PageBar"
+import InputLabel from '@mui/material/InputLabel';
 
 export default function ReboardSearch() {
 
@@ -54,17 +56,18 @@ export default function ReboardSearch() {
         <Box 
           component="form" 
           onSubmit={(e) => { handleSearch(e); }}
-          sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
+          sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}
         >
-          <FormControl sx={{ minWidth: 150 }}>
+          <FormControl size="small" sx={{ minWidth: 120, }}>
+            <InputLabel>필터</InputLabel>
             <Select
-              name="filter"
               value={searchRq.filter}
               onChange={e => handleFilter(e.target.value)}
-              size="small"
-              displayEmpty
+              autoWidth
+              label="필터"
+              sx={{ minWidth: 100, height: 40, }}
             >
-              <MenuItem value="">선택</MenuItem>
+              <MenuItem value=""><em>선택</em></MenuItem>
               <MenuItem value="name">이름</MenuItem>
               <MenuItem value="subject">제목</MenuItem>
               <MenuItem value="content">내용</MenuItem>
@@ -78,16 +81,22 @@ export default function ReboardSearch() {
             value={searchRq.keyword}
             onChange={e => updateSearchRq({ keyword: e.target.value })}
             size="small"
-            sx={{ flex: 1 }}
+            sx={{ width: 500 }}
           />
 
           <Button 
             type="submit" 
-            variant="contained" 
-            startIcon={<SearchIcon />}
-            sx={{ px: 3 }}
+            variant="contained"
+            sx={{ 
+              minWidth: 40,
+              width: 40,
+              height: 40,
+              borderRadius: 1,
+              p: 0,
+              boxShadow: 'none' // 그림자 제거
+            }}
           >
-            검색
+            <SearchIcon />
           </Button>
         </Box>
       </Paper>
@@ -122,25 +131,14 @@ export default function ReboardSearch() {
 
           <TableBody>
             {loading ? (
-              Array.from({ length: searchRq.pageSize }).map((_, idx) => (
-                <TableRow key={idx}>
-                  <TableCell align="center" sx={{ width: '10%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                  <TableCell align="center" sx={{ width: '20%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                  <TableCell align="left" sx={{ width: '50%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                  <TableCell align="center" sx={{ width: '20%' }}>
-                    <Skeleton width="100%" />
-                  </TableCell>
-                </TableRow>
-              ))
+              <TableRow>
+                <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
             ) : rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} align="center" sx={{ py: 8, color: 'text.secondary' }}>
+                <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
                   검색 결과가 없습니다.
                 </TableCell>
               </TableRow>
@@ -159,19 +157,7 @@ export default function ReboardSearch() {
       </TableContainer>
 
       {/* 하단 페이징 */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <Pagination 
-          count={10} // 총 페이지 수 (실제로는 searchRp에서 받아온 totalPages 사용)
-          page={pagination.page || 1}
-          onChange={(event, pageNum) => {
-            console.log('페이지 번호:', pageNum);
-            handlePage(pageNum);
-          }}
-          color="primary"
-          showFirstButton
-          showLastButton
-        />
-      </Box>
+      <PageBar pagination={pagination} onChange={handlePage}/>
     </Box>
   )
 }
