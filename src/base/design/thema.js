@@ -143,7 +143,6 @@ const theme = createTheme({
 
           color: theme.palette.text.light, // 버튼 색
           textAlign: 'center',
-          fontWeight: 'bold'
         }),
       },
     },
