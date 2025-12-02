@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
+import NewsPage from './pages/news/NewsPage'
 
 
 
@@ -30,8 +31,15 @@ const nastedRoutes = [
       { path: 'edit/:idx', element: <ProtectedRoute><AuthLoginPage /></ProtectedRoute> }, // 회원 공개 (작성자 검증은 Page 컴포넌트 내에서)
     ]
   },
+  { 
+    path: '/news/*', // url : 뉴스
+    children: [
+      { path: 'list', element: <NewsPage /> }, // 모두 공개
+    ]
+  },
 
 ]
+
 
 export default function App() {
 
@@ -64,6 +72,7 @@ export default function App() {
             {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
           </Route>
         )}
+        
 
       </Routes>
     </>
