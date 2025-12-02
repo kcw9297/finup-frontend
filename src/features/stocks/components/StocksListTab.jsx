@@ -1,10 +1,10 @@
 import { Tabs, Tab } from "@mui/material";
 import { useState } from "react";
-import StocksSummaryMarcetCap from "./StocksSummaryMarcetCap";
+import StocksListMarcetCap from "./StocksListMarcetCap";
 
 
 /* 종목+ 카테고리에서 공통적으로 사용하는 탭(시가총액, 거래량) */
-export default function StocksSummary() {
+export default function StocksListTab() {
   const [value, setValue] = useState(0); // 두 번째 탭이 활성처럼 보기 위해
   
   return (    
@@ -38,8 +38,8 @@ export default function StocksSummary() {
       <Tab label="나머지는 아직 뭐할지 안정함" />
     </Tabs>
 
-    {value === 0 && <StocksSummaryMarcetCap />}
-    {/* {value === 1 && <StocksSummaryVolume />} */}
+    {value === 0 && <StocksListMarcetCap />}
+    {/* {value === 1 && <StocksListVolume />} */}
     </>
   );
 }

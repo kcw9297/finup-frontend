@@ -1,9 +1,9 @@
-import './StocksSummaryTable.css';
+import './StocksListTable.css';
 import data from "./test/StocksTestData.js";
 
 /* Table */
 /* 시가총액 */
-export default function StocksSummaryMarcetCap() {
+export default function StocksListMarcetCap() {
 
 
   const formatPrice = (num) => Number(num).toLocaleString() + '원';

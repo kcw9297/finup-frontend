@@ -10,8 +10,7 @@ import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
 import NoticeListPage from './pages/notice/NoticeListPage'
-import StocksListPage from './pages/stocks/StocksSummaryPage'
-
+import StocksListPage from './pages/stocks/StocksListPage'
 
 
 // 자식이 없는 단순 라우팅 리스트
@@ -44,7 +43,8 @@ const nastedRoutes = [
   {
     path: '/stocks/*', //url : 종목 +
     children: [
-      { path: '', element: <StocksListPage />},
+      { path: '', element: <StocksListPage />}, // 모두 공개
+      
     ]
   }
     

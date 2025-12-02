@@ -57,7 +57,7 @@
   },
   {
     data_rank: "5",
-    mksc_shrn_iscd: "005930",
+    mksc_shrn_iscd: "005935",
     hts_kor_isnm: "삼성전자우",
     stck_prpr: "75700",
     prdy_vrss: "700",

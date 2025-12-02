@@ -14,7 +14,7 @@
 
 .table-header {
   font-weight: 500;
-  color: var(--primary-text);
+  color: #49454F; /*var(--primary-text);*/
   min-height: 56px;
 }
 
@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: flex-start;
   overflow: hidden;
-  color: var(--primary-text);
+  color: #49454F; /*var(--primary-text);*/
 }
 
 .table-cell.rank-wrap {
@@ -66,5 +66,5 @@
 }
 
 .table-row:hover {
-  background: var(--light-hover);
+  background: #F1F4F7; /*var(--light-hover); */
 }
