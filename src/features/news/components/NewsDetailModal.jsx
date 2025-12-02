@@ -50,6 +50,9 @@ export default function NewsDetailModal({ open, onClose, data }) {
           {/* 본문 내용 */}
           <Box sx={{ mb: 3 }}>
             <h3>요약</h3>
+            <a href={data?.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '14px', color: '#3B5BDB', textDecoration:"none" }}>
+              원문 보기 →
+            </a>
             <p>{data?.summary}</p>
           </Box>
 
