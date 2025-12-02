@@ -20,7 +20,7 @@ export default function StocksListTab() {
       }}
       sx={{
         //background: 'white',
-        //paddingY: 2,
+        paddingY: 2,
         '& .MuiTab-root': {
           //minWidth: 'auto',
           //padding: '8px 16px',
