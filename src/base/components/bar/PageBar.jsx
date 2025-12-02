@@ -8,11 +8,13 @@ import { Box, Pagination } from '@mui/material';
 
 export default function PageBar({ pagination, onChange }) {
 
+  if (!pagination) return null;  // 초기 렌더링 보호막(로딩 스피너)
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-      <Pagination 
+      <Pagination
         count={pagination.totalPage || 1}
-        page={pagination.curPage}
+        page={pagination.pageNum}
         onChange={(event, value) => onChange(value)}
         shape="rounded"
         showFirstButton
@@ -26,7 +28,7 @@ export default function PageBar({ pagination, onChange }) {
             '&:hover': {
               backgroundColor: theme.palette.base.main, // palette 색상 유지
               cursor: 'default',
-            }          
+            }
           }
         })}
       />
