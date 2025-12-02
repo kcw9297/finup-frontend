@@ -3,8 +3,10 @@
  */
 
 import { Box, Card, CardMedia, Typography } from "@mui/material";
+import { useNewsCard } from "../hooks/useNewsCard";
 
 export default function NewsCard({ title, summary, thumbnail, publisher, publishedAt, link }) {
+  const {detailDate} = useNewsCard()
   return (
     <Card
       elevation={0}
@@ -51,7 +53,7 @@ export default function NewsCard({ title, summary, thumbnail, publisher, publish
         </Typography>
 
         <Box sx={{ mt: 1, fontSize: "13px", color: "gray" }}>
-          {publisher} · {publishedAt}
+          {publisher} · {detailDate(new Date(publishedAt))}
         </Box>
       </Box>
     </Card>
