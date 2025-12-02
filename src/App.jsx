@@ -9,6 +9,8 @@ import { useEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
+import NewsPage from './pages/news/NewsPage'
+import NewsModalPage from './pages/news/NewsModalPage'
 import NoticeListPage from './pages/notice/NoticeListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
@@ -31,6 +33,13 @@ const nastedRoutes = [
       { path: 'edit/:idx', element: <ProtectedRoute><AuthLoginPage /></ProtectedRoute> }, // 회원 공개 (작성자 검증은 Page 컴포넌트 내에서)
     ]
   },
+  { 
+    path: '/news/*', // url : 뉴스
+    children: [
+      { path: 'list', element: <NewsPage /> }, // 모두 공개
+      { path: 'detail', element: <NewsModalPage />}, // 회원공개로 전환예정
+    ]
+  },
 
   {
     path: '/admin/*', // url : 관리자
@@ -49,6 +58,7 @@ const nastedRoutes = [
   }
     
 ]
+
 
 export default function App() {
 
@@ -81,6 +91,7 @@ export default function App() {
             {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
           </Route>
         )}
+        
 
       </Routes>
     </>
