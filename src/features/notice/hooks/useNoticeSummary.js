@@ -8,7 +8,7 @@ const INITIAL_SEARCH_RQ = {
   size: 10
 }
 
-export function useNoticeList() {
+export function useNoticeSummary() {
   // [1] 필요 데이터 선언
   const [searchRq, setSearchRq] = useState(INITIAL_SEARCH_RQ)  // 검색 리퀘스트 데이터
   const [noticeList, setNoticeList] = useState([])  // 공지사항 리스트 요청 결과 데이터
@@ -37,20 +37,22 @@ export function useNoticeList() {
   }
 
   // [4] REST API 요청 함수
-  const fetchNoticeList = () => {
+  const fetchNoticeSummary = () => {
     setLoading(true)
 
     api.get(
-      "/admin/notices/search",
-      { onSuccess, onError, onFinally },
-      searchRq
-    )
+      '/notices',
+      {
+        onSuccess, onError, onFinally,
+        admin: true,
+        params: searchRq
+      })
   }
 
   // [5] 검색 조건 변경 시 자동 호출
   useEffect(() => {
     (async () => {
-      await fetchNoticeList();
+      await fetchNoticeSummary();
     })()
   }, [searchRq.keyword, searchRq.page])
 
@@ -61,6 +63,6 @@ export function useNoticeList() {
     loading,
 
     changeSearchRq,
-    fetchNoticeList
+    fetchNoticeSummary
   }
 }

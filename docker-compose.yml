@@ -1,0 +1,34 @@
+name: finup
+
+services:
+
+  # container - MariaDB
+  mariadb:
+    image: mariadb:latest
+    container_name: finup-mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: "1q2w3e4r!"
+      MARIADB_DATABASE: finup
+      MARIADB_USER: finup
+      MARIADB_PASSWORD: "1q2w3e4r!"
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - finup_mariadb:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  # container - Redis
+  redis:
+    image: redis:latest
+    container_name: finup-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - finup_redis:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass 1q2w3e4r! --notify-keyspace-events Exg
+
+volumes:
+  finup_mariadb:
+  finup_redis:
