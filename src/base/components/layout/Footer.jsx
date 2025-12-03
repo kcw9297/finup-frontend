@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Link, TextField, Button, IconButton, Stack} from '@mui/material';
+import { Box, Link} from '@mui/material';
 
 /**
  * 홈페이지 Footer
@@ -20,8 +20,7 @@ export default function Footer() {
         margin:'auto',
         padding:'30px',
         backgroundColor:'white',
-        "& p": {
-            margin:0,
+        "& p ,& .footer-text": {
             color:"text.light",
             fontSize:"16px",
           }
@@ -29,11 +28,11 @@ export default function Footer() {
     >
 
       <Box sx={{display:'flex', gap:'10px'}}>
-        <Link underline="none" href=''>개인정보 처리방침</Link>
+        <Link className="footer-text" underline="none" href=''>개인정보 처리방침</Link>
         <p>ㅣ</p>
-        <Link underline="none" href=''>공지사항</Link>
+        <Link className="footer-text" underline="none" href=''>공지사항</Link>
         <p>ㅣ</p>
-        <Link underline="none" href='https://www.chunjae.co.kr'>(주)천재교육</Link>
+        <Link className="footer-text" underline="none" href='https://www.chunjae.co.kr'>(주)천재교육</Link>
       </Box>
 
       <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', gap:'5px'}}>

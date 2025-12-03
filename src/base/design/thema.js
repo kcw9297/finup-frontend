@@ -1,3 +1,4 @@
+import { Margin } from "@mui/icons-material";
 import { Slide } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 
@@ -24,7 +25,8 @@ const theme = createTheme({
     },
 
     line: {
-      main: '#E0E0E0',
+      main: '#E5E8EB',
+      light: '#F2F4F6',
       dark: '#717783ff',
     },
 
@@ -141,10 +143,21 @@ const theme = createTheme({
 
         root: ({ theme }) => ({
 
-          color: theme.palette.text.light, // 버튼 색
+          color: theme.palette.text.main, // 버튼 색
           textAlign: 'center',
         }),
       },
+    },
+
+    // p
+    MuiCssBaseline: {
+      styleOverrides: {
+        p: {
+          margin: 0,
+          padding: 0,
+          textAlign: 'center',
+        }
+      }
     },
 
 
