@@ -3,7 +3,6 @@ import { useNoticeDetail } from "../hooks/useNoticeDetail"
 import { useEffect } from "react"
 import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import thema from "../../../base/design/thema";
 import theme from "../../../base/design/thema";
 export default function NoticeDetail() {
 
@@ -84,12 +83,18 @@ export default function NoticeDetail() {
 
         </Paper>
         {/* 버튼 정렬 박스 */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4, gap: 1 }}>
           <Button
             variant="contained"
             onClick={() => navigate(`/admin/notices/${noticeId}/edit`)}
           >
             수정하기
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => navigate(`/admin/notices/${noticeId}/remove`)}
+          >
+            삭제하기
           </Button>
         </Box>
       </Box>
