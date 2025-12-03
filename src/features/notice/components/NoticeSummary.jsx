@@ -43,7 +43,7 @@ export default function NoticeSummary() {
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
         {/* 상단 타이틀 + 등록 버튼 */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, maxWidth: "750px", mx: "auto" }}>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
             공지사항 관리
           </Typography>
@@ -59,7 +59,7 @@ export default function NoticeSummary() {
         </Box>
 
         {/* 공지사항 테이블 */}
-        <Paper elevation={0} sx={{ width: "100%", overflow: "hidden" }}>
+        <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "800px", mx: "auto" }}>
           <Table>
             <TableHead>
               <TableRow>

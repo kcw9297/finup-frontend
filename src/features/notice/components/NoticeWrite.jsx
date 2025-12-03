@@ -15,7 +15,7 @@ export default function NoticeWrite() {
   // [2] 반환 컴포넌트 구성
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
+    <Box sx={{ display: "flex", width: "100%", maxWidth: "800px", mx: "auto" }}>
       <Box sx={{ flexGrow: 1, padding: 4 }}>
 
         {/* 상단 뒤로가기 + 제목 */}

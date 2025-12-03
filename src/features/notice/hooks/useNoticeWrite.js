@@ -12,7 +12,7 @@ const INITIAL_NOTICE_WRITE_RQ = {
 export function useNoticeWrite(noticeId) {
   // [1] 폼 불러오는 거 필요 데이터 선언
 
-  const [form, setForm] = useState(() => ({ INITIAL_NOTICE_WRITE_RQ }))  // 입력 상태
+  const [form, setForm] = useState(() => (INITIAL_NOTICE_WRITE_RQ))  // 입력 상태
   const [writeRp, setWriteRp] = useState(null)  // 응답 결과 데이터
   const { showSnackbar } = useSnackbar()  // 스낵바
   const navigate = useNavigate()  // 페이지 이동
