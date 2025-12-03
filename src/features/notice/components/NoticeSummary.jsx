@@ -92,6 +92,7 @@ export default function NoticeSummary() {
                     {n.content}
                   </TableCell>
                   <TableCell>{formatDate(n.cdate)}</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               ))}
 
