@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Link} from '@mui/material';
+import React from 'react'
+import { Box, Link} from '@mui/material'
 
 /**
  * 홈페이지 Footer
@@ -28,11 +28,11 @@ export default function Footer() {
     >
 
       <Box sx={{display:'flex', gap:'10px'}}>
-        <Link className="footer-text" underline="none" href=''>개인정보 처리방침</Link>
+        <Link className="footer-text" href=''>개인정보 처리방침</Link>
         <p>ㅣ</p>
-        <Link className="footer-text" underline="none" href=''>공지사항</Link>
+        <Link className="footer-text" href=''>공지사항</Link>
         <p>ㅣ</p>
-        <Link className="footer-text" underline="none" href='https://www.chunjae.co.kr'>(주)천재교육</Link>
+        <Link className="footer-text"  href='https://www.chunjae.co.kr'>(주)천재교육</Link>
       </Box>
 
       <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', gap:'5px'}}>
@@ -40,5 +40,5 @@ export default function Footer() {
         <p>본 플랫폼에서 제공하는 정보는 투자 판단을 위한 참고 자료일 뿐이며, 어떠한 경우에도 투자 권유·종목 추천·자문에 해당하지 않습니다.</p>
       </Box>
     </Box>
-  );
+  )
 }

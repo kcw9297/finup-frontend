@@ -150,7 +150,7 @@ const theme = createTheme({
         root: ({ theme }) => ({
 
           color: theme.palette.text.main, // 버튼 색
-          textAlign: 'center',
+          alignItems: 'center',
         }),
       },
     },
@@ -161,11 +161,24 @@ const theme = createTheme({
         p: {
           margin: 0,
           padding: 0,
-          textAlign: 'center',
+          alignItems: 'center',
         }
       }
     },
 
+    // Link
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          color: "inherit",
+          "&:hover": {
+            textDecoration: "none",
+            color: "inherit",
+          },
+        }
+      }
+    },
 
     // Button
     MuiButton: {
