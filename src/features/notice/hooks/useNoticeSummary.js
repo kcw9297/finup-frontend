@@ -4,7 +4,7 @@ import { api } from "../../../base/utils/fetchUtils";
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
-  page: 1,
+  pageNum: 1,
   size: 10
 }
 
@@ -40,6 +40,8 @@ export function useNoticeSummary() {
   const fetchNoticeSummary = () => {
     setLoading(true)
 
+    console.log("요청 params:", searchRq)
+
     api.get(
       '/notices',
       {
@@ -54,7 +56,7 @@ export function useNoticeSummary() {
     (async () => {
       await fetchNoticeSummary();
     })()
-  }, [searchRq.keyword, searchRq.page])
+  }, [searchRq.keyword, searchRq.pageNum])
 
   return {
     searchRq,

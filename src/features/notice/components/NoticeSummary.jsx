@@ -34,9 +34,15 @@ export default function NoticeSummary() {
     loading,
   } = useNoticeSummary()
 
+  // [2] 페이징 계산
+  const totalPages = (pagination && pagination.dataCount)
+    ? Math.ceil(pagination.dataCount / pagination.pageSize)
+    : 1;
+
+  // console.log("pagination >>>", pagination)
   const navigate = useNavigate();
 
-  // [2] 반환 컴포넌트 구성
+  // [3] 반환 컴포넌트 구성
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
       {/* 좌측 관리자 메뉴 */}
@@ -107,9 +113,11 @@ export default function NoticeSummary() {
           <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
             <PageBar
               pagination={pagination}
-              page={pagination.curPage}
-              count={pagination.totalPage}
-              onChange={(newPage) => changeSearchRq({ page: newPage })}
+              page={pagination.pageNum + 1}
+              count={totalPages}
+              onChange={(value) => {
+                changeSearchRq({ pageNum: value })
+              }}
             />
           </Box>
         )}
