@@ -1,8 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useNoticeDetail } from "../hooks/useNoticeDetail";
-import { useEffect, useState } from "react";
-import { showSnackbar } from "../../../base/config/globalHookConfig";
-import { api } from "../../../base/utils/fetchUtils";
+import { useEffect } from "react";
 import { IconButton, TextField, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNoticeEdit } from "../hooks/useNoticeEdit";
@@ -27,10 +25,10 @@ export default function NoticeEdit() {
 
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
-      <Box sx={{ flexGrow: 1, p: 4 }}>
+      <Box sx={{ flexGrow: 1, padding: 4 }}>
 
         {/* 상단 뒤로가기 + 제목 */}
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <IconButton onClick={() => navigate(-1)}>
             <ArrowBackIcon />
           </IconButton>

@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import thema from "../../../base/design/thema";
+import theme from "../../../base/design/thema";
 export default function NoticeDetail() {
 
   // 공통 날짜 포맷 함수 (Summary와 동일)
@@ -60,7 +61,7 @@ export default function NoticeDetail() {
         </Box>
 
         {/* 상세 내용 카드 */}
-        <Paper elevation={0} sx={{ p: 4, borderRadius: 3, border: "1px solid" }}>
+        <Paper elevation={0} sx={{ padding: 4, borderRadius: 3, maxWidth: "750px", mx: "auto", border: theme.palette.line.dark }}>
           <Typography variant="h4" fontWeight={700}>
             {detailRp.title}
           </Typography>
