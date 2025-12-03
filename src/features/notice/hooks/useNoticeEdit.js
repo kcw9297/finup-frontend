@@ -13,10 +13,10 @@ export function useNoticeEdit(noticeId, initialData) {
 
   const [loading, setLoading] = useState(false)
 
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false)
 
-  const { showSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
 
 
