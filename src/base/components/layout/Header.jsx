@@ -58,7 +58,7 @@ export default function Header() {
             </Box>
             
             {/* 메뉴 */}
-            <Box sx={{display:{md:'flex'}, gap:'30px'}}>
+            <Box sx={{display:'flex', gap:'30px'}}>
               {manuItems.map((menu) => (
                 <Typography
                   key={menu}
