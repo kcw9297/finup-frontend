@@ -1,6 +1,6 @@
 import { Box, Chip, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
-import BookmarkOutlined from "@mui/icons-material/BookmarkOutlined";// 북마크 아이콘
+import BookmarkBorder from "@mui/icons-material/BookmarkBorder";// 북마크 아이콘
 
 export default function StocksDetailInfoTooltipIcon() {
   return (
@@ -17,7 +17,7 @@ export default function StocksDetailInfoTooltipIcon() {
     >
       {/* 학습방법 Chip */}
       <Chip        
-        icon={<BookmarkOutlined sx={{ color: "#B0C3EB !important" }} />} // 왜 MUI 아이콘 색깔 변경이 안되냐
+        icon={<BookmarkBorder sx={{ color: "#B0C3EB !important" }} />} // 왜 MUI 아이콘 색깔 변경이 안되냐 important하니까됨
         label="학습방법"
         sx={{
           backgroundColor: "white",
