@@ -22,9 +22,8 @@ export default function MainLayout({ children }) {
           
           // 너비 설정
           maxWidth: 1440, 
-          margin: '0 auto', 
-          padding: 2,
-          width: '100%',
+          margin: 'auto', 
+          width: '100%'
         }}
       >
         {children}
