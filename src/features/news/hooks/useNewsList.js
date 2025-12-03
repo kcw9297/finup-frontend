@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 
-export function useNewsPage(){
+export function useNewsList(){
 // [1] 필요 데이터 선언
   const [category, setCategory] = useState("date")
   const [news, setNews] = useState([])
@@ -70,6 +70,7 @@ export function useNewsPage(){
       observer.observe(bottomRef.current)
     return () => observer.disconnect()
   },[loading])
+
 
   // [5] 반환
   return {
