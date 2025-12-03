@@ -155,6 +155,7 @@ const theme = createTheme({
         p: {
           margin: 0,
           padding: 0,
+          textAlign: 'center',
         }
       }
     },
