@@ -3,49 +3,48 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
 /**
- * 왼쪽 사이드바를 사용하는 경우 사용하는 레이아웃 컴포넌트 (우측 영역)
+ * 상단 Header, 하단 Footer 공통 사용 + 가운데 사이드바 레이아웃
  */
 export default function SidebarLayout({ sidebar, children }) {
-
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        gap: 2, 
-        maxWidth: 1200,
-        margin: '0 auto',
-        padding: 2,
-        minHeight: 'calc(100vh - 64px - 100px)', // 헤더, 푸터 영역만큼 길이 제외 (헤더 푸터 변경시 변경 필요)
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-
-      {/* 헤더 영역 */}
+      {/* 상단 헤더 */}
       <Header />
 
-      {/* 좌측 사이드바 */}
-      <Box 
-        sx={{ 
-          width: 250,
-          border: '1px solid #e0e0e0', 
-          borderRadius: 2, 
-          p: 2, 
-          flexShrink: 0,
-          height: 'fit-content',
-          position: 'sticky',
-          top: 80, // 헤더 아래 고정
-        }} 
+      {/* 가운데 영역 : 사이드바 + 내용 */}
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          maxWidth: 1200,
+          width: "100%",
+          mx: "auto",
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 4,
+          pt: 4,   // 여백 줄임
+          pb: 4,
+        }}
       >
-        {sidebar}
-      </Box>
-      
-      {/* 우측 컨텐츠 */}
-      <Box sx={{ flex: 1 }}>
-        {children}
+        {/* 왼쪽 사이드바 */}
+        <Box sx={{ width: 220, flexShrink: 0 }}>
+          {sidebar}
+        </Box>
+
+        {/* 오른쪽 콘텐츠 */}
+        <Box sx={{ flex: 1 }}>
+          {children}
+        </Box>
       </Box>
 
-      {/* 푸터 영역 */}
+      {/* 하단 푸터 */}
       <Footer />
-      
     </Box>
-  )
+  );
 }
