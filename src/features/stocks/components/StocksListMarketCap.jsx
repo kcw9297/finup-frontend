@@ -3,7 +3,7 @@ import data from "./test/StocksTestData.js";
 
 /* Table */
 /* 시가총액 */
-export default function StocksListMarcetCap() {
+export default function StocksListMarketCap() {
 
 
   const formatPrice = (num) => Number(num).toLocaleString() + '원';
