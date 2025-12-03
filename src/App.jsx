@@ -17,6 +17,8 @@ import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import NoticeEditPage from './pages/notice/NoticeEditPage'
+import NoticeWritePage from './pages/notice/NoticeWritePage'
+import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -51,7 +53,8 @@ const nastedRoutes = [
     children: [
       { path: 'notices', element: <ProtectedRoute><NoticeSummaryPage /></ProtectedRoute> },
       { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> }
+      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
+      { path: 'notices/write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> }
     ]
   },
 
@@ -61,11 +64,20 @@ const nastedRoutes = [
       { path: '', element: <StocksListPage /> }, // 모두 공개
       { path: 'detail', element: <StocksDetailPage /> },
     ]
+  },
+
+
+  {
+    path: '/mypage/*',
+    children: [
+      {
+        path: 'member',
+        element: <MypageMemberPage />
+      }
+    ]
   }
 
-]
-
-
+];
 export default function App() {
 
   // 페이지 마운트 시, 최초 1회 로그인 검증

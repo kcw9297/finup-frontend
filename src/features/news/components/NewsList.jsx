@@ -10,20 +10,18 @@ import SearchIcon from "@mui/icons-material/Search";
  * 뉴스 페이지 컴포넌트
  */
 
-import { useNewsPage } from "../hooks/useNewsPage"
-import NewsDetailModal from "./NewsDetailModal";
+import { useNewsList } from "../hooks/useNewsList"
+import NewsDetailModal from "./NewsModal";
+import { useNewsModal } from "../hooks/useNewsModal";
 
 export default function NewsPage(){
   //(1)커스텀 훅
-  const {
-    category, setCategory,
+  const { category, setCategory : changeCategory,
     news,
-    bottomRef, 
+    bottomRef,
     loading,
-    CATEGORY_LIST,
-    modalOpen, setModalOpen,
-    selectedNews, setSelectedNews
-  } = useNewsPage()
+    CATEGORY_LIST, } = useNewsList();
+  const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal();
 
   //(2)반환활 컴포넌트
   return(
@@ -50,7 +48,7 @@ export default function NewsPage(){
             key={item.value}
             label={item.label}
             clickable
-            onClick={() => setCategory(item.value)}
+            onClick={() => changeCategory(item.value)}
             sx={{
               borderRadius: "16px",
               px: 1.5,
@@ -66,12 +64,12 @@ export default function NewsPage(){
       {/* 뉴스 리스트 */}
       <Box sx={{ mt: 2 }}>
         {news.map((item, idx) => (
-          <NewsCard key={idx} {...item} onClick={() => {setSelectedNews(item); setModalOpen(true)}}/>
+          <NewsCard key={idx} {...item} onClick={() => openModal(item)}/>
         ))}
 
         {loading && (
           <Box sx={{ textAlign: "center", py: 3 }}>
-            <CircularProgress size={32} />
+            <CircularProgress size={28} />
           </Box>
         )}
         
@@ -79,9 +77,10 @@ export default function NewsPage(){
       </Box>
       {/* 뉴스 상세 모달 */}
       <NewsDetailModal 
-        open={modalOpen} 
-        onClose={() => setModalOpen(false)} 
-        data={selectedNews}
+        open={open} 
+        onClose={closeModal} 
+        article={article}
+        loading={aiLoading}
       />
     </Box>
     

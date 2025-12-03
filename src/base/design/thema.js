@@ -11,10 +11,16 @@ const theme = createTheme({
 
     // 사이트 기본 색상
     base: {
+      light: '#e6ecf9', //채우기 적용
+      lightHover: '#d9e2f5',
+      lightActive: '#b0c3eb',
       main: '#003fbf',  // 메인 색상. focus 등 이벤트에 적용
-      light: '#F1F4F7', //채우기 적용
+      mainHover: '#0039ac',
+      mainActive: '#003299',
       dark: '#002f8f', // hover, 선 적용
-      contrastText: '#ffffff', // primary 배경 적용 시 글씨 색상
+      darkHover: '#002673',
+      darkActive: '#001c56',
+      darker: '#001643'
     },
 
     // 사이트 텍스트 색상

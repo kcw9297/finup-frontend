@@ -22,7 +22,7 @@ export default function Footer() {
         backgroundColor:'white',
         "& p ,& .footer-text": {
             color:"text.light",
-            fontSize:"16px",
+            fontSize:"14px",
           }
       }}
     >
