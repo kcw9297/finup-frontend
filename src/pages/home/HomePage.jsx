@@ -28,7 +28,7 @@ export default function HomePage() {
       setNoticeCurrent((prev) => (prev+1) % noticeList.length)
       setFade(true)
       if(shouldReset) resetInterval()
-    }, 300)
+    }, 400)
   }
 
   // 공지사항 자동 이동(3초)
@@ -42,7 +42,7 @@ export default function HomePage() {
         <MainLayout>
           {/* Top */}
           <Box sx={{display:'flex', flexDirection:'column', gap:'20px', borderBottom:"1px solid #ddd"}}>
-            {/* 베너 */}
+            {/* 배너 */}
             <Box component={Link} to="" sx={{display:"flex", alignItems:"center", justifyContent:"center"}}>
               <img src={banner} alt="배너" style={{height:300, borderRadius:20}}/>
             </Box>
