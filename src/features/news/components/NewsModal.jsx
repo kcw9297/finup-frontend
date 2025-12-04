@@ -57,7 +57,7 @@ export default function NewsDetailModal({ open, onClose, article }) {
           {/* 요약 */}
           <Box sx={{ mb: 10}}>
             <Box sx={{ display:"flex", justifyContent:"space-between", alignItems:"center", mb: 1 }}>
-              <h3 style={{margin:3}}>요약</h3>
+              <h3>요약</h3>
               <a
                 href={article?.link}
                 target="_blank"
