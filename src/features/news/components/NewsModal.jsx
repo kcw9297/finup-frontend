@@ -1,11 +1,16 @@
-import { Modal, Box, IconButton, Tabs, Tab } from "@mui/material";
+import { Modal, Box, IconButton, Chip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
-export default function NewsDetailModal({ open, onClose, article, loading }) {
+import moment from 'moment'
+export default function NewsDetailModal({ open, onClose, article }) {
+  
+  if (!article) return null;
+  const formattedDate = moment(article.publishedAt).format('YYYY-MM-DD HH:mm')
+  
   return (
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
+          position: "relative",
           width: "800px",
           bgcolor: "#fff",
           mx: "auto",
@@ -14,32 +19,31 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
           p: 3,
           outline: "none",
           maxHeight: "90vh",
-          overflow: "hidden",
+          overflow: "hidden"
         }}
       >
-        <Box>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <Box sx={{p: 3, maxHeight:"90vh", overflowY:"auto"}}>
+        {/* 닫기 버튼 - 오른쪽 상단 */}
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8
+          }}
+        >
+          <CloseIcon sx={{ fontSize: 30 }} />
+        </IconButton>
+
+        {/* 내용 영역 */}
+        <Box sx={{ p: 2, padding: "25px", maxHeight: "85vh", overflowY: "auto", "&::-webkit-scrollbar":{display:"none"}, scrollbarWidth:"none"}}>
           
           {/* HEADER */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2}}>
-            <Box>
-              <h2 style={{ margin: 0 }}>{article?.title}</h2>
-              <span style={{ color: "#777", fontSize: "14px" }}>{article?.publishedAt}・{article?.publisher}</span>
-            </Box>
+          <Box sx={{ mb: 3 }}>
+            <h2 style={{ margin: 0 }}>{article?.title}</h2>
+            <span style={{ color: "#777", fontSize: "14px" }}>
+              {formattedDate} · {article?.publisher}
+            </span>
           </Box>
-          
-
-          {/* TABS */}
-          {/* <Tabs value={0} sx={{ mb: 2 }}>
-            <Tab label="탭1" />
-            <Tab label="탭2" />
-            <Tab label="탭3" />
-            <Tab label="탭4" />
-          </Tabs> */}
 
           {/* IMAGE */}
           <Box sx={{ mb: 3 }}>
@@ -50,26 +54,38 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
             />
           </Box>
 
-          {/* 본문 내용 */}
-          <Box sx={{ mb: 3 }}>
-            <h3>요약</h3>
-            <a href={article?.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '14px', color: '#3B5BDB', textDecoration:"none" }}>
-              원문 보기 →
-            </a>
+          {/* 요약 */}
+          <Box sx={{ mb: 10}}>
+            <Box sx={{ display:"flex", justifyContent:"space-between", alignItems:"center", mb: 1 }}>
+              <h3 style={{margin:3}}>요약</h3>
+              <a
+                href={article?.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: "14px", color: "#3B5BDB", textDecoration: "none" }}
+              >
+                원문 보기 →
+              </a>
+            </Box>
             <p>{article?.ai?.summary}</p>
           </Box>
+          
 
-          {/* AI 분석 */}
-          <Box sx={{ mb: 3 }}>
-            <h3>AI 해설</h3>
-            <p>{article?.ai?.explanation}</p>
+          {/* AI 해설 */}
+          <Box sx={{ mb: 10 }}>
+            <Box sx={{ mb: 1 }}>
+              <h3>AI 해설</h3>
+            </Box>
+            <p>{article?.ai?.insight}</p>
           </Box>
-
-          {/* 필요 개념 */}
-          <Box sx={{ mb: 3 }}>
+          {/* 필수 개념 */}
+          <Box sx={{ mb: 10 }}>
             <h3>필수 개념</h3>
-            {article?.ai?.keywords?.map((c, idx) => (
-              <p key={idx}>• {c}</p>
+            {article?.ai?.keywords?.map((item, idx) => (
+              <Box key={idx} sx={{ display: "flex",alignItems: "flex-start",gap: 1.5,mb: 1.5 }}>
+                <Chip label={item.term} color="primary" variant="outlined" size="small"/>
+                <Box sx={{fontSize:14, lineHeight:1.4}}>{item.definition}</Box>
+              </Box>
             ))}
           </Box>
 
@@ -77,37 +93,17 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
           <Box>
             <h3>추천 콘텐츠</h3>
             <Box
-                mt={2}
-                sx={{ display: "flex", gap: 2, justifyContent: "flex-start" }}
-              >
-                <Box
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    background: "#e9ecef",
-                    borderRadius: "12px",
-                  }}
-                />
-                <Box
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    background: "#e9ecef",
-                    borderRadius: "12px",
-                  }}
-                />
-                <Box
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    background: "#e9ecef",
-                    borderRadius: "12px",
-                  }}
-                />
-              </Box>
+              mb={3}
+              sx={{ display: "flex", gap: 2 }}
+            >
+              <Box sx={{ width: 120, height: 120, background: "#e9ecef", borderRadius: "12px" }} />
+              <Box sx={{ width: 120, height: 120, background: "#e9ecef", borderRadius: "12px" }} />
+              <Box sx={{ width: 120, height: 120, background: "#e9ecef", borderRadius: "12px" }} />
             </Box>
           </Box>
+
         </Box>
+      </Box>
     </Modal>
   );
 }
