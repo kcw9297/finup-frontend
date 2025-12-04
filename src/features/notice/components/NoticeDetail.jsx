@@ -1,13 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useNoticeDetail } from "../hooks/useNoticeDetail"
-import { useEffect } from "react"
+import { useNoticeRemove } from "../hooks/useNoticeRemove"
+import { useEffect, useState } from "react"
 import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import thema from "../../../base/design/thema";
+import ConfirmDialog from "./ConfirmDialog"
 import theme from "../../../base/design/thema";
 export default function NoticeDetail() {
 
-  // 공통 날짜 포맷 함수 (Summary와 동일)
+  // [0] 공통 날짜 포맷 함수 (Summary와 동일)
   function formatDate(dateString) {
     if (!dateString) return ""
     const date = new Date(dateString)
@@ -20,11 +21,14 @@ export default function NoticeDetail() {
     })
   }
 
-  // URL 파라미터
+  // [1] 필요한 상수들(URL 파라미터 외)
   const { noticeId } = useParams()
   const navigate = useNavigate()
+  const { removeNotice } = useNoticeRemove()
+  const [openConfirm, setOpenConfirm] = useState(false)
 
-  // 상세 조회 훅
+
+  // [2] 상세 조회 훅
   const {
     detailRq,
     detailRp,
@@ -84,14 +88,35 @@ export default function NoticeDetail() {
 
         </Paper>
         {/* 버튼 정렬 박스 */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4, gap: 1 }}>
           <Button
             variant="contained"
             onClick={() => navigate(`/admin/notices/${noticeId}/edit`)}
           >
             수정하기
           </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setOpenConfirm(true)}
+          >
+            삭제하기
+          </Button>
         </Box>
+
+        {/* 삭제 확인 Dialog */}
+        <ConfirmDialog
+          open={openConfirm}
+          title="공지사항 삭제"
+          content="정말 삭제하시겠습니까?"
+          onClose={() => setOpenConfirm(false)}
+          onConfirm={() => {
+            removeNotice(noticeId).then(() => {
+              setOpenConfirm(false)
+              navigate("/admin/notices")
+            })
+          }}
+        />
       </Box>
     </Box>
   )
