@@ -32,11 +32,11 @@ export default function MypageSidebar() {
             fontSize: "14px",
             padding: "6px 12px",
             borderRadius: "4px",
-            backgroundColor: "#CEDCFF57", // ✔ 요청한 색상 적용
+            backgroundColor: "#CEDCFF57",
             color: "#000",
             fontWeight: 500,
             "&:hover": {
-              backgroundColor: "#CEDCFF57", // hover 시 색 유지
+              backgroundColor: "#CEDCFF57",
             },
           }}
         >

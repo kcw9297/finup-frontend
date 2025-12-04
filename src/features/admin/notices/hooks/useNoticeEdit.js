@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useSnackbar } from "../../../base/provider/SnackbarProvider";
+import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../base/utils/fetchUtils";
+import { api } from "../../../../base/utils/fetchUtils";
 
 export function useNoticeEdit(noticeId, initialData) {
 

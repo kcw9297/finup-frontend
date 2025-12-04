@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-import { api } from "../../../base/utils/fetchUtils";
+import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
+import { api } from "../../../../base/utils/fetchUtils";
 
 export function useNoticeRemove() {
 

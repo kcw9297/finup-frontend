@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useNoticeDetail } from "../hooks/useNoticeDetail"
+import { useNoticeDetail } from "../../../notice/hooks/useNoticeDetail"
 import { useNoticeRemove } from "../hooks/useNoticeRemove"
 import { useEffect, useState } from "react"
 import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ConfirmDialog from "./ConfirmDialog"
-import theme from "../../../base/design/thema";
-export default function NoticeDetail() {
+import theme from "../../../../base/design/thema";
+export default function AdminNoticeDetail() {
 
   // [0] 공통 날짜 포맷 함수 (Summary와 동일)
   function formatDate(dateString) {

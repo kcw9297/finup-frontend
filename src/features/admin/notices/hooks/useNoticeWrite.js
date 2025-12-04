@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useSnackbar } from "../../../base/provider/SnackbarProvider";
+import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../base/utils/fetchUtils";
-
+import { api } from "../../../../base/utils/fetchUtils";
+import { useAuthStore } from "../../../../base/stores/useAuthStore";
 
 const INITIAL_NOTICE_WRITE_RQ = {
   title: "",
   content: "",
 }
 
-export function useNoticeWrite(noticeId) {
+export function useNoticeWrite() {
   // [1] 폼 불러오는 거 필요 데이터 선언
+
+  const adminId = useAuthStore(state => state.loginMember?.memberId)
 
   const [form, setForm] = useState(() => (INITIAL_NOTICE_WRITE_RQ))  // 입력 상태
   const [writeRp, setWriteRp] = useState(null)  // 응답 결과 데이터
@@ -41,10 +43,18 @@ export function useNoticeWrite(noticeId) {
 
   // [4] REST API 요청 함수
   const handleWrite = () => {
+
+    // adminId가 없으면 호출 막기
+    if (!adminId) {
+      showSnackbar("관리자 정보가 없습니다. 다시 로그인해주세요.", "error")
+      return
+    }
+
+
     setWriteRp(null)  // 응답 초기화
 
     api.post(
-      "/notices",
+      `/notices/${adminId}`,
       {
         admin: true,
         onSuccess, onError, onFinally

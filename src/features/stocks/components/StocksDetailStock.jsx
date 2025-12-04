@@ -1,23 +1,15 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import thema from "../../../base/design/thema.js"
 import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
+import { useStockDetail } from "../hooks/useStocksDetailStock.js";
 
 export default function StocksDetailStock(){
-  const basic = [
-    { label: "업종", value: "전기·전자" },
-    { label: "액면가", value: "100원" },
-    { label: "시가총액", value: "648조 9,365억원" },
-    { label: "상장주수", value: "6,735,612,586주" },
-  ];
-  const price = [
-    { label: "52주 최고가", value: "112,400원", color: "#F15764" },
-    { label: "52주 최저가", value: "50,800원", color: "#3282F6" },
-    { label: "250일 최고가", value: "112,400원", color: "#F15764" },
-    { label: "250일 최저가", value: "50,800원", color: "#3282F6" },
-  ];
-
+  const { code } = useParams();
+  const { basic, price, valuation, flow, risk, loading} = useStockDetail(code);
+  
   return (
     // <Box>
     <Box sx={{backgroundColor: thema.palette.background.base}}>
@@ -29,7 +21,7 @@ export default function StocksDetailStock(){
       <Box sx={{px: 3, width: "100%", display: "flex", flexDirection: "column", gap: 5 }}>
         {/* 기본정보 */}
         <Box sx={{display: "flex", flexDirection: "column", gap: 3 }}>
-          {/* 종목명 */}
+          {/* 종목명 헤더*/}
           <Box sx={{
             display: "flex",
             gap: 2,
@@ -98,9 +90,9 @@ export default function StocksDetailStock(){
           
           <Box sx={{ display: "flex", px: 2, gap: 3, overflow: "hidden" }}>
             <InfoCard title="가격" rows={price} />
-            <InfoCard title="가치평가" rows={price} />
-            <InfoCard title="수급·거래" rows={price} />
-            <InfoCard title="리스크·상태" rows={price} />
+            <InfoCard title="가치평가" rows={valuation} />
+            <InfoCard title="수급·거래" rows={flow} />
+            <InfoCard title="리스크·상태" rows={risk} />
           </Box>
         </Box>
 
