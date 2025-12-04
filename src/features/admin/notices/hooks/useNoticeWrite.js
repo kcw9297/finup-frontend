@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useSnackbar } from "../../../base/provider/SnackbarProvider";
+import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../base/utils/fetchUtils";
-import { useAuthStore } from "../../../base/stores/useAuthStore";
+import { api } from "../../../../base/utils/fetchUtils";
+import { useAuthStore } from "../../../../base/stores/useAuthStore";
 
 const INITIAL_NOTICE_WRITE_RQ = {
   title: "",

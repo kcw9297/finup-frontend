@@ -1,19 +1,18 @@
 import { useNavigate } from "react-router-dom"
-import { useNoticeSummary } from "../hooks/useNoticeSummary"
 import { useNoticeRemove } from "../hooks/useNoticeRemove"
 import {
   Box, IconButton, Paper, Table, TableHead,
   TableBody, TableRow, TableCell, Tooltip, Typography
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"
-import PageBar from "../../../base/components/bar/PageBar"
-import AdminSidebar from "../../../base/components/layout/AdminSidebar"
+import PageBar from "../../../../base/components/bar/PageBar"
+import AdminSidebar from "../../../../base/components/layout/AdminSidebar"
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
-import SearchBar from "../../../base/components/bar/SearchBar"
-
-export default function NoticeSummary() {
+import SearchBar from "../../../../base/components/bar/SearchBar"
+import { useNoticeList } from "../../../notice/hooks/useNoticeList";
+export default function AdminNoticeList() {
 
 
   // [0] 날짜 포맷 함수
@@ -37,7 +36,7 @@ export default function NoticeSummary() {
     searchRq, changeSearchRq,
     noticeList, pagination,
     loading, fetchNoticeSummary
-  } = useNoticeSummary()
+  } = useNoticeList()
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [targetId, setTargetId] = useState(null)
