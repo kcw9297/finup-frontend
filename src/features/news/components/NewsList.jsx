@@ -14,14 +14,15 @@ import { useNewsList } from "../hooks/useNewsList"
 import NewsDetailModal from "./NewsModal";
 import { useNewsModal } from "../hooks/useNewsModal";
 
-export default function NewsPage(){
+export default function NewsList(){
   //(1)커스텀 훅
   const { category, setCategory : changeCategory,
     news,
     bottomRef,
     loading,
-    CATEGORY_LIST, } = useNewsList();
-  const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal();
+    CATEGORY_LIST,
+    refreshNews } = useNewsList();
+  const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
 
   //(2)반환활 컴포넌트
   return(

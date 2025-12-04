@@ -13,7 +13,7 @@ export default function StocksListPage() {
   // BaseLayout 내에 실제로 사용할 컴포넌트를 조합
   return (
     <MainLayout>
-      <Box  sx={{backgroundColor: thema.palette.base.light}}>
+      <Box  sx={{backgroundColor: thema.palette.background.light}}>
         <StocksDetailNameCard />
         <StocksDetailTab />
       </Box>
