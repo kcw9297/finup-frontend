@@ -15,9 +15,14 @@ import { useLogout } from '../../hooks/useLogout';
 export default function Header() {
 
   // 메뉴 목록
-  const manuItems = ["개념+", "뉴스+", "종목+", "단어장+"];
+  const manuItems = [
+    { label: "개념+", path: "/" },
+    { label: "뉴스+", path: "/news/list" },
+    { label: "종목+", path: "/stocks" },
+    { label: "단어장+", path: "/" },
+  ]
   const { isAuthenticated, loading, loginMember } = useAuthStore()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const { handleLogout } = useLogout()
 
   return (
@@ -59,9 +64,11 @@ export default function Header() {
             
             {/* 메뉴 */}
             <Box sx={{display:'flex', gap:'30px'}}>
-              {manuItems.map((menu) => (
+              {manuItems.map((item) => (
                 <Typography
-                  key={menu}
+                  key={item.label}
+                  component={Link}
+                  to={item.path}
                   sx={{
                     cursor: "pointer",
                     fontSize: 16,
@@ -70,7 +77,7 @@ export default function Header() {
                     transition: "0.2s",
                     "&:hover": {color: "text.main"}
                   }}>
-                  {menu}
+                  {item.label}
                 </Typography>
               ))}
             </Box>

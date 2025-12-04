@@ -59,6 +59,12 @@ const theme = createTheme({
       disabled: '#bdbdbd',
       disabledBackground: '#e0e0e0',
       active: '#003fbf',
+    },
+
+    // 주가, 환율 등의 상승·하락 표시
+    stock: {
+      rise: '#F04452',
+      fall: '#3182F6'
     }
   },
 
@@ -94,6 +100,8 @@ const theme = createTheme({
           //borderStyle: 'solid', // 테두리 스타일
           //borderColor: theme.palette.line.main, // 테두리 색상
           boxShadow: 'none',  // 그림자 제거
+          margin: 0,
+          padding: 0
         }),
         
       },
@@ -150,7 +158,7 @@ const theme = createTheme({
         root: ({ theme }) => ({
 
           color: theme.palette.text.main, // 버튼 색
-          textAlign: 'center',
+          alignItems: 'center',
         }),
       },
     },
@@ -161,11 +169,24 @@ const theme = createTheme({
         p: {
           margin: 0,
           padding: 0,
-          textAlign: 'center',
+          alignItems: 'center',
         }
       }
     },
 
+    // Link
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          color: "inherit",
+          "&:hover": {
+            textDecoration: "none",
+            color: "inherit",
+          },
+        }
+      }
+    },
 
     // Button
     MuiButton: {
