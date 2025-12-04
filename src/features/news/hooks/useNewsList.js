@@ -23,6 +23,10 @@ export function useNewsList(){
     setPage(1);
     setNews([]); //탭 바뀌면 초기화
   }
+  const refreshNews = () => {
+    setPage(1);
+    setNews([]);
+  }
 
 // [3] 성공/실패 콜백 함수 정의
   const onSuccess = (items) => {
@@ -80,6 +84,7 @@ export function useNewsList(){
     loading,
     CATEGORY_LIST,
     modalOpen, setModalOpen,
-    selectedNews, setSelectedNews
+    selectedNews, setSelectedNews,
+    refreshNews
   }
 }

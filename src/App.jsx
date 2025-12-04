@@ -12,7 +12,6 @@ import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
 import NoticeSummaryPage from './pages/notice/NoticeSummaryPage'
 import NoticeDetailPage from './pages/notice/NoticeDetailPage'
 import NewsPage from './pages/news/NewsPage'
-import NewsModalPage from './pages/news/NewsModalPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
@@ -44,7 +43,6 @@ const nastedRoutes = [
     path: '/news/*', // url : 뉴스
     children: [
       { path: 'list', element: <NewsPage /> }, // 모두 공개
-      { path: 'detail', element: <NewsModalPage /> }, // 회원공개로 전환예정
     ]
   },
 
