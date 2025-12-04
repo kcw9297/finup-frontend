@@ -14,7 +14,7 @@ import { useNewsList } from "../hooks/useNewsList"
 import NewsDetailModal from "./NewsModal";
 import { useNewsModal } from "../hooks/useNewsModal";
 
-export default function NewsPage(){
+export default function NewsList(){
   //(1)커스텀 훅
   const { category, setCategory : changeCategory,
     news,

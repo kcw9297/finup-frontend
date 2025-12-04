@@ -1,7 +1,10 @@
 import { Modal, Box, IconButton, Chip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
+import moment from 'moment'
 export default function NewsDetailModal({ open, onClose, article }) {
+  
+  const formattedDate = moment(article.publishedAt).format('YYYY-MM-DD HH:mm')
+  
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -37,7 +40,7 @@ export default function NewsDetailModal({ open, onClose, article }) {
           <Box sx={{ mb: 3 }}>
             <h2 style={{ margin: 0 }}>{article?.title}</h2>
             <span style={{ color: "#777", fontSize: "14px" }}>
-              {article?.publishedAt} · {article?.publisher}
+              {formattedDate} · {article?.publisher}
             </span>
           </Box>
 
