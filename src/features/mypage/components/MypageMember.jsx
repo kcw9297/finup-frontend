@@ -1,4 +1,3 @@
-// src/features/mypage/components/MypageMember.jsx
 import {
   Avatar,
   Box,
@@ -24,7 +23,7 @@ const COLORS = {
 // 공통 TextField 스타일
 const textFieldSx = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: 0.5, // 살짝만 둥글게
+    borderRadius: 0.5,
     backgroundColor: COLORS.fieldBg,
     "& fieldset": {
       borderColor: COLORS.fieldBorder,
@@ -34,7 +33,7 @@ const textFieldSx = {
       borderColor: COLORS.fieldBorder,
     },
     "&.Mui-focused fieldset": {
-      borderColor: COLORS.fieldBorder, // 포커스돼도 파란 두꺼운 테두리 X
+      borderColor: COLORS.fieldBorder,
     },
   },
   "& .MuiOutlinedInput-input": {
@@ -51,12 +50,12 @@ export default function MypageMember() {
         borderRadius: 2,
         p: 4,
         display: "flex",
-        flexDirection: "column",   // ✅ 세로로 쌓고
+        flexDirection: "column",
         alignItems: "stretch",
         gap: 3,
       }}
     >
-      {/* ✅ 카드 왼쪽 상단 타이틀 */}
+      {/*  카드 왼쪽 상단 타이틀 */}
       <Typography
         variant="h6"
         sx={{
@@ -67,7 +66,7 @@ export default function MypageMember() {
         회원 정보 수정
       </Typography>
 
-      {/* ✅ 타이틀 아래에서 프로필 + 폼을 가로로 배치 */}
+      {/*  타이틀 아래에서 프로필 + 폼을 가로로 배치 */}
       <Box
         sx={{
           display: "flex",
@@ -82,7 +81,7 @@ export default function MypageMember() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            mt: 1.5,  // ✅ 타이틀 기준으로 프로필을 조금 아래로 내리기
+            mt: 1.5,
           }}
         >
           <Box
@@ -95,7 +94,7 @@ export default function MypageMember() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              bgcolor: "#E5E7EB", // 연한 회색 배경
+              bgcolor: "#E5E7EB",
             }}
           >
             <Avatar
@@ -126,7 +125,6 @@ export default function MypageMember() {
 
         {/* 오른쪽 : 회원 정보 폼 */}
         <Box sx={{ flex: 1, maxWidth: 520 }}>
-          {/* ⛔️ 여기 있던 "회원 정보 수정" 타이틀은 위로 올렸으니 삭제됨 */}
 
           <Stack spacing={2.5}>
             {/* 이름 */}
