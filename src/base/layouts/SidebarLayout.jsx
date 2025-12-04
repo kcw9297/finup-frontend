@@ -28,7 +28,7 @@ export default function SidebarLayout({ sidebar, children }) {
           display: "flex",
           alignItems: "flex-start",
           gap: 4,
-          pt: 4,   // 여백 줄임
+          pt: 4,
           pb: 4,
         }}
       >
