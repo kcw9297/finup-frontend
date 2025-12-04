@@ -2,26 +2,43 @@
 import {
   Avatar,
   Box,
+  Button,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 
-// 🔵 파란색 테두리 완전 제거 + 얇은 라인 유지
-const thinInputSx = {
+const COLORS = {
+  pageBg: "#F5F7FF",        // 오른쪽 전체 영역 연한 파랑 배경
+  fieldBorder: "#CEDCFF",   // 입력칸 테두리
+  fieldBg: "#FFFFFF",       // 입력칸 내부 배경
+  label: "#6B7280",         // 라벨(이름, 이메일 등) 글자색
+  title: "#111827",         // "회원 정보 수정" 제목
+  desc: "#6B7280",          // 프로필 설명
+  primaryBtnBg: "#2563EB",  // 수정하기 버튼 배경
+  primaryBtnText: "#FFFFFF",
+  secondaryBtnText: "#2563EB",
+  secondaryBtnBorder: "#CEDCFF",
+};
+
+// 공통 TextField 스타일
+const textFieldSx = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: 1, // 각지게 (4px)
+    borderRadius: 0.5, // 살짝만 둥글게
+    backgroundColor: COLORS.fieldBg,
     "& fieldset": {
-      borderColor: "divider",  // 기본 테두리
+      borderColor: COLORS.fieldBorder,
       borderWidth: "1px",
     },
     "&:hover fieldset": {
-      borderColor: "divider",  // hover 시 테두리 유지
+      borderColor: COLORS.fieldBorder,
     },
     "&.Mui-focused fieldset": {
-      borderColor: "divider !important", // 포커스 파랑 제거
-      borderWidth: "1px",
+      borderColor: COLORS.fieldBorder, // 포커스돼도 파란 두꺼운 테두리 X
     },
+  },
+  "& .MuiOutlinedInput-input": {
+    fontSize: 14,
   },
 };
 
@@ -29,154 +46,250 @@ export default function MypageMember() {
   return (
     <Box
       sx={{
-        maxWidth: 960,
-        mt: 6,
-        ml: 10,      // 사이드바 여백 분리
-        mr: 4,
-        border: 1,
-        borderColor: "divider",   // 카드 테두리는 살림
-        borderRadius: 1,
+        width: "100%",
+        bgcolor: COLORS.pageBg,
+        borderRadius: 2,
         p: 4,
         display: "flex",
-        gap: 6,
-        alignItems: "flex-start",
-        bgcolor: "background.paper",
+        flexDirection: "column",   // ✅ 세로로 쌓고
+        alignItems: "stretch",
+        gap: 3,
       }}
     >
-      {/* ------------------- 왼쪽 프로필 ------------------- */}
-      <Box
+      {/* ✅ 카드 왼쪽 상단 타이틀 */}
+      <Typography
+        variant="h6"
         sx={{
-          width: 260,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          fontWeight: 600,
+          color: COLORS.title,
         }}
       >
+        회원 정보 수정
+      </Typography>
+
+      {/* ✅ 타이틀 아래에서 프로필 + 폼을 가로로 배치 */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: 6,
+          alignItems: "flex-start",
+        }}
+      >
+        {/* 왼쪽 : 프로필 영역 */}
         <Box
           sx={{
-            width: 200,
-            height: 200,
-            borderRadius: "50%",
-            overflow: "hidden",
-            mb: 2.5,
+            width: 260,
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            border: 1,
-            borderColor: "divider",
+            mt: 1.5,  // ✅ 타이틀 기준으로 프로필을 조금 아래로 내리기
           }}
         >
-          <Avatar
+          <Box
             sx={{
-              width: "100%",
-              height: "100%",
-              fontSize: 40,
+              width: 220,
+              height: 220,
+              borderRadius: "50%",
+              overflow: "hidden",
+              mb: 2.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "#E5E7EB", // 연한 회색 배경
             }}
           >
-            프로필
-          </Avatar>
-        </Box>
-
-        <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
-          프로필 이미지
-        </Typography>
-        <Typography variant="body2" align="center" sx={{ mb: 2 }}>
-          클릭 또는 이미지 드래그
-          <br />
-          (1:1 비율)
-        </Typography>
-      </Box>
-
-      {/* ------------------- 오른쪽 입력 폼 ------------------- */}
-      <Box sx={{ flex: 1 }}>
-        <Typography variant="h6" sx={{ mb: 3 }}>
-          회원 정보 수정
-        </Typography>
-
-        <Stack spacing={2.5}>
-          {/* 이름 */}
-          <Box>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5 }}>
-              이름
-            </Typography>
-            <TextField
-              fullWidth
-              size="small"
-              variant="outlined"
-              defaultValue="금영리"
-              sx={thinInputSx}
+            <Avatar
+              src="/assets/profile-sample.png"
+              sx={{
+                width: "100%",
+                height: "100%",
+              }}
             />
           </Box>
 
-          {/* 이메일 */}
-          <Box>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5 }}>
-              이메일
-            </Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 600, mb: 0.5 }}
+          >
+            프로필 이미지
+          </Typography>
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ color: COLORS.desc }}
+          >
+            클릭 또는 이미지 드래그
+            <br />
+            (1:1 비율)
+          </Typography>
+        </Box>
 
-            <Stack direction="row" spacing={1}>
+        {/* 오른쪽 : 회원 정보 폼 */}
+        <Box sx={{ flex: 1, maxWidth: 520 }}>
+          {/* ⛔️ 여기 있던 "회원 정보 수정" 타이틀은 위로 올렸으니 삭제됨 */}
+
+          <Stack spacing={2.5}>
+            {/* 이름 */}
+            <Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mb: 0.5,
+                  color: COLORS.label,
+                }}
+              >
+                이름
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                defaultValue="금영리"
+                sx={textFieldSx}
+              />
+            </Box>
+
+            {/* 이메일 */}
+            <Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mb: 0.5,
+                  color: COLORS.label,
+                }}
+              >
+                이메일
+              </Typography>
               <TextField
                 fullWidth
                 size="small"
                 variant="outlined"
                 defaultValue="godguemyeong@naver.com"
-                sx={thinInputSx}
+                sx={textFieldSx}
               />
-            </Stack>
-          </Box>
+            </Box>
 
-          {/* 아이디 */}
-          <Box>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5 }}>
-              아이디
-            </Typography>
+            {/* 아이디 (읽기 전용) */}
+            <Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mb: 0.5,
+                  color: COLORS.label,
+                }}
+              >
+                아이디
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                defaultValue="geumyeonglee"
+                InputProps={{ readOnly: true }}
+                sx={textFieldSx}
+              />
+            </Box>
 
-            <TextField
-              fullWidth
-              size="small"
-              variant="outlined"
-              defaultValue="geumyeonglee"
-              InputProps={{ readOnly: true }}
-              sx={thinInputSx}
-            />
-          </Box>
+            {/* 새 비밀번호 */}
+            <Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mb: 0.5,
+                  color: COLORS.label,
+                }}
+              >
+                새 비밀번호
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                type="password"
+                placeholder="새 비밀번호를 입력해주세요"
+                sx={textFieldSx}
+              />
+              <Typography
+                variant="caption"
+                sx={{
+                  mt: 0.5,
+                  display: "block",
+                  color: COLORS.label,
+                }}
+              >
+                영문, 숫자 포함 8~20자
+              </Typography>
+            </Box>
 
-          {/* 새 비번 */}
-          <Box>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5 }}>
-              새 비밀번호
-            </Typography>
+            {/* 비밀번호 확인 */}
+            <Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mb: 0.5,
+                  color: COLORS.label,
+                }}
+              >
+                비밀번호 확인
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                type="password"
+                placeholder="비밀번호를 다시 입력해주세요"
+                sx={textFieldSx}
+              />
+            </Box>
 
-            <TextField
-              fullWidth
-              size="small"
-              variant="outlined"
-              type="password"
-              placeholder="새 비밀번호를 입력해주세요"
-              sx={thinInputSx}
-            />
+            {/* 하단 버튼 */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 1,
+                mt: 1,
+              }}
+            >
+              <Button
+                variant="outlined"
+                sx={{
+                  minWidth: 88,
+                  fontSize: 14,
+                  borderColor: COLORS.secondaryBtnBorder,
+                  color: COLORS.secondaryBtnText,
+                  "&:hover": {
+                    borderColor: COLORS.secondaryBtnBorder,
+                    backgroundColor: "rgba(37, 99, 235, 0.04)",
+                  },
+                }}
+              >
+                취소
+              </Button>
 
-            <Typography variant="caption" sx={{ mt: 0.5, display: "block" }}>
-              영문, 숫자 포함 8~20자
-            </Typography>
-          </Box>
-
-          {/* 비번 확인 */}
-          <Box>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5 }}>
-              비밀번호 확인
-            </Typography>
-
-            <TextField
-              fullWidth
-              size="small"
-              variant="outlined"
-              type="password"
-              placeholder="비밀번호를 다시 입력해주세요"
-              sx={thinInputSx}
-            />
-          </Box>
-        </Stack>
+              <Button
+                variant="contained"
+                sx={{
+                  minWidth: 88,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  bgcolor: COLORS.primaryBtnBg,
+                  color: COLORS.primaryBtnText,
+                  "&:hover": {
+                    bgcolor: "#1D4ED8",
+                  },
+                }}
+              >
+                수정하기
+              </Button>
+            </Box>
+          </Stack>
+        </Box>
       </Box>
     </Box>
   );
