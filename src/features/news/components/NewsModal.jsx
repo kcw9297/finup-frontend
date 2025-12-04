@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import moment from 'moment'
 export default function NewsDetailModal({ open, onClose, article }) {
   
+  if (!article) return null;
   const formattedDate = moment(article.publishedAt).format('YYYY-MM-DD HH:mm')
   
   return (

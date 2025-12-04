@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react"
 import { api } from "../../../base/utils/fetchUtils";
+import { navigate } from "../../../base/config/globalHookConfig";
 
-export function useNewsModal(){
+export function useNewsModal(onCloseCallback){
   const [open, setOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState(null);
   const [article, setArticle] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+  const [news, setNews] = useState([]);
+
   const openModal = (basicInfo) => {
+    //  if (!sessionStorage.getItem("jwt")) {
+    //   alert("로그인이 필요한 기능입니다.");
+    //   navigate("/login");
+    //   return;
+    // }
     setArticle(basicInfo)
     setSelectedUrl(basicInfo.link)
     setOpen(true)
@@ -17,7 +24,9 @@ export function useNewsModal(){
     setOpen(false)
     setArticle(null)
     setSelectedUrl(null)
+    if(onCloseCallback) onCloseCallback()
   }
+  
   const onSuccess = (items) => {
     setArticle(prev => ({
       ...prev, 
@@ -37,6 +46,12 @@ export function useNewsModal(){
         })
         onSuccess(res.data)
       }catch (e) {
+        // if(e.response?.status === 403) {
+        //   alert("로그인이 필요합니다.");
+        //   closeModal();
+        //   navigate("/login");
+        //   return;
+        // }
         console.error("AI 분석 실패", e);
       }finally{
         setLoading(false)

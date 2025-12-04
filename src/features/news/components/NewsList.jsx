@@ -20,8 +20,9 @@ export default function NewsList(){
     news,
     bottomRef,
     loading,
-    CATEGORY_LIST, } = useNewsList();
-  const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal();
+    CATEGORY_LIST,
+    refreshNews } = useNewsList();
+  const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
 
   //(2)반환활 컴포넌트
   return(
