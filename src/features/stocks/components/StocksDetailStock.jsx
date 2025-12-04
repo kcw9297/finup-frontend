@@ -21,7 +21,7 @@ export default function StocksDetailStock(){
       <Box sx={{px: 3, width: "100%", display: "flex", flexDirection: "column", gap: 5 }}>
         {/* 기본정보 */}
         <Box sx={{display: "flex", flexDirection: "column", gap: 3 }}>
-          {/* 종목명 */}
+          {/* 종목명 헤더*/}
           <Box sx={{
             display: "flex",
             gap: 2,
