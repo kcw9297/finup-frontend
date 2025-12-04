@@ -9,14 +9,14 @@ import { useEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
-import NoticeSummaryPage from './pages/notice/NoticeSummaryPage'
-import NoticeDetailPage from './pages/notice/NoticeDetailPage'
+import NoticeListPage from './pages/admin/notices/NoticeListPage'
+import NoticeDetailPage from './pages/admin/notices/NoticeDetailPage'
+import NoticeEditPage from './pages/admin/notices/NoticeEditPage'
+import NoticeWritePage from './pages/admin/notices/NoticeWritePage'
 import NewsPage from './pages/news/NewsPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
-import NoticeEditPage from './pages/notice/NoticeEditPage'
-import NoticeWritePage from './pages/notice/NoticeWritePage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 
 // 자식이 없는 단순 라우팅 리스트
@@ -47,15 +47,22 @@ const nastedRoutes = [
   },
 
   {
-    path: '/admin/*', // url : 관리자
+    path: '/admin/notices/*', // url : 관리자 공지사항
     children: [
-      { path: 'notices', element: <ProtectedRoute><NoticeSummaryPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
-      { path: 'notices/write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> }
+      { path: '', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
+      { path: ':noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
+      { path: ':noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
+      { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
     ]
   },
-
+  /*
+  {
+    path: '/admin/member/*',
+    children: [
+      { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+    ]
+  },
+  */
   {
     path: '/stocks/*', //url : 종목 +
     children: [
@@ -97,19 +104,23 @@ export default function App() {
       <Routes>
 
         {/* 단순 라우트 */}
-        {simpleRoutes.map(({ path, element, roles }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
+        {
+          simpleRoutes.map(({ path, element, roles }) => (
+            <Route key={path} path={path} element={element} />
+          ))
+        }
 
         {/* 자식이 있는 라우트 */}
-        {nastedRoutes.map(({ path, layout, roles, children }) =>
-          <Route key={path} path={path} element={layout} >
-            {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
-          </Route>
-        )}
+        {
+          nastedRoutes.map(({ path, layout, roles, children }) =>
+            <Route key={path} path={path} element={layout} >
+              {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
+            </Route>
+          )
+        }
 
 
-      </Routes>
+      </Routes >
     </>
   )
 }

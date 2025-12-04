@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useNoticeDetail } from "../hooks/useNoticeDetail";
+import { useNoticeDetail } from "../../../notice/hooks/useNoticeDetail";
 import { useEffect } from "react";
 import { IconButton, TextField, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNoticeEdit } from "../hooks/useNoticeEdit";
 
-export default function NoticeEdit() {
+export default function AdminNoticeEdit() {
   const { noticeId } = useParams()
   const navigate = useNavigate()
 

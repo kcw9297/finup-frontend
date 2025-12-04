@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useNoticeWrite } from "../hooks/useNoticeWrite";
 import { IconButton, TextField, Button, Typography, Box, Paper, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-export default function NoticeWrite() {
+export default function AdminNoticeWrite() {
 
   // [1] 폼 커스텀 훅
   const {

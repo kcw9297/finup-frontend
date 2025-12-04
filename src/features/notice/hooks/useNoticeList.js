@@ -8,7 +8,7 @@ const INITIAL_SEARCH_RQ = {
   size: 10
 }
 
-export function useNoticeSummary() {
+export function useNoticeList() {
   // [1] 필요 데이터 선언
   const [searchRq, setSearchRq] = useState(INITIAL_SEARCH_RQ)  // 검색 리퀘스트 데이터
   const [noticeList, setNoticeList] = useState([])  // 공지사항 리스트 요청 결과 데이터
