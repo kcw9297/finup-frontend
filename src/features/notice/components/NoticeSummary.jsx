@@ -1,17 +1,22 @@
-import { useNavigate } from "react-router-dom";
-import { useNoticeSummary } from "../hooks/useNoticeSummary";
+import { useNavigate } from "react-router-dom"
+import { useNoticeSummary } from "../hooks/useNoticeSummary"
+import { useNoticeRemove } from "../hooks/useNoticeRemove"
 import {
   Box, IconButton, Paper, Table, TableHead,
   TableBody, TableRow, TableCell, Tooltip, Typography
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import PageBar from "../../../base/components/bar/PageBar";
-import AdminSidebar from "../../../base/components/layout/AdminSidebar";
-import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from "@mui/icons-material/Add"
+import PageBar from "../../../base/components/bar/PageBar"
+import AdminSidebar from "../../../base/components/layout/AdminSidebar"
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useState } from "react";
+import ConfirmDialog from "./ConfirmDialog";
+import SearchBar from "../../../base/components/bar/SearchBar"
 
 export default function NoticeSummary() {
 
 
+  // [0] 날짜 포맷 함수
   function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -27,12 +32,17 @@ export default function NoticeSummary() {
     });
   }
 
-  // [1] 목록 커스텀 훅
+  // [1] 목록, 삭제 커스텀 훅
   const {
     searchRq, changeSearchRq,
     noticeList, pagination,
-    loading,
+    loading, fetchNoticeSummary
   } = useNoticeSummary()
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [targetId, setTargetId] = useState(null)
+
+  const { removeNotice } = useNoticeRemove()
 
   // [2] 페이징 계산
   const totalPages = (pagination && pagination.dataCount)
@@ -65,7 +75,17 @@ export default function NoticeSummary() {
             </IconButton>
           </Tooltip>
         </Box>
-
+        { /* 검색 바 */}
+        <SearchBar
+          searchRq={searchRq}
+          onChange={(rq) => changeSearchRq(rq)}
+          onSubmit={(e) => {
+            // 이벤트 동작 방지
+            e.preventDefault()
+            // 검색 실행
+            fetchNoticeSummary()
+          }}
+        />
         {/* 공지사항 테이블 */}
         <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "800px", mx: "auto" }}>
           <Table sx={{ tableLayout: "fixed" }}>
@@ -101,11 +121,33 @@ export default function NoticeSummary() {
                     {n.content}
                   </TableCell>
                   <TableCell sx={{ width: 140 }}>{formatDate(n.cdate)}</TableCell>
-                  <TableCell sx={{ width: 70 }}><DeleteIcon></DeleteIcon></TableCell>
+                  <TableCell sx={{ width: 70 }}><IconButton onClick={(e) => {
+                    // 상세 페이지 이동 막기
+                    e.stopPropagation()
+                    setTargetId(n.noticeId)
+                    setDialogOpen(true)
+                  }}
+                  >
+                    <DeleteIcon />
+                  </IconButton></TableCell>
                 </TableRow>
               ))}
 
             </TableBody>
+
+            {/* 삭제 확인 Dialog*/}
+            <ConfirmDialog
+              open={dialogOpen}
+              title="공지사항 삭제"
+              content="정말로 이 공지사항을 삭제하시겠습니까?"
+              onClose={() => setDialogOpen(false)}
+              onConfirm={() => {
+                removeNotice(targetId).then(() => {
+                  fetchNoticeSummary()
+                  setDialogOpen(false)
+                })
+              }}
+            />
           </Table>
         </Paper>
         {/* 페이지네이션 */}

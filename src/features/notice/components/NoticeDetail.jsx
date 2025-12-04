@@ -1,12 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useNoticeDetail } from "../hooks/useNoticeDetail"
-import { useEffect } from "react"
+import { useNoticeRemove } from "../hooks/useNoticeRemove"
+import { useEffect, useState } from "react"
 import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ConfirmDialog from "./ConfirmDialog"
 import theme from "../../../base/design/thema";
 export default function NoticeDetail() {
 
-  // 공통 날짜 포맷 함수 (Summary와 동일)
+  // [0] 공통 날짜 포맷 함수 (Summary와 동일)
   function formatDate(dateString) {
     if (!dateString) return ""
     const date = new Date(dateString)
@@ -19,11 +21,14 @@ export default function NoticeDetail() {
     })
   }
 
-  // URL 파라미터
+  // [1] 필요한 상수들(URL 파라미터 외)
   const { noticeId } = useParams()
   const navigate = useNavigate()
+  const { removeNotice } = useNoticeRemove()
+  const [openConfirm, setOpenConfirm] = useState(false)
 
-  // 상세 조회 훅
+
+  // [2] 상세 조회 훅
   const {
     detailRq,
     detailRp,
@@ -92,11 +97,26 @@ export default function NoticeDetail() {
           </Button>
           <Button
             variant="contained"
-            onClick={() => navigate(`/admin/notices/${noticeId}/remove`)}
+            color="error"
+            onClick={() => setOpenConfirm(true)}
           >
             삭제하기
           </Button>
         </Box>
+
+        {/* 삭제 확인 Dialog */}
+        <ConfirmDialog
+          open={openConfirm}
+          title="공지사항 삭제"
+          content="정말 삭제하시겠습니까?"
+          onClose={() => setOpenConfirm(false)}
+          onConfirm={() => {
+            removeNotice(noticeId).then(() => {
+              setOpenConfirm(false)
+              navigate("/admin/notices")
+            })
+          }}
+        />
       </Box>
     </Box>
   )
