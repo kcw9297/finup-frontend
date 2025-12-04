@@ -3,12 +3,12 @@
  */
 
 import MainLayout from "../../base/layouts/MainLayout";
-import NoticeList from "../../features/notice/components/NoticeList";
+import NoticeSummary from "../../features/notice/components/NoticeSummary";
 
 export default function NoticeListPage() {
   return (
     <MainLayout>
-      <NoticeList />
+      <NoticeSummary />
     </MainLayout>
   );
 }
