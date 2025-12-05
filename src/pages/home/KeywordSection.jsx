@@ -10,7 +10,7 @@ export default function KeywordSection({
   setShowNegative,
 }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: "10px" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 5}}>
       {/* 체크박스 */}
       <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
         <FormControlLabel
