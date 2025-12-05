@@ -4,6 +4,7 @@ import axios from "axios";
 export function useStockDetail(code) {
 
   // [1] 필요 데이터 선언 
+  const [headInfo, setHeadInfo] = useState([]);
   const [basic, setBasic] = useState([]);
   const [price, setPrice] = useState([]);
   const [valuation, setValuation] = useState([]);
@@ -20,6 +21,14 @@ export function useStockDetail(code) {
     const detail = res.data.data;
     
     /* 기본 정보 */
+    // 종목명 헤더
+    setHeadInfo([
+      {label: "종목명", value: detail.htsKorIsnm },
+      {label: "주식 단축 종목코드", value: detail.stckShrnIscd },
+      //{label: "주식 현재가", value: detail.stckPrpr },
+      {label: "대표 시장 한글명", value: detail.rprsMrktKorName }    
+    ]);
+
     // 정보 카드
     setBasic([
       { label: "업종", value: detail.bstpKorIsnm },
@@ -70,5 +79,5 @@ export function useStockDetail(code) {
   }, [code]);
 
   // [5] 반환
-  return { basic, price, valuation, flow, risk, loading };
+  return { headInfo, basic, price, valuation, flow, risk, loading };
 }

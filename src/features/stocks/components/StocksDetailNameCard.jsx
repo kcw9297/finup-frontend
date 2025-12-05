@@ -1,6 +1,11 @@
 import { Card, CardContent, Box, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { useStockDetail } from "../hooks/useStocksDetailStock.js";
 
 export default function StocksDetailNameCard() {
+  const { code } = useParams();
+  const { headInfo, basic, price, valuation, flow, risk} = useStockDetail(code);
+
   return (
     <Card
       sx={{
