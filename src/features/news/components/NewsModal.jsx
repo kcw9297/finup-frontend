@@ -1,4 +1,4 @@
-import { Modal, Box, IconButton, Chip, Skeleton } from "@mui/material";
+import { Modal, Box, IconButton, Chip, Skeleton, keyframes, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from 'moment'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
@@ -8,7 +8,11 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
   if (!article) return null;
 
   const formattedDate = moment(article.publishedAt).format('YYYY-MM-DD HH:mm')
-  
+  const sparkle = keyframes`
+    0% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 0.4; transform: scale(1); }
+  `;
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -58,13 +62,20 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
           </Box>
           {loading && (
             <Box sx={{ 
-              fontSize: 14, 
-              color: "#666", 
-              mb: 2,
-              ml: 1
+              display: "flex", 
+              alignItems: "center",
+              gap: 1,
+              mb: 1
             }}>
-              <AutoAwesomeIcon fontSize="small" sx={{ mr: 0.5 }} />
-              AI 분석 중입니다...
+              <AutoAwesomeIcon 
+                sx={{ 
+                  color: "#3B5BDB",
+                  animation: `${sparkle} 1.5s ease-in-out infinite`,
+                }} 
+              />
+              <Typography sx={{ fontSize: 14, color: "#3B5BDB", fontWeight: 600 }}>
+                AI 분석 중…
+              </Typography>
             </Box>
           )}
           {/* 요약 */}
