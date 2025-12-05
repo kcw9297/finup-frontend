@@ -6,6 +6,12 @@ import { IconButton, Button, Typography, Box, Paper, Divider } from "@mui/materi
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ConfirmDialog from "./ConfirmDialog"
 import theme from "../../../../base/design/thema";
+
+/**
+ * 공지사항 게시글 상세 정보
+ * @author khj
+ * @since 2025-12-03
+ */
 export default function AdminNoticeDetail() {
 
   // [0] 공통 날짜 포맷 함수 (Summary와 동일)

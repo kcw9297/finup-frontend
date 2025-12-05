@@ -2,6 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { api } from "../../../../base/utils/fetchUtils";
 
+/**
+ * 공지사항 삭제 훅
+ * @author khj
+ * @since 2025-12-03
+ */
+
 export function useNoticeRemove() {
 
   // [1] 필요한 변수 선언

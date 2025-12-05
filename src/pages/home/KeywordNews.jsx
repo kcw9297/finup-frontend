@@ -1,19 +1,36 @@
 import { Box, Paper, Typography } from "@mui/material";
 import { useState, useMemo } from "react";
 import KeywordSection from "./KeywordSection";
+import KeywordContent from "./KeywordContent";
+
+// 워드클라우드는 전역테마 적용 불가
 
 export default function KeywordNews() {
+  // 뉴스 리스트 가짜 데이터
+  const fakeNews = [
+    {title: "코레일유통, 철도역 추석 맞아 각종 이벤트 진행",
+      date: "2025.10.01",
+      logo: "/press/munhwa.png"},
+    {title: "K메모리 글로벌 위상 입증… 아·태 AI 허브 도약 기대",
+      date: "2025.10.01",
+      logo: "/press/seoul.png"},
+    {title: "韓 수출 호조세 지속… 반도체 시장 회복 조짐",
+      date: "2025.10.02",
+      logo: "/press/hankyung.png"},
+    {title: "정부, 내년도 경제정책방향 발표 ‘성장·복지 강화’",
+      date: "2025.10.03",
+      logo: "/press/joongang.png"},
+    {title: "환율 변동성 확대… 금융시장 불안감 고조",
+      date: "2025.10.03",
+      logo: "/press/ytn.png"},
+      {title: "환율 변동성 확대… 금융시장 불안감 고조",
+      date: "2025.10.03",
+      logo: "/press/ytn.png"},
+  ]
+
   // 긍/부정 필터
   const [showPositive, setShowPositive] = useState(true);
   const [showNegative, setShowNegative] = useState(true);
-
-  // Fake 기사 데이터
-  const fakeArticles = [
-    { press: "조선일보", title: "코레일유통, 철도역 추석 맞아 이벤트 펼쳐", date: "2025.10.01" },
-    { press: "세계일보", title: "KD메모리 글로벌 위상 입증… AI 허브 기대감", date: "2025.10.01" },
-    { press: "KBS", title: "‘D-30’ APEC 준비 박차", date: "2025.10.01" },
-    { press: "한국경제", title: "“안보 핑계 대는 악질…” 중국, 미국에 맹비난", date: "2025.10.01" },
-  ];
 
   // 원본 데이터 (뉴스 갱신 시에만 변경)
   const [originalKeywords] = useState(() => {
@@ -45,14 +62,13 @@ export default function KeywordNews() {
     });
   }, [originalKeywords, showPositive, showNegative]); // 필터 변경 시에만 재계산
 
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
       {/* 제목 */}
       <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
+        sx={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'20px',
           "& .MuiTypography-root": { fontSize: 22, fontWeight: 600 }
         }}
       >
@@ -60,7 +76,7 @@ export default function KeywordNews() {
           <Typography sx={{ color: 'base.main', backgroundColor: 'base.main' }}>&nbsp;</Typography>
           <Typography>핵심 키워드</Typography>
         </Paper>
-        <Paper sx={{ display: 'flex', gap: '10px', width: 690 }}>
+        <Paper sx={{ display: 'flex', gap: '10px'}}>
           <Typography sx={{ color: 'base.main', backgroundColor: 'base.main' }}>&nbsp;</Typography>
           <Typography>기사 원문</Typography>
         </Paper>
@@ -80,7 +96,9 @@ export default function KeywordNews() {
         />
 
         {/* 기사 본문 */}
-        <Box></Box>
+        <Box sx={{ width: "100%" }}>
+          <KeywordContent list={fakeNews} />
+        </Box>
       </Box>
 
     </Box>

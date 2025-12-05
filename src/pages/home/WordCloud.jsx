@@ -7,39 +7,57 @@ import cloud from "d3-cloud";
 // displayWords: 필터 적용된 데이터 (색상·표시용, 배치에는 영향 없음)
 
 export default function WordCloud({ originalWords, displayWords }) {
+  const containerRef = useRef(null);
   const svgRef = useRef(null);
+
+  // 부모 크기 상태
+  const [size, setSize] = useState({ width: 300, height: 200 });
+
   const [layoutWords, setLayoutWords] = useState([]);
 
-  // value 기반 글자 크기 스케일
+  // 부모 크기 자동 감지
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const rect = entries[0].contentRect;
+      setSize({ width: rect.width, height: rect.height });
+    });
+
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  // 글자 크기 스케일
   const fontScale = d3
     .scaleLinear()
     .domain([
       d3.min(originalWords, d => d.value),
       d3.max(originalWords, d => d.value)
     ])
-    .range([16, 40]);
+    .range([14, 36]);
 
-  // originalWords 변경 시에만 새 배치 계산
+  // originalWords가 바뀌거나 size가 바뀌면 레이아웃 다시 계산
   useEffect(() => {
-    if (!originalWords || originalWords.length === 0) return;
+    if (!originalWords.length) return;
 
     const layout = cloud()
-      .size([690, 200])
+      .size([size.width, size.height])
       .words(
         originalWords.map(w => ({
           text: w.text,
-          size: fontScale(w.value)
+          size: fontScale(w.value),
         }))
       )
-      .padding(6)
+      .padding(4)
       .rotate(() => 0)
       .spiral("archimedean")
       .font("Pretendard")
       .fontSize(d => d.size)
-      .on("end", words => {
-        // d3-cloud가 계산한 위치를 중앙 기준으로 보정
-        const avgX = d3.mean(words, d => d.x);
-        const avgY = d3.mean(words, d => d.y);
+      .on("end", (words) => {
+        // 중심 보정
+        const avgX = d3.mean(words, w => w.x);
+        const avgY = d3.mean(words, w => w.y);
 
         setLayoutWords(
           words.map(w => ({
@@ -51,28 +69,25 @@ export default function WordCloud({ originalWords, displayWords }) {
       });
 
     layout.start();
-  }, [originalWords]);
+  }, [originalWords, size]);
 
-  // layoutWords 또는 displayWords 변경 시 SVG 렌더링
+  // SVG 렌더링
   useEffect(() => {
     if (!layoutWords.length) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 690;
-    const height = 200;
-
     svg
       .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`)
+      .attr("transform", `translate(${size.width / 2}, ${size.height / 2})`)
       .selectAll("text")
       .data(layoutWords)
       .enter()
       .append("text")
       .style("font-size", d => `${d.size}px`)
       .style("font-family", "Pretendard")
-      .style("font-weight", "600")
+      .style("font-weight", 700)
       .style("fill", d => {
         const match = displayWords.find(w => w.text === d.text);
         return match ? match.color : "#ccc";
@@ -80,7 +95,11 @@ export default function WordCloud({ originalWords, displayWords }) {
       .attr("text-anchor", "middle")
       .attr("transform", d => `translate(${d.x}, ${d.y})`)
       .text(d => d.text);
-  }, [layoutWords, displayWords]);
+  }, [layoutWords, displayWords, size]);
 
-  return <svg ref={svgRef} width={690} height={200} />;
+  return (
+    <div ref={containerRef} style={{ width: "100%", height: "200px" }}>
+      <svg ref={svgRef} width="100%" height="100%" />
+    </div>
+  );
 }

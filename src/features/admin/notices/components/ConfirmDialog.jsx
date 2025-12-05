@@ -1,5 +1,12 @@
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 
+
+/**
+ * 삭제하는 다이얼로그 알림창
+ * @author khj
+ * @since 2025-12-03
+ */
+
 export default function ConfirmDialog({ open, title, content, onConfirm, onClose }) {
   return (
     <Dialog open={open} onClose={onClose}>

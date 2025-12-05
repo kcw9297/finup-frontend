@@ -3,6 +3,12 @@ import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../../base/utils/fetchUtils";
 
+/**
+ * 공지사항 편집 훅
+ * @author khj
+ * @since 2025-12-02
+ */
+
 export function useNoticeEdit(noticeId, initialData) {
 
   // [1] 수정 데이터 상태
