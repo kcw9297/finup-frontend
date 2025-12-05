@@ -4,25 +4,22 @@ import NewsModal from "./NewsModal";
 import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
 /**
  * 뉴스 페이지 컴포넌트
  */
 
 import { useNewsList } from "../hooks/useNewsList"
 import { useNewsModal } from "../hooks/useNewsModal";
+import { Fab, Zoom } from "@mui/material";
+import NewsScrollToTop from "./NewsScrollToTop";
 
 export default function NewsList(){
   //(1)커스텀 훅
   const { category, setCategory : changeCategory,
     news,
-    bottomRef,
-    loading,
     visibleCount,
     CATEGORY_LIST,
-    refreshNews } = useNewsList();
+    refreshNews, showTop } = useNewsList();
   const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
 
   //(2)반환활 컴포넌트
@@ -55,13 +52,14 @@ export default function NewsList(){
           <NewsCard key={idx} {...item} onClick={() => openModal(item)}/>
         ))}
 
-        {loading && (
+        {/* {loading && (
           <Box sx={{ textAlign: "center", py: 3 }}>
             <CircularProgress size={28} />
           </Box>
-        )}
+        )} */}
+        {/* <div ref={bottomRef} style={{ height: 40 }}></div> */}
         
-        <div ref={bottomRef} style={{ height: 40 }}></div>
+        <NewsScrollToTop show={showTop}/>
       </Box>
       {/* 뉴스 상세 모달 */}
       <NewsModal 
