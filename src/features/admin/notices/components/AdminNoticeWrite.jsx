@@ -2,6 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useNoticeWrite } from "../hooks/useNoticeWrite";
 import { IconButton, TextField, Button, Typography, Box, Paper, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+/**
+ * 공지사항 게시글 작성
+ * @author khj
+ * @since 2025-12-03
+ */
 export default function AdminNoticeWrite() {
 
   // [1] 폼 커스텀 훅

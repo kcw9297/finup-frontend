@@ -13,11 +13,15 @@ import NoticeListPage from './pages/admin/notices/NoticeListPage'
 import NoticeDetailPage from './pages/admin/notices/NoticeDetailPage'
 import NoticeEditPage from './pages/admin/notices/NoticeEditPage'
 import NoticeWritePage from './pages/admin/notices/NoticeWritePage'
+import MemberListPage from './pages/admin/member/MemberListPage'
 import NewsPage from './pages/news/NewsPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
+import WordHomePage from './pages/word/WordHomePage'
+import WordSearchPage from './pages/word/WordSearchPage'
+import WordDetailPage from './pages/word/WordDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -55,14 +59,14 @@ const nastedRoutes = [
       { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
     ]
   },
-  /*
+
   {
-    path: '/admin/member/*',
+    path: '/admin/members/*',
     children: [
       { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
     ]
   },
-  */
+
   {
     path: '/stocks/*', //url : 종목 +
     children: [
@@ -80,9 +84,20 @@ const nastedRoutes = [
         element: <MypageMemberPage />
       }
     ]
-  }
+  },
 
+  {
+    path: '/words/*',
+    children: [
+      { path: '', element: <WordHomePage /> },         // 모두공개
+      { path: 'search', element: <WordSearchPage /> }, // 무두공개
+      { path: ':wordId', element: <WordDetailPage /> } // 모두공개
+    ]
+  },
 ];
+
+
+
 export default function App() {
 
   // 페이지 마운트 시, 최초 1회 로그인 검증

@@ -12,8 +12,13 @@ import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
 import SearchBar from "../../../../base/components/bar/SearchBar"
 import { useNoticeList } from "../../../notice/hooks/useNoticeList";
-export default function AdminNoticeList() {
 
+/**
+ * 공지사항 게시글 리스트
+ * @author khj
+ * @since 2025-12-02
+ */
+export default function AdminNoticeList() {
 
   // [0] 날짜 포맷 함수
   function formatDate(dateString) {
@@ -35,15 +40,20 @@ export default function AdminNoticeList() {
   const {
     searchRq, changeSearchRq,
     noticeList, pagination,
-    loading, fetchNoticeSummary
+    loading, fetchNoticeList
   } = useNoticeList()
+
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [targetId, setTargetId] = useState(null)
 
   const { removeNotice } = useNoticeRemove()
 
-  // [2] 페이징 계산
+  // [2] 검색 바 필터, 페이징 계산, 링크 네비게이션
+  const handleFilter = (value) => {
+    changeSearchRq({ filter: value })
+  }
+
   const totalPages = (pagination && pagination.dataCount)
     ? Math.ceil(pagination.dataCount / pagination.pageSize)
     : 1;
@@ -77,12 +87,13 @@ export default function AdminNoticeList() {
         { /* 검색 바 */}
         <SearchBar
           searchRq={searchRq}
+          filterOnChange={handleFilter}
           onChange={(rq) => changeSearchRq(rq)}
           onSubmit={(e) => {
             // 이벤트 동작 방지
             e.preventDefault()
             // 검색 실행
-            fetchNoticeSummary()
+            fetchNoticeList()
           }}
         />
         {/* 공지사항 테이블 */}
@@ -142,7 +153,7 @@ export default function AdminNoticeList() {
               onClose={() => setDialogOpen(false)}
               onConfirm={() => {
                 removeNotice(targetId).then(() => {
-                  fetchNoticeSummary()
+                  fetchNoticeList()
                   setDialogOpen(false)
                 })
               }}

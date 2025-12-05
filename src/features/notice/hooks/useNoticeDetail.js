@@ -4,6 +4,11 @@ import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 
 const INITIAL_DETAIL_RQ = { noticeId: null }
 
+/**
+ * 공지사항 상세 정보 훅
+ * @author khj
+ * @since 2025-12-02
+ */
 export function useNoticeDetail() {
   // [1] 필요 데이터 선언
   const [detailRq, setDetailRq] = useState(INITIAL_DETAIL_RQ)

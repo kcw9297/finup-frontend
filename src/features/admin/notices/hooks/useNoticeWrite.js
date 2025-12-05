@@ -9,6 +9,12 @@ const INITIAL_NOTICE_WRITE_RQ = {
   content: "",
 }
 
+/**
+ * 공지사항 작성 훅
+ * @author khj
+ * @since 2025-12-02
+ */
+
 export function useNoticeWrite() {
   // [1] 폼 불러오는 거 필요 데이터 선언
 
