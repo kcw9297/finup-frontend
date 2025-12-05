@@ -129,7 +129,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           '& .MuiTableRow-root': {
-            backgroundColor: theme.palette.background.dark, // 배경 색상
+            backgroundColor: theme.palette.background.light, // 배경 색상
           },
           '& .MuiTableCell-root': {
             fontWeight: 'bold',
