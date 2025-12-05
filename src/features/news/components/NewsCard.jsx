@@ -2,8 +2,10 @@
  * 뉴스 카드 컴포넌트
  */
 
-import { Box, Card, CardMedia, Typography } from "@mui/material";
+import { Box, Card, CardMedia, IconButton, Typography } from "@mui/material";
 import { useNewsCard } from "../hooks/useNewsCard";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import thema from "../../../base/design/thema.js"
 
 export default function NewsCard({ title, summary, thumbnail, publisher, publishedAt, link, onClick }) {
   const {detailDate} = useNewsCard()
@@ -53,7 +55,11 @@ export default function NewsCard({ title, summary, thumbnail, publisher, publish
         </Typography>
 
         <Box sx={{ mt: 1, fontSize: "13px", color: "gray" }}>
-          {publisher} · {detailDate(new Date(publishedAt))}
+          {publisher} · {detailDate(new Date(publishedAt))} 
+          <IconButton>
+            <BookmarkBorderIcon sx={{fontSize:20, color: "#bbb", transition:"color 0.3s ease", "&:hover":{color: thema.palette.base.dark}}}/>
+          </IconButton>
+          
         </Box>
       </Box>
     </Card>
