@@ -27,9 +27,8 @@ import WordDetailPage from './pages/word/WordDetailPage'
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
-  { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
-
-
+  { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
+  
 ]
 
 // 자식이 있는 라우팅 리스트

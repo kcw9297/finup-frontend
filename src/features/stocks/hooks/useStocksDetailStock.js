@@ -18,6 +18,7 @@ export function useStockDetail(code) {
   // [4] REST API 요청 함수 정의
   const fetchDetail = async () => {
     const res = await axios.get(`http://localhost:8080/public/api/stocks/detail/${code}`)
+    console.log(res)
     const detail = res.data.data;
     
     /* 기본 정보 */

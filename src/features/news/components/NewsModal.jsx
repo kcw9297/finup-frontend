@@ -1,11 +1,18 @@
-import { Modal, Box, IconButton, Chip } from "@mui/material";
+import { Modal, Box, IconButton, Chip, Skeleton, keyframes, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from 'moment'
-export default function NewsDetailModal({ open, onClose, article }) {
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+
+export default function NewsDetailModal({ open, onClose, article, loading }) {
   
   if (!article) return null;
+
   const formattedDate = moment(article.publishedAt).format('YYYY-MM-DD HH:mm')
-  
+  const sparkle = keyframes`
+    0% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 0.4; transform: scale(1); }
+  `;
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -53,7 +60,24 @@ export default function NewsDetailModal({ open, onClose, article }) {
               style={{ width: "100%", borderRadius: "10px" }}
             />
           </Box>
-
+          {loading && (
+            <Box sx={{ 
+              display: "flex", 
+              alignItems: "center",
+              gap: 1,
+              mb: 1
+            }}>
+              <AutoAwesomeIcon 
+                sx={{ 
+                  color: "#3B5BDB",
+                  animation: `${sparkle} 1.5s ease-in-out infinite`,
+                }} 
+              />
+              <Typography sx={{ fontSize: 14, color: "#3B5BDB", fontWeight: 600 }}>
+                AI 분석 중…
+              </Typography>
+            </Box>
+          )}
           {/* 요약 */}
           <Box sx={{ mb: 10}}>
             <Box sx={{ display:"flex", justifyContent:"space-between", alignItems:"center", mb: 1 }}>
@@ -67,8 +91,13 @@ export default function NewsDetailModal({ open, onClose, article }) {
                 원문 보기 →
               </a>
             </Box>
-            <p>{article?.ai?.summary}</p>
+            {loading ? (
+              <Skeleton variant="rectangular" height={80} sx={{borderRadius:2}}/>
+            ):(
+              <p>{article?.ai?.summary}</p>
+            )}
           </Box>
+          
           
 
           {/* AI 해설 */}
@@ -76,17 +105,36 @@ export default function NewsDetailModal({ open, onClose, article }) {
             <Box sx={{ mb: 1 }}>
               <h3>AI 해설</h3>
             </Box>
-            <p>{article?.ai?.insight}</p>
+            {loading ? (
+              <>
+                <Skeleton height={20} width="90%" />
+                <Skeleton height={20} width="95%" />
+                <Skeleton height={20} width="80%" />
+              </>
+            ) : (
+              <p>{article?.ai?.insight}</p>
+            )}
           </Box>
           {/* 필수 개념 */}
           <Box sx={{ mb: 10 }}>
             <h3>필수 개념</h3>
-            {article?.ai?.keywords?.map((item, idx) => (
-              <Box key={idx} sx={{ display: "flex",alignItems: "flex-start",gap: 1.5,mb: 1.5 }}>
-                <Chip label={item.term} color="primary" variant="outlined" size="small"/>
-                <Box sx={{fontSize:14, lineHeight:1.4}}>{item.definition}</Box>
-              </Box>
-            ))}
+            {loading ? (
+              <>
+                <Skeleton height={30} width="60%" />
+                <Skeleton height={30} width="50%" />
+                <Skeleton height={30} width="70%" />
+              </>
+            ) : (
+              article?.ai?.keywords?.map((item, idx) => (
+                <Box
+                  key={idx}
+                  sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, mb: 1.5 }}
+                >
+                  <Chip label={item.term} color="primary" variant="outlined" size="small" />
+                  <Box sx={{ fontSize: 14, lineHeight: 1.4 }}>{item.definition}</Box>
+                </Box>
+              ))
+            )}
           </Box>
 
           {/* 추천 콘텐츠 */}
