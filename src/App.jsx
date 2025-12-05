@@ -13,6 +13,7 @@ import NoticeListPage from './pages/admin/notices/NoticeListPage'
 import NoticeDetailPage from './pages/admin/notices/NoticeDetailPage'
 import NoticeEditPage from './pages/admin/notices/NoticeEditPage'
 import NoticeWritePage from './pages/admin/notices/NoticeWritePage'
+import MemberListPage from './pages/admin/member/MemberListPage'
 import NewsPage from './pages/news/NewsPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
@@ -55,14 +56,14 @@ const nastedRoutes = [
       { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
     ]
   },
-  /*
+
   {
-    path: '/admin/member/*',
+    path: '/admin/members/*',
     children: [
       { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
     ]
   },
-  */
+
   {
     path: '/stocks/*', //url : 종목 +
     children: [

@@ -16,16 +16,16 @@ const INITIAL_SEARCH_RQ = {
 
 export function useMemberList() {
   // [1] 필요 데이터 선언
-  const [searchRp, setSearchRp] = useState(INITIAL_SEARCH_RQ) // 검색 응답 데이터
+  const [searchRq, setSearchRq] = useState(INITIAL_SEARCH_RQ) // 검색 응답 데이터
   const [loading, setLoding] = useState(true) // 요청 로딩 상태
   const [pagination, setPagination] = useState(null) // 페이징 데이터
-  const [memberList, setMemberList] = useState(null) // 리스트 요청 결과 데이터
+  const [memberList, setMemberList] = useState([]) // 리스트 요청 결과 데이터
 
   // [2] 필요 함수 선언
   const { showSnackbar } = useSnackbar()  // 스낵바 전역 context
 
   const changeSearchRq = rq =>
-    setSearchRp(prev => ({ ...prev, ...rq }))
+    setSearchRq(prev => ({ ...prev, ...rq }))
 
   // [3] 성공/실패/마지막 콜백 함수
   const onSuccess = rp => {
@@ -34,7 +34,7 @@ export function useMemberList() {
   }
 
   const onError = (rp) => {
-    showSnackbar("공지사항을 불러오지 못했습니다.", "error")
+    showSnackbar("회원 목록을 불러오지 못했습니다.", "error")
   }
 
   const onFinally = () => {
@@ -51,7 +51,7 @@ export function useMemberList() {
       {
         onSuccess, onError, onFinally,
         admin: true,
-        params: searchRp
+        params: searchRq
       })
   }
 
@@ -62,10 +62,10 @@ export function useMemberList() {
     (async () => {
       await fetchMemberList()
     })()
-  }, [searchRp.keyword, searchRp.pageNum])
+  }, [searchRq.keyword, searchRq.pageNum])
 
   return (
-    searchRp,
+    searchRq,
     memberList,
     pagination,
     loading,

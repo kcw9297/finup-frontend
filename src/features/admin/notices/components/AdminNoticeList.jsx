@@ -49,12 +49,11 @@ export default function AdminNoticeList() {
 
   const { removeNotice } = useNoticeRemove()
 
-  // 검색 바 필터
+  // [2] 검색 바 필터, 페이징 계산, 링크 네비게이션
   const handleFilter = (value) => {
     changeSearchRq({ filter: value })
   }
 
-  // [2] 페이징 계산
   const totalPages = (pagination && pagination.dataCount)
     ? Math.ceil(pagination.dataCount / pagination.pageSize)
     : 1;
