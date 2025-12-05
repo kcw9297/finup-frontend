@@ -10,7 +10,8 @@ export default function StocksDetailNews(){
       news,
       visibleCount,
       CATEGORY_LIST,
-      refreshNews, showTop } = useNewsList();
+      refreshNews, showTop,
+      } = useNewsList();
   const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
   
   return (
