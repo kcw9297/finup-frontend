@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import SearchBar from './../../../../base/components/bar/SearchBar';
 import { useState } from "react";
+import PageBar from './../../../../base/components/bar/PageBar';
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -39,16 +40,10 @@ export default function MemberList() {
     });
   }
   // [1] 필요한 상수들
-  const {
-    memberList, pagination,
-    loading, fetchMemberList
-  } = useMemberList()
 
   const memberFilterOptions = [
     { value: "email", label: "이메일" },
     { value: "nickname", label: "닉네임" },
-    { value: "role", label: "권한" },
-    { value: "isActive", label: "활성 여부" },
   ]
 
   const [searchRq, setSearchRq] = useState(INITIAL_SEARCH_RQ)
@@ -56,6 +51,10 @@ export default function MemberList() {
   const changeSearchRq = (rq) => {
     setSearchRq(prev => ({ ...prev, ...rq }))
   }
+  const {
+    memberList, pagination,
+    loading, fetchMemberList
+  } = useMemberList(searchRq)
 
   // [2] 검색 바 필터, 페이징 계산, 링크 네비게이션
   const handleFilter = (value) => {
@@ -93,7 +92,7 @@ export default function MemberList() {
           onChange={(rq) => changeSearchRq(rq)}
           onSubmit={(e) => {
             e.preventDefault()
-            fetchMemberList()
+            fetchMemberList(searchRq)
           }}
           selectItems={memberFilterOptions}
         />
@@ -102,17 +101,18 @@ export default function MemberList() {
         <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "850px", mx: "auto" }}>
           <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
-              <TableCell>회원번호(ID)</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>이메일</TableCell>
-              <TableCell>연락처</TableCell>
-              <TableCell>활성여부</TableCell>
-              <TableCell>권한</TableCell>
-              <TableCell>소셜</TableCell>
+              <TableRow>
+                <TableCell>회원번호(ID)</TableCell>
+                <TableCell>이름</TableCell>
+                <TableCell>이메일</TableCell>
+                <TableCell>활성여부</TableCell>
+                <TableCell>권한</TableCell>
+                <TableCell>소셜</TableCell>
+              </TableRow>
             </TableHead>
 
             <TableBody>
-              {(memberList?.length ?? 0) === 0 && (
+              {memberList.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                     회원 목록이 없습니다.
@@ -130,11 +130,27 @@ export default function MemberList() {
                   <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
                   <TableCell>{m.nickname}</TableCell>
                   <TableCell>{m.email}</TableCell>
-
+                  <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
+                  <TableCell>{m.memberRole}</TableCell>
+                  <TableCell>{m.socialType}</TableCell>
                 </TableRow>)}
             </TableBody>
           </Table>
         </Paper>
+        {/* 페이지네이션 */}
+        {pagination && (
+          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
+            <PageBar
+              pagination={pagination}
+              page={pagination.pageNum + 1}
+              count={totalPages}
+              onChange={(value) => {
+                changeSearchRq({ pageNum: value })
+                fetchMemberList({ ...searchRq, pageNum: value })
+              }}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   )

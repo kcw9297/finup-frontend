@@ -12,10 +12,15 @@ import SearchIcon from '@mui/icons-material/Search'
 export default function SearchBar({ searchRq, onSubmit, onChange, filterOnChange, selectItems = [] }) {
 
   // 필터 선택 안됐을 때 '선택' 표시
-  const items = [
-    { value: "", label: <em>선택</em> },
-    ...(selectItems || [])
-  ];
+  const items = selectItems.length > 0
+    ? [{ value: "", label: <em>선택</em> }, ...selectItems]
+    : [
+      { value: "", label: <em>선택</em> },
+      { value: "name", label: "이름" },
+      { value: "subject", label: "제목" },
+      { value: "content", label: "내용" },
+      { value: "subjectContent", label: "제목+내용" }
+    ]
 
 
   return (
@@ -37,22 +42,12 @@ export default function SearchBar({ searchRq, onSubmit, onChange, filterOnChange
               sx={{ minWidth: 100, height: 40, }}
             >
               {/* 옵션 목록을 동적으로 생성 (커스터마이징 항목 없으면 기본 디폴트 옵션으로)*/}
-              {selectItems && selectItems.length > 0 ? (
-
-                items.map(opt => (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </MenuItem>
-                ))
-              ) : (
-                <>
-                  <MenuItem value=""><em>선택</em></MenuItem>
-                  <MenuItem value="name">이름</MenuItem>
-                  <MenuItem value="subject">제목</MenuItem>
-                  <MenuItem value="content">내용</MenuItem>
-                  <MenuItem value="subjectContent">제목+내용</MenuItem>
-                </>
-              )}
+              {items.map(opt => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))
+              }
 
             </Select>
           </FormControl>
