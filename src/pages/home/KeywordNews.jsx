@@ -23,6 +23,9 @@ export default function KeywordNews() {
     {title: "환율 변동성 확대… 금융시장 불안감 고조",
       date: "2025.10.03",
       logo: "/press/ytn.png"},
+      {title: "환율 변동성 확대… 금융시장 불안감 고조",
+      date: "2025.10.03",
+      logo: "/press/ytn.png"},
   ]
 
   // 긍/부정 필터

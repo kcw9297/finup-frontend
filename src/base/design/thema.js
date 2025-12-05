@@ -103,7 +103,7 @@ const theme = createTheme({
           margin: 0,
           padding: 0
         }),
-        
+
       },
 
       // 기본 프롭스
@@ -149,7 +149,6 @@ const theme = createTheme({
         },
       },
     },
-    
 
     // Typography
     MuiTypography: {
@@ -163,15 +162,29 @@ const theme = createTheme({
       },
     },
 
-    // p
+    // p + 스크롤바
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
+        // p
         p: {
           margin: 0,
           padding: 0,
           alignItems: 'center',
-        }
-      }
+        },
+
+        // 스크롤바
+        "*::-webkit-scrollbar": {
+          width: "2px",
+          height: "2px",
+        },
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: theme.palette.line.main,
+          borderRadius: 100,
+        },
+        "*::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+      }),
     },
 
     // Link

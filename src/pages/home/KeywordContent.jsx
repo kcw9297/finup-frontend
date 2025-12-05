@@ -2,36 +2,26 @@ import { Box, Typography, Avatar } from "@mui/material";
 
 export default function KeywordContent({ list }) {
   return (
-    <Box
-      sx={{
-        border: 1,
-        borderColor: 'line.light',
-        "&::-webkit-scrollbar": { width: 6 },
-        "&::-webkit-scrollbar-thumb": {
-          background: "#dee2e6",
-          borderRadius: "8px",
-        },
-      }}
-    >
+    <Box sx={{ height: 400, overflow: "auto" }}>
       {list.map((item, idx) => (
         <Box
           key={idx}
           sx={{
-            display: "flex",
+            display: 'flex',
             alignItems: "center",
-            gap: 1.5,
-            py: 1.5,
-            borderBottom: "1px solid #f1f3f5",
-            cursor: "pointer",
-            "&:hover": { backgroundColor: "#fafafa" },
+            gap: 2,
+            padding: 2,
+            borderBottom: 1,
+            borderColor: 'line.light',
+            cursor: 'pointer',
+            "&:hover": { backgroundColor: 'background.light' },
           }}
         >
-          <Avatar src={item.logo} sx={{ width: 36, height: 36 }} />
+          <Avatar src={item.logo} sx={{ width: 40, height: 40 }} />
 
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection:'column' }}>
             <Typography
               sx={{
-                fontSize: 15,
                 fontWeight: 500,
                 overflow: "hidden",
                 whiteSpace: "nowrap",
@@ -40,7 +30,7 @@ export default function KeywordContent({ list }) {
             >
               {item.title}
             </Typography>
-            <Typography sx={{ fontSize: 12, color: "#666" }}>
+            <Typography sx={{ fontSize: 14, color: "text.light" }}>
               {item.date}
             </Typography>
           </Box>
