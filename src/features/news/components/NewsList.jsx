@@ -29,20 +29,6 @@ export default function NewsList(){
   return(
     <Box sx={{ maxWidth: "900px", mx: "auto", mt: 4 }}>
 
-      {/* 검색창 */}
-      <TextField
-        fullWidth
-        placeholder="뉴스를 검색하세요"
-        sx={{ mb: 3, "& fieldset": { borderRadius: "20px" } }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <SearchIcon sx={{ color: "#666" }} />
-            </InputAdornment>
-          ),
-        }}
-      />
-
       {/* Chip 탭 */}
       <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
         {CATEGORY_LIST.map((item) => (
