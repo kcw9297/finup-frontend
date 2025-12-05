@@ -131,8 +131,8 @@ export default function MemberList() {
                   <TableCell>{m.nickname}</TableCell>
                   <TableCell>{m.email}</TableCell>
                   <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
-                  <TableCell>{m.memberRole}</TableCell>
-                  <TableCell>{m.socialType}</TableCell>
+                  <TableCell>{m.memberRoleValue}</TableCell>
+                  <TableCell>{m.socialTypeValue}</TableCell>
                 </TableRow>)}
             </TableBody>
           </Table>
