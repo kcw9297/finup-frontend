@@ -51,13 +51,6 @@ export default function NewsList(){
         {news.slice(0, visibleCount).map((item, idx) => (
           <NewsCard key={idx} {...item} onClick={() => openModal(item)}/>
         ))}
-
-        {/* {loading && (
-          <Box sx={{ textAlign: "center", py: 3 }}>
-            <CircularProgress size={28} />
-          </Box>
-        )} */}
-        {/* <div ref={bottomRef} style={{ height: 40 }}></div> */}
         
         <NewsScrollToTop show={showTop}/>
       </Box>

@@ -15,7 +15,7 @@ export default function NewsCard({ title, summary, thumbnail, publisher, publish
         gap: 2,
         padding: 2,
         borderRadius: 2,
-        border: "1px solid #eee",
+        //border: "1px solid #eee",
         mb: 2,
         cursor: "pointer",
         "&:hover": { backgroundColor: "#fafafa" }
@@ -25,7 +25,7 @@ export default function NewsCard({ title, summary, thumbnail, publisher, publish
       {/* 썸네일 */}
       <CardMedia
         component="img"
-        sx={{ width: 120, height: 120, borderRadius: 1, objectFit: "cover" }}
+        sx={{ width: 100, height: 100, borderRadius: 1, objectFit: "cover" }}
         image={
           thumbnail
        }
