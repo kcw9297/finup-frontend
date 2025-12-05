@@ -19,12 +19,16 @@ import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
+import WordHomePage from './pages/word/WordHomePage'
+import WordSearchPage from './pages/word/WordSearchPage'
+import WordDetailPage from './pages/word/WordDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
-  { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
+  { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
+
 
 ]
 
@@ -81,9 +85,20 @@ const nastedRoutes = [
         element: <MypageMemberPage />
       }
     ]
-  }
+  },
 
+  {
+    path: '/words/*',
+    children: [
+      { path: '', element: <WordHomePage /> },         // 모두공개
+      { path: 'search', element: <WordSearchPage /> }, // 무두공개
+      { path: ':wordId', element: <WordDetailPage /> } // 모두공개
+    ]
+  },
 ];
+
+
+
 export default function App() {
 
   // 페이지 마운트 시, 최초 1회 로그인 검증

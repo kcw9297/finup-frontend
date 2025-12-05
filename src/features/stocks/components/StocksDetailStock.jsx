@@ -8,7 +8,7 @@ import { useStockDetail } from "../hooks/useStocksDetailStock.js";
 
 export default function StocksDetailStock(){
   const { code } = useParams();
-  const { basic, price, valuation, flow, risk, loading} = useStockDetail(code);
+  const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
   
   return (
     // <Box>
@@ -28,12 +28,19 @@ export default function StocksDetailStock(){
             flexWrap: "wrap",
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>
+            
+            {headInfo.map((item) => (
+              <Typography variant= "body1">
+                {item.value}
+              </Typography>
+            ))} 
+
             <Typography variant="h5" fontWeight={600}>
               삼성전자
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              국내
-            </Typography>
+              국내   
+            </Typography>                    
             <Typography variant="body1" /*color="text.secondary"*/>
               005930
             </Typography>
