@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import NewsCard from "./NewsCard";
+import NewsModal from "./NewsModal";
 import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -11,7 +12,6 @@ import SearchIcon from "@mui/icons-material/Search";
  */
 
 import { useNewsList } from "../hooks/useNewsList"
-import NewsDetailModal from "./NewsModal";
 import { useNewsModal } from "../hooks/useNewsModal";
 
 export default function NewsList(){
@@ -20,6 +20,7 @@ export default function NewsList(){
     news,
     bottomRef,
     loading,
+    visibleCount,
     CATEGORY_LIST,
     refreshNews } = useNewsList();
   const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
@@ -64,7 +65,7 @@ export default function NewsList(){
 
       {/* 뉴스 리스트 */}
       <Box sx={{ mt: 2 }}>
-        {news.map((item, idx) => (
+        {news.slice(0, visibleCount).map((item, idx) => (
           <NewsCard key={idx} {...item} onClick={() => openModal(item)}/>
         ))}
 
@@ -77,7 +78,7 @@ export default function NewsList(){
         <div ref={bottomRef} style={{ height: 40 }}></div>
       </Box>
       {/* 뉴스 상세 모달 */}
-      <NewsDetailModal 
+      <NewsModal 
         open={open} 
         onClose={closeModal} 
         article={article}

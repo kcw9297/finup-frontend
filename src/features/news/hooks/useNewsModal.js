@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { api } from "../../../base/utils/fetchUtils";
 import { navigate } from "../../../base/config/globalHookConfig";
 
-export function useNewsModal(onCloseCallback){
+export function useNewsModal(){
   const [open, setOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState(null);
   const [article, setArticle] = useState([]);
@@ -18,13 +18,14 @@ export function useNewsModal(onCloseCallback){
     setArticle(basicInfo)
     setSelectedUrl(basicInfo.link)
     setOpen(true)
+    setLoading(true);
   }
 
   const closeModal = () => {
     setOpen(false)
     setArticle(null)
     setSelectedUrl(null)
-    if(onCloseCallback) onCloseCallback()
+    setLoading(false)
   }
   
   const onSuccess = (items) => {
