@@ -1,6 +1,7 @@
 import { Modal, Box, IconButton, Chip, Skeleton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from 'moment'
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 export default function NewsDetailModal({ open, onClose, article, loading }) {
   
@@ -55,7 +56,17 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
               style={{ width: "100%", borderRadius: "10px" }}
             />
           </Box>
-
+          {loading && (
+            <Box sx={{ 
+              fontSize: 14, 
+              color: "#666", 
+              mb: 2,
+              ml: 1
+            }}>
+              <AutoAwesomeIcon fontSize="small" sx={{ mr: 0.5 }} />
+              AI 분석 중입니다...
+            </Box>
+          )}
           {/* 요약 */}
           <Box sx={{ mb: 10}}>
             <Box sx={{ display:"flex", justifyContent:"space-between", alignItems:"center", mb: 1 }}>
