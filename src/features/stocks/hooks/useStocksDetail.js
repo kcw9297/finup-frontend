@@ -29,6 +29,7 @@ export function useStockDetail(code) {
     /* 네임 카드  */
     setNameCard([
       {label: "종목명", value: detail.htsKorIsnm },
+      {label: "종목코드", value: code },
       {label: "주식 현재가", value: detail.stckPrpr }
     ]);
 
