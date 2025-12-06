@@ -5,11 +5,13 @@ import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/m
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
 import { useStockDetail } from "../hooks/useStocksDetailStock.js";
+//import { useStockDetail } from "../hooks/useStocksDetail.js";
 
 export default function StocksDetailStock(){
   const { code } = useParams();
   const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
-  
+  //const { nameCard, detailStock, loading, error } = useStockDetail(code);
+
   return (
     // <Box>
     <Box sx={{backgroundColor: thema.palette.background.base}}>
@@ -29,7 +31,7 @@ export default function StocksDetailStock(){
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>
             
-            {headInfo.map((item) => (
+            { headInfo.map((item) => (
               <Typography variant= "body1">
                 {item.value}
               </Typography>
@@ -39,13 +41,13 @@ export default function StocksDetailStock(){
               삼성전자
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              국내   
+              국내   111
             </Typography>                    
             <Typography variant="body1" /*color="text.secondary"*/>
               005930
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              코스피
+              코스피aa
             </Typography>
           </Box>
 
