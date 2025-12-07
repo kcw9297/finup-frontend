@@ -44,15 +44,11 @@ export default function GoodVideo ({ videoList }) {
         {/* < > 버튼 */}
         <Box>
           <IconButton onClick={handlePrev}>
-            <ArrowBackIosNewIcon
-              sx={{ color: isPrevDisabled ? "text.light" : "text.main" }}
-            />
+            <ArrowBackIosNewIcon sx={{ color: isPrevDisabled ? "text.light" : "text.main" }}/>
           </IconButton>
 
           <IconButton onClick={handleNext}>
-            <ArrowForwardIosIcon
-              sx={{ color: isNextDisabled ? "text.light" : "text.main" }}
-            />
+            <ArrowForwardIosIcon sx={{ color: isNextDisabled ? "text.light" : "text.main" }}/>
           </IconButton>
         </Box>
       </Box>
