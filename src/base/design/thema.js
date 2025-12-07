@@ -249,17 +249,19 @@ const theme = createTheme({
 
     // IconButton
     MuiIconButton: {
-      defaultProps: {
-        color: 'inherit',
-      },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          "&:hover": {
-            backgroundColor: `${theme.palette.background.light} !important`,
-          }
-        })
-      }
+    defaultProps: {
+      color: "inherit",
+      disableRipple: true,
+      disableFocusRipple: true,
     },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        "&:hover": {
+          backgroundColor: `${theme.palette.background.light} !important`,
+        }
+      })
+    }
+  },
 
 
     // Snackbar
