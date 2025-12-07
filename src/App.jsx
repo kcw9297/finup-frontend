@@ -70,7 +70,7 @@ const nastedRoutes = [
   {
     path: '/stocks/*', //url : 종목 +
     children: [
-      { index: true, element: <StocksListPage /> }, // 모두 공개
+      { path: '', element: <StocksListPage /> }, // 모두 공개
       { path: 'detail/:code', element: <StocksDetailPage /> },
     ]
   },
