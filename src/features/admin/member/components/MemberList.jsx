@@ -102,9 +102,9 @@ export default function MemberList() {
           <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                <TableCell>회원번호(ID)</TableCell>
+                <TableCell>ID</TableCell>
                 <TableCell>이름</TableCell>
-                <TableCell>이메일</TableCell>
+                <TableCell sx={{ width: "25%" }}>이메일</TableCell>
                 <TableCell>활성여부</TableCell>
                 <TableCell>권한</TableCell>
                 <TableCell>소셜</TableCell>
