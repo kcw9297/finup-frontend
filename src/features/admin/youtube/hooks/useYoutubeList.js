@@ -44,10 +44,17 @@ export function useYoutubeList(searchRq) {
 
   // [4] API 요청 함수 정의
   const fetchYoutubeList = () => {
-    api.get(`/video-links?${query}`,
+    api.get(`/video-links`,
       {
         onSuccess, onError, onFinally,
-        params: searchRq,
+        params: {
+          ownerId: adminId,
+          videoLinkOwner: "HOME",
+          keyword: searchRq.keyword,
+          filter: searchRq.filter,
+          pageNum: searchRq.pageNum,
+          size: searchRq.size,
+        },
         admin: true
       }
     )
@@ -55,8 +62,9 @@ export function useYoutubeList(searchRq) {
 
   // [5] 목록 자동 호출
   useEffect(() => {
+    if (!adminId) return
     fetchYoutubeList()
-  }, [searchRq.pageNum, searchRq.keyword, searchRq.filter])
+  }, [adminId, searchRq.pageNum, searchRq.keyword, searchRq.filter])
 
   // [6] 반환
   return {
