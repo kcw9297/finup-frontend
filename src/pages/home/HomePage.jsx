@@ -113,11 +113,14 @@ export default function HomePage() {
           <Box sx={{height:'30px'}}/>
 
           {/* Buttom */}
-          <Box sx={{display:'flex', flexDirection:'column', gap:'30px', borderBottom:"1px solid #ddd"}}>
+          <Box sx={{display:'flex', flexDirection:'column', gap:'30px'}}>
             <KeywordNews/>
             <GoodVideo videoList={fakeVideos}/>
             <StockFirm/>
           </Box>
+
+          {/* 간격 띄우는 용도 */}
+          <Box sx={{height:'30px'}}/>
           
         </MainLayout>
       </>

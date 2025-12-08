@@ -2,9 +2,10 @@ import { Paper, Box, Typography, IconButton } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
 
+// 공지사항
+
 export default function Notice({ noticeList, noticeCurrent, fade, showNext }) {
   
-  // 공지사항
   return (
     <Paper
       elevation={0}
@@ -32,11 +33,9 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext }) {
           "& .title": {
             fontSize: 16,
             fontWeight: 500,
-            color: "text.primary",
           },
           "& .notice-text": {
             fontSize: 16,
-            color: "text.secondary",
           },
         }}
       >
