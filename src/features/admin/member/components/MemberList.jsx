@@ -125,7 +125,7 @@ export default function MemberList() {
                   key={m.memberId}
                   hover
                   sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/admin/members/${m.memberId}`)}
+                /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
                 >
                   <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
                   <TableCell>{m.nickname}</TableCell>

@@ -65,7 +65,7 @@ export default function YoutubeVideoWrite() {
           label="영상 등록 링크"
           name="url"
           placeholder="https://www.youtube.com/..."
-          value={youtubeWriteRq.url}
+          value={youtubeWriteRq.videoUrl}
           onChange={(e) =>
             changeYoutubeWriteRq({ [e.target.name]: e.target.value })
           }

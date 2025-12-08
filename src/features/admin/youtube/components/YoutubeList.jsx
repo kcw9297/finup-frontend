@@ -3,14 +3,14 @@ import { useYoutubeList } from "../hooks/useYoutubeList";
 import AdminSidebar from "../../../../base/components/layout/AdminSidebar";
 
 import {
-  Box, IconButton, Paper, Table, TableHead,
-  TableBody, TableRow, TableCell, Tooltip, Typography
+  Box, Paper, Table, TableHead,
+  TableBody, TableRow, TableCell, Typography, IconButton, Tooltip
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"
+
 import SearchBar from "../../../../base/components/bar/SearchBar";
 import PageBar from "../../../../base/components/bar/PageBar";
 import { useState } from "react";
-
+import AddIcon from '@mui/icons-material/Add';
 
 // 검색 요청 초기값 (MemberList와 동일 구조 유지)
 const INITIAL_SEARCH_RQ = {
@@ -144,7 +144,7 @@ export default function YoutubeList() {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.title}</TableCell>
                   <TableCell sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {item.url}
+                    {item.videoUrl}
                   </TableCell>
                   <TableCell>
                     {item.regDate}
@@ -164,7 +164,7 @@ export default function YoutubeList() {
               count={totalPages}
               onChange={(value) => {
                 changeSearchRq({ pageNum: value });
-                fetchYoutubeList();
+                fetchYoutubeList({});
               }}
             />
           </Box>
