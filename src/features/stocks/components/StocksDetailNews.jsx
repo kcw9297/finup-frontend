@@ -4,6 +4,7 @@ import NewsCard from "../../news/components/NewsCard.jsx";
 import NewsScrollToTop from "../../news/components/NewsScrollToTop.jsx";
 import { useNewsList } from "../../news/hooks/useNewsList.js";
 import { useNewsModal } from "../../news/hooks/useNewsModal.js";
+import { useStocksNews } from "../hooks/useStocksNews.js";
 
 export default function StocksDetailNews(){
   const { category, setCategory : changeCategory,
@@ -11,7 +12,7 @@ export default function StocksDetailNews(){
       visibleCount,
       CATEGORY_LIST,
       refreshNews, showTop,
-      } = useNewsList();
+      } = useStocksNews();
   const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
   
   return (
