@@ -34,6 +34,7 @@ export default function YoutubeVideoWrite() {
   useEffect(() => {
     if (previewRp) {
       changeYoutubeWriteRq({
+        videoUrl: previewRq.videoUrl,
         title: previewRp.title ?? "",
         content: previewRp.description ?? "",
         thumbnailUrl: previewRp.thumbnailUrl ?? "",
@@ -76,11 +77,14 @@ export default function YoutubeVideoWrite() {
             name="videoUrl"
             placeholder="https://www.youtube.com/..."
             value={previewRq.videoUrl}
-            onChange={(e) => changePreviewRq({ videoUrl: e.target.value })}
+            onChange={(e) => {
+              changePreviewRq({ videoUrl: e.target.value });
+              changeYoutubeWriteRq({ videoUrl: e.target.value }); // ← 추가
+            }}
             autoComplete="off"
           />
 
-          <Button variant="contained" color="info" onClick={loadPreview} sx={{ whiteSpace: "nowrap" }}>
+          <Button variant="contained" onClick={loadPreview} sx={{ whiteSpace: "nowrap" }}>
             확인
           </Button>
         </Box>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { api } from "../../../../base/utils/fetchUtils";
+import { useAuthStore } from "../../../../base/stores/useAuthStore";
 
 
 /**
@@ -17,10 +18,12 @@ export function useYoutubeList(searchRq) {
 
   const { showSnackbar } = useSnackbar()
 
+  const adminId = useAuthStore(state => state.loginMember?.memberId);
+
   // [2] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
-    setYoutubeList(rp.data)
-    setPagination(rp.pagination)
+    setYoutubeList(rp.data ?? [])
+    setPagination(rp.pagination ?? null)
   }
 
   const onError = () => {
@@ -28,9 +31,20 @@ export function useYoutubeList(searchRq) {
   }
   const onFinally = () => { }
 
-  // [3] API 요청 함수 정의
+  // [3] URL 수동 조합
+  const query = new URLSearchParams({
+    ownerId: adminId,
+    videoLinkOwner: "HOME",
+    keyword: searchRq.keyword,
+    filter: searchRq.filter,
+    pageNum: searchRq.pageNum,
+    size: searchRq.size,
+  }).toString()
+
+
+  // [4] API 요청 함수 정의
   const fetchYoutubeList = () => {
-    api.get("/video-links",
+    api.get(`/video-links?${query}`,
       {
         onSuccess, onError, onFinally,
         params: searchRq,
@@ -39,7 +53,12 @@ export function useYoutubeList(searchRq) {
     )
   }
 
-  // [5] 반환
+  // [5] 목록 자동 호출
+  useEffect(() => {
+    fetchYoutubeList()
+  }, [searchRq.pageNum, searchRq.keyword, searchRq.filter])
+
+  // [6] 반환
   return {
     youtubeList,
     pagination,

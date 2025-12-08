@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useYoutubeList } from "../hooks/useYoutubeList";
 import AdminSidebar from "../../../../base/components/layout/AdminSidebar";
+import YoutubeCard from "./YoutubeCard";
 
 import {
   Box, Paper, Table, TableHead,
-  TableBody, TableRow, TableCell, Typography, IconButton, Tooltip
+  TableBody, TableRow, TableCell, Typography, IconButton, Tooltip, Grid
 } from "@mui/material";
 
 import SearchBar from "../../../../base/components/bar/SearchBar";
 import PageBar from "../../../../base/components/bar/PageBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 
 // 검색 요청 초기값 (MemberList와 동일 구조 유지)
@@ -42,17 +43,23 @@ export default function YoutubeList() {
     fetchYoutubeList
   } = useYoutubeList(searchRq)
 
+  // 검색 조건 바뀔 때마다 리스트 자동 조회
+  useEffect(() => {
+    fetchYoutubeList();
+  }, [searchRq]);
+
+  const navigate = useNavigate()
+
   // [3] 필터 옵션 (원하는 만큼 추가 가능)
   const youtubeFilterOptions = [
     { value: "title", label: "제목" },
     { value: "url", label: "영상링크" },
   ]
 
+
   const handleFilter = (value) => {
     changeSearchRq({ filter: value })
   }
-
-  const navigate = useNavigate()
 
   // [4] 페이지 계산 (pagination.dataCount 사용)
   const totalPages = (pagination && pagination.dataCount)
@@ -100,61 +107,22 @@ export default function YoutubeList() {
           filterOnChange={handleFilter}
           selectItems={youtubeFilterOptions}
         />
+        <Box sx={{ mt: 4 }}>
+          <Grid container spacing={3}>
+            {youtubeList.length === 0 && (
+              <Typography sx={{ mx: "auto", mt: 5 }}>
+                영상 데이터가 없습니다.
+              </Typography>
+            )}
 
-        {/* 영상 목록 테이블 */}
-        <Paper
-          elevation={0}
-          sx={{
-            width: "100%",
-            overflow: "hidden",
-            maxWidth: "850px",
-            mx: "auto",
-            mt: 2
-          }}
-        >
-          <Table sx={{ tableLayout: "fixed" }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>No.</TableCell>
-                <TableCell>제목</TableCell>
-                <TableCell sx={{ width: "35%" }}>URL</TableCell>
-                <TableCell sx={{ width: "20%" }}>등록일</TableCell>
-              </TableRow>
-            </TableHead>
+            {youtubeList.map((item) => (
+              <Grid item key={item.videoId} xs={12} sm={6} md={4} lg={3}>
+                <YoutubeCard item={item} onClick={item.videoUrl} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
-            <TableBody>
-
-              {/* 데이터 없음 */}
-              {youtubeList.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={4} align="center" sx={{ py: 5 }}>
-                    영상 데이터가 없습니다.
-                  </TableCell>
-                </TableRow>
-              )}
-
-              {/* 데이터 있음 */}
-              {youtubeList?.map((item, index) => (
-                <TableRow
-                  key={item.videoId}
-                  hover
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/admin/youtube/${item.videoId}`)}
-                >
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{item.title}</TableCell>
-                  <TableCell sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {item.videoUrl}
-                  </TableCell>
-                  <TableCell>
-                    {item.regDate}
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            </TableBody>
-          </Table>
-        </Paper>
         {/* 페이지네이션 */}
         {pagination && (
           <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>

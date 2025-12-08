@@ -21,7 +21,8 @@ export function useYoutubeVideoWrite() {
   // [1] 필요 데이터 선언
   const [youtubeWriteRq, setYoutubeWriteRq] = useState(INITIAL_YOUTUBE_WRITE_RQ)
   const [youtubeWriteRp, setYoutubeWriteRp] = useState(null)
-  const adminId = useAuthStore(state => state.loginMember.memberId)
+  const adminId = useAuthStore(state => state.loginMember?.memberId ?? null);
+
 
   const { showSnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -48,13 +49,19 @@ export function useYoutubeVideoWrite() {
 
   // [4] API 요청 함수 정의
   const handleYoutubeRegister = () => {
+
+    if (!adminId) {
+      showSnackbar("로그인 정보가 없습니다.", "error");
+      return;
+    }
     setYoutubeWriteRp(null)
 
     const body = {
-      ...youtubeWriteRq,
+      videoUrl: youtubeWriteRq.videoUrl,
       ownerId: adminId,
       videoLinkOwner: "HOME",
-    }
+    };
+
 
     api.post(
       "/video-links",

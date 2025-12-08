@@ -33,6 +33,7 @@ export function useYoutubePreview() {
 
   const onFinally = () => setLoading(false)
 
+  const cleanUrl = previewRq.videoUrl.split("&")[0].split("?")[0];
 
   // [4] 프리뷰 호출 함수
   const loadPreview = () => {
@@ -42,7 +43,7 @@ export function useYoutubePreview() {
     setPreviewRp(null)
 
     api.get(
-      `/videos?url=${encodeURIComponent(previewRq.videoUrl)}`,
+      `/videos?url=${encodeURIComponent(cleanUrl)}`,
       { onSuccess, onError, onFinally, admin: "true" }
     )
   }
