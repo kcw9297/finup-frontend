@@ -3,6 +3,7 @@ import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../../base/utils/fetchUtils";
 import { navigate } from './../../../../base/config/globalHookConfig';
+import { useAuthStore } from "../../../../base/stores/useAuthStore";
 
 const INITIAL_YOUTUBE_WRITE_RQ = {
   videoUrl: "",
@@ -20,6 +21,7 @@ export function useYoutubeVideoWrite() {
   // [1] 필요 데이터 선언
   const [youtubeWriteRq, setYoutubeWriteRq] = useState(INITIAL_YOUTUBE_WRITE_RQ)
   const [youtubeWriteRp, setYoutubeWriteRp] = useState(null)
+  const adminId = useAuthStore(state => state.loginMember.memberId)
 
   const { showSnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -48,10 +50,16 @@ export function useYoutubeVideoWrite() {
   const handleYoutubeRegister = () => {
     setYoutubeWriteRp(null)
 
+    const body = {
+      ...youtubeWriteRq,
+      ownerId: adminId,
+      videoLinkOwner: "HOME",
+    }
+
     api.post(
       "/video-links",
       { onSuccess, onError, onFinally, admin: true },
-      youtubeWriteRq
+      body
     )
   }
 

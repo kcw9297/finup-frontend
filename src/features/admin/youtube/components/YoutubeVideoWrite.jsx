@@ -4,6 +4,8 @@ import AdminSidebar from "../../../../base/components/layout/AdminSidebar"
 import theme from "../../../../base/design/thema";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useYoutubePreview } from "../hooks/useYoutubePreview";
+import { useEffect } from "react";
 
 /**
  * 유튜브 영상 등록 컴포넌트
@@ -14,6 +16,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 export default function YoutubeVideoWrite() {
   // [1] 훅 불러오기
   const {
+    previewRq, previewRp, loading,
+    changePreviewRq,
+    loadPreview,
+  } = useYoutubePreview()
+
+  const {
     youtubeWriteRq,
     changeYoutubeWriteRq,
     handleYoutubeRegister
@@ -21,18 +29,19 @@ export default function YoutubeVideoWrite() {
 
   const navigate = useNavigate();
 
-  // 미리보기 기능
-  const previewVideo = () => {
-    const url = youtubeWriteRq.url
-    if (!url || !url.includes("youtube")) {
-      alert("유효한 유튜브 영상 링크가 아닙니다")
-      return
+
+  // preview, write 연결(미리보기 기능)
+  useEffect(() => {
+    if (previewRp) {
+      changeYoutubeWriteRq({
+        title: previewRp.title ?? "",
+        content: previewRp.description ?? "",
+        thumbnailUrl: previewRp.thumbnailUrl ?? "",
+      })
     }
-    window.open(url, "_blank")
-  }
+  }, [previewRp])
 
-
-  // [2] UI 반환
+  // [3] UI 반환
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
 
@@ -58,48 +67,61 @@ export default function YoutubeVideoWrite() {
             유튜브 영상 등록(링크)
           </Typography>
         </Box>
+        {/* URL + 확인 버튼 */}
+        <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+          {/* 영상 링크 */}
+          <TextField
+            fullWidth
+            label="영상 등록 링크"
+            name="videoUrl"
+            placeholder="https://www.youtube.com/..."
+            value={previewRq.videoUrl}
+            onChange={(e) => changePreviewRq({ videoUrl: e.target.value })}
+            autoComplete="off"
+          />
 
-        {/* 영상 링크 */}
-        <TextField
-          fullWidth
-          label="영상 등록 링크"
-          name="url"
-          placeholder="https://www.youtube.com/..."
-          value={youtubeWriteRq.videoUrl}
-          onChange={(e) =>
-            changeYoutubeWriteRq({ [e.target.name]: e.target.value })
-          }
-          autoComplete="off"
-          sx={{ mb: 3 }}
-        />
+          <Button variant="contained" color="info" onClick={loadPreview} sx={{ whiteSpace: "nowrap" }}>
+            확인
+          </Button>
+        </Box>
 
-        {/* 제목 */}
-        <TextField
-          fullWidth
-          label="제목"
-          name="title"
-          value={youtubeWriteRq.title}
-          onChange={(e) =>
-            changeYoutubeWriteRq({ [e.target.name]: e.target.value })
-          }
-          autoComplete="off"
-          sx={{ mb: 3 }}
-        />
+        {/* 미리보기 패널 */}
+        {previewRp && (
+          <Paper
+            elevation={1}
+            sx={{
+              p: 2,
+              mb: 3,
+              borderRadius: 2,
+              backgroundColor: "#fafafa",
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+              영상 정보 미리보기
+            </Typography>
 
-        {/* 내용 */}
-        <TextField
-          fullWidth
-          label="내용"
-          name="content"
-          multiline
-          rows={10}
-          value={youtubeWriteRq.content}
-          onChange={(e) =>
-            changeYoutubeWriteRq({ [e.target.name]: e.target.value })
-          }
-          autoComplete="off"
-          sx={{ mb: 4 }}
-        />
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              제목: {previewRp.title}
+            </Typography>
+
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              설명: {previewRp.description}
+            </Typography>
+
+            {previewRp.thumbnailUrl && (
+              <Box
+                component="img"
+                src={previewRp.thumbnailUrl}
+                sx={{
+                  width: 240,
+                  height: "auto",
+                  borderRadius: 1,
+                  border: "1px solid #ddd",
+                }}
+              />
+            )}
+          </Paper>
+        )}
 
         {/* 버튼 영역 */}
         <Box
@@ -120,14 +142,6 @@ export default function YoutubeVideoWrite() {
 
           {/* 우측 버튼 그룹 */}
           <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant="contained"
-              color="info"
-              onClick={previewVideo}
-            >
-              영상 미리보기
-            </Button>
-
             <Button
               variant="contained"
               color="primary"
