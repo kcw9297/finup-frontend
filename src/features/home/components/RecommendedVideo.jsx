@@ -29,7 +29,7 @@ export default function GoodVideo ({ videoList }) {
   };
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
 
       <Box 
         sx={{ display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -38,7 +38,7 @@ export default function GoodVideo ({ videoList }) {
         {/* 제목 */}
         <Paper sx={{ display: 'flex', gap: '10px', alignItems: 'center', paddingRight: 1 }}>
           <Typography sx={{ color: 'base.main', backgroundColor: 'base.main' }}>&nbsp;</Typography>
-          <Typography>핵심 키워드</Typography>
+          <Typography>추천 영상</Typography>
         </Paper>
 
         {/* < > 버튼 */}
