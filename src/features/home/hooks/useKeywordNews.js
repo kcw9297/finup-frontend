@@ -1,12 +1,8 @@
-import { Box, Paper, Typography } from "@mui/material";
 import { useState, useMemo } from "react";
-import KeywordSection from "./KeywordSection";
-import KeywordContent from "./KeywordContent";
 
-// 핵심 키워드 + 뉴스 원문
-// 워드클라우드는 전역테마 적용 불가
+// 핵심 키워드 + 뉴스 원문 데이터
 
-export default function KeywordNews() {
+export function useKeywordNews () {
   // 뉴스 리스트 가짜 데이터
   const fakeNews = [
     {title: "코레일유통, 철도역 추석 맞아 각종 이벤트 진행",
@@ -61,47 +57,13 @@ export default function KeywordNews() {
       if (w.sentiment === "negative" && !showNegative) return false;
       return true;
     });
-  }, [originalKeywords, showPositive, showNegative]); // 필터 변경 시에만 재계산
+  }, [originalKeywords, showPositive, showNegative]);
 
-
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-      {/* 제목 */}
-      <Box
-        sx={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'20px',
-          "& .MuiTypography-root": { fontSize: 22, fontWeight: 600 }
-        }}
-      >
-        <Paper sx={{ display: 'flex', gap: '10px' }}>
-          <Typography sx={{ color: 'base.main', backgroundColor: 'base.main' }}>&nbsp;</Typography>
-          <Typography>핵심 키워드</Typography>
-        </Paper>
-        <Paper sx={{ display: 'flex', gap: '10px'}}>
-          <Typography sx={{ color: 'base.main', backgroundColor: 'base.main' }}>&nbsp;</Typography>
-          <Typography>기사 원문</Typography>
-        </Paper>
-      </Box>
-
-      {/* 본문 */}
-      <Box sx={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'20px'}}>
-        
-        {/* 핵심 키워드 */}
-        <KeywordSection
-          originalKeywords={originalKeywords}   // 뉴스 갱신 시에만 바뀌는 데이터
-          filteredKeywords={filteredKeywords}   // 필터용 데이터 (워드클라우드 위치는 불변)
-          showPositive={showPositive}
-          showNegative={showNegative}
-          setShowPositive={setShowPositive}
-          setShowNegative={setShowNegative}
-        />
-
-        {/* 기사 본문 */}
-        <Box sx={{ width: "100%" }}>
-          <KeywordContent list={fakeNews} />
-        </Box>
-      </Box>
-
-    </Box>
-  );
+  return {
+    fakeNews, 
+    originalKeywords, 
+    filteredKeywords,
+    showPositive, setShowPositive,
+    showNegative, setShowNegative
+  }
 }
