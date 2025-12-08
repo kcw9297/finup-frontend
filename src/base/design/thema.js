@@ -211,23 +211,8 @@ const theme = createTheme({
           '&:active': { boxShadow: 'none' },
           '&.Mui-focusVisible': { boxShadow: 'none' },
         }),
-
-        outlined: ({ theme }) => ({
-          border: `1px solid ${theme.palette.base.main}`, 
-          '&:hover': {
-            border: `1px solid ${theme.palette.base.dark}`,
-          },
-        }),
-
-        contained: ({ theme }) => ({
-          boxShadow: 'none',
-          backgroundColor: theme.palette.background.base,
-          '&:hover': {
-            boxShadow: 'none',
-            backgroundColor: theme.palette.background.light,
-          },
-        }),
       },
+      
     },
 
 

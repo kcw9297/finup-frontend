@@ -4,6 +4,8 @@ import { GoogleIcon } from '../../../base/components/icon/icon.jsx';
 import { useAuthLogin } from '../hooks/useAuthLogin.js';
 import logo from '../../../assets/logo.png'
 import CloseIcon from '@mui/icons-material/Close';
+import { Link } from 'react-router-dom';
+import { navigate } from '../../../base/config/globalHookConfig.js';
 
 /**
  * 로그인 페이지 컴포넌트
@@ -32,7 +34,7 @@ export default function AuthLogin() {
       padding: '0 30px',
     }}>
       <Box sx={{display: 'flex', flexDirection: 'row-reverse', marginTop: '30px'}}>
-        <IconButton sx={{ padding: '5px' }}><CloseIcon/></IconButton>
+        <IconButton onClick={() => navigate('/')} sx={{ padding: '5px' }}><CloseIcon/></IconButton>
         
       </Box>
       <Box sx={{display:'flex', justifyContent:'center', alignItems:'center'}} >
@@ -76,6 +78,13 @@ export default function AuthLogin() {
         >
           로그인
         </Button>
+
+        <Typography
+          component={Link} to="/login"
+          sx={{display:'flex', flexDirection:'row-reverse', fontSize:'12px', color:'text.light'}}
+        >
+          회원가입
+        </Typography>
       </Box>
       
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', }}>

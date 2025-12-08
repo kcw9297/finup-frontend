@@ -24,10 +24,8 @@ export default function AuthSocialBtn ({ icon, text, onClick, ...props }) {
         fontSize: '14px',
         fontWeight: 500,
         marginBottom: '30px',
-        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
         '&:hover': {
           backgroundColor: 'background.light',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
         },
         // 아이콘을 왼쪽에 고정
         '& .MuiButton-startIcon': {
