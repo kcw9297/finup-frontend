@@ -81,7 +81,7 @@ export default function AuthLogin() {
 
         <Typography
           component={Link} to="/login"
-          sx={{display:'flex', flexDirection:'row-reverse', fontSize:'12px', color:'text.light'}}
+          sx={{display:'flex', flexDirection:'row-reverse', fontSize:'12px', textDecorationLine: 'underline !important'}}
         >
           회원가입
         </Typography>

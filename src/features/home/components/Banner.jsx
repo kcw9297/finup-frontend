@@ -1,13 +1,21 @@
 import { Box } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { QuizModal } from "../../quiz/components/QuizModal";
 import banner from '../../../assets/banner.png';
 
 // 개념 테스트 이동 배너
 
 export default function Banner () {
+  const [open, setOpen] = useState(false)
+
   return(
-    <Box component={Link} to="" sx={{display:"flex", alignItems:"center", justifyContent:"center"}}>
-      <img src={banner} alt="배너" style={{height:300, borderRadius:20}}/>
-    </Box>
+    <>
+      <Box onClick={() => setOpen(true)}
+      sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'}}>
+        <img src={banner} alt="배너" style={{height:300, borderRadius:20}}/>
+      </Box>
+
+      <QuizModal open={open} onClose={() => setOpen(false)} />
+    </>
   )
 }
