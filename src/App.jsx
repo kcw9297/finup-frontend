@@ -121,7 +121,7 @@ export default function App() {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
     initGlobalHook(navigate, showSnackbar)
-  }, [])
+  }, [location.pathname])
 
   return (
     <>
