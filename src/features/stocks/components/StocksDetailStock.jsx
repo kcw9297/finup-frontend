@@ -1,21 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
+import { StockDetailContext } from "../context/StockDetailContext";
 import { useParams } from "react-router-dom";
 import thema from "../../../base/design/thema.js"
 import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
 //import { useStockDetail } from "../hooks/useStocksDetailStock.js";
-import { useStockDetail } from "../hooks/useStocksDetail.js";
+//import { useStockDetail } from "../hooks/useStocksDetail.js";
 
 export default function StocksDetailStock(){
   const { code } = useParams();
   // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
-  const { nameCard, detailStock, loading, error } = useStockDetail(code);
-
+  //const { nameCard, detailStock, loading, error } = useStockDetail(code);
+  const { detailStock } = useContext(StockDetailContext);
+/*
   const basicHead = detailStock.basicHead?.reduce((acc, item) => {
     acc[item.label] = item.value;
     return acc;
-  }, {});
+  }, {});*/
 
   return (
     // <Box>
@@ -34,26 +36,19 @@ export default function StocksDetailStock(){
             gap: 2,
             flexWrap: "wrap",
             alignItems: "flex-end", // 세로 기준 아래 정렬          
-          }}>
-            
-            {/* { detailStock.basicHead?.map((item) => (
-              <Typography variant= "body1" key={item.label}>
-                {item.value}
-              </Typography>
-            ))}  */}
-
+          }}>           
             <Typography variant="h5" fontWeight={600} >
-              {basicHead?.["종목명"]}
+              { detailStock.basicHead.stockName }
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
               국내   
             </Typography>                    
             <Typography variant="body1" /*color="text.secondary"*/>
-              {basicHead?.["종목코드"]}
+              { detailStock.basicHead.code }
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              {basicHead?.["대표 시장 한글명"]}
-            </Typography>
+              { detailStock.basicHead.marketName }
+            </Typography>          
           </Box>
 
           {/* 정보 카드 */}

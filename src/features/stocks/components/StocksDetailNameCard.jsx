@@ -1,7 +1,10 @@
 import { Card, CardContent, Box, Typography } from "@mui/material";
 import thema from "../../../base/design/thema.js"
+import { useContext } from "react";
+import { StockDetailContext } from "../context/StockDetailContext";
+import defaultImg from "../../../assets/default_stock.png";
 
-export default function StocksDetailNameCard(nameCard) {
+export default function StocksDetailNameCard() {
 
   // const nameCardInfo = Object.fromEntries(
   //   nameCard.map(item => [item.label, item.value])
@@ -17,6 +20,8 @@ export default function StocksDetailNameCard(nameCard) {
   // //디폴트 이미지 나중에 정적 소스로 넣고 url 변경하기(현재는 그냥 삼성전자로함)
   // const defaultImg = "https://static.toss.im/png-icons/securities/icn-sec-fill-005930.png"; 
   
+  const { nameCard } = useContext(StockDetailContext); 
+
   return (
     <Card
       sx={{
@@ -33,9 +38,8 @@ export default function StocksDetailNameCard(nameCard) {
       <Box sx={{ width: 80, height: 80, position: "relative" }}>
         <Box
           component="img"
-          //src={imgSrc}        
-          //onError={(e) => { e.currentTarget.src = defaultImg; }}
-          src="https://static.toss.im/png-icons/securities/icn-sec-fill-005930.png"
+          src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${nameCard.code}.png`}        
+          onError={(e) => { e.currentTarget.src = defaultImg; }}         
           sx={{
             width: 70,
             height: 70,
@@ -66,18 +70,14 @@ export default function StocksDetailNameCard(nameCard) {
         >
           <Box sx={{ display: "flex", gap: 1 }}>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              삼성전자
-              {/* 가져온거: {htsKorIsnm},  걍 쓴거: 삼성전자 */}
+              { nameCard.stockName }{/* 종목명 */}
             </Typography>
             <Typography sx={{ fontSize: 16, fontWeight: 500, color: "#8E98A8" }}>
-              종목코드
-              {/* {code} */}
+              { nameCard.code }{/* 종목코드 */}
             </Typography>
           </Box>
-
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            가격
-            {/* {stckPrpr} */}
+            { nameCard.price }{/* 가격 */}           
           </Typography>
         </CardContent>
       </Card>
