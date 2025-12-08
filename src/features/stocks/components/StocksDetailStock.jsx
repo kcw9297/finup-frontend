@@ -38,16 +38,16 @@ export default function StocksDetailStock(){
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>           
             <Typography variant="h5" fontWeight={600} >
-              { detailStock.basicHead.stockName }
+              {/* { detailStock.basicHead.stockName } */}
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
               국내   
             </Typography>                    
             <Typography variant="body1" /*color="text.secondary"*/>
-              { detailStock.basicHead.code }
+              {/* { detailStock.basicHead.code } */}
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              { detailStock.basicHead.marketName }
+              {/* { detailStock.basicHead.marketName } */}
             </Typography>          
           </Box>
 
@@ -74,11 +74,11 @@ export default function StocksDetailStock(){
                     width: "23%",                  
                     px: 1,
                     py: 2,                    
-                    borderBottom: "1px solid #B0C3EB",
+                    borderBottom: (theme) => `1px solid ${theme.palette.base.lightActive}`
                   }}
                 >
                   <Typography /*color="text.primary"*/ sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
-                    <Box sx={{ color: "#B0C3EB", display: 'flex', alignItems: 'center', px: 1 }}>
+                    <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
                       <InfoIcon/>            
                     </Box>
                   </Typography>                                  
@@ -140,7 +140,7 @@ function InfoCard({ title, rows }) {
       sx={{
         flex: 1,
         p: 2,
-        //background: "#F1F4F7",
+        background: (theme) => theme.palette.background.light,
         borderRadius: 4,
       }}
     >
@@ -165,7 +165,7 @@ function InfoCard({ title, rows }) {
             {/* 왼쪽 영역 */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography fontSize={16}>{item.label}</Typography>                  
-              <Box sx={{ color: "#B0C3EB", display: 'flex', alignItems: 'center', px: 1 }}>
+              <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
                 <InfoIcon/>            
               </Box>
             </Stack>
@@ -181,7 +181,7 @@ function InfoCard({ title, rows }) {
           </Box>
 
           {/* 행 구분선 */}
-          {i < rows.length - 1 && <Divider sx={{ borderColor: "#B0C3EB" }} />}
+          {i < rows.length - 1 && <Divider sx={{ borderColor: (theme) => theme.palette.base.lightActive }} />}
         </Box>
       ))}
     </Box>

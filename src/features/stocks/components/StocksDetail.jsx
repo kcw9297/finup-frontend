@@ -12,13 +12,11 @@ export default function StocksDetail() {
     nameCard,
     detailStock
   }), [nameCard, detailStock]);
-  //if (loading) return <p>Loading...</p>;
-  //if (error) return <p>Error!</p>;
 
   return (
     <StockDetailContext.Provider value={ value }>    
       <StocksDetailNameCard />
-      <StocksDetailTab />       
+      <StocksDetailTab />         
     </StockDetailContext.Provider>
   );
 }

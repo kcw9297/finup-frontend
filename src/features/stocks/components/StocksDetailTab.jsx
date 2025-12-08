@@ -17,7 +17,7 @@ export default function StocksDetailTab() {
       exclusive
       onChange={handleChange}
       sx={{
-      background: "#F1F4F7",
+      background: (theme) => theme.palette.background.light,
       //p: 0.5,
       borderRadius: 1,
       "& .MuiToggleButton-root": {
@@ -26,7 +26,7 @@ export default function StocksDetailTab() {
         borderRadius: 1,
         fontSize: 16,
         fontWeight: 400,
-        color: "#1E1E1E",
+        //color: "#1E1E1E",
         textTransform: "none",
         "&.Mui-selected": {
           backgroundColor: "white",
