@@ -28,9 +28,9 @@ export function useStockDetail(code) {
     
     /* 네임 카드  */
     setNameCard([
-      {label: "종목명", value: detail.htsKorIsnm },
-      {label: "종목코드", value: code },
-      {label: "주식 현재가", value: detail.stckPrpr }
+      { label: "종목명", value: detail.htsKorIsnm },
+      { label: "종목코드", value: code },
+      { label: "주식 현재가", value: detail.stckPrpr }
     ]);
 
     /* 종목상세 */    
@@ -38,6 +38,8 @@ export function useStockDetail(code) {
       /* 기본정보 */
       //기본정보 헤더
       basicHead: [
+        { label: "종목명", value: detail.htsKorIsnm },
+        { label: "종목코드", value: code },
         { label: "대표 시장 한글명", value: detail.rprsMrktKorName }
       ],
       //기본정보 카드
