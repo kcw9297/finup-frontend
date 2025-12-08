@@ -23,6 +23,7 @@ import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
 import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
+import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -62,7 +63,8 @@ const nastedRoutes = [
       // url : 회원 목록
       { path: 'members', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
       // url : 유튜브 영상
-      { path: "youtube", element: <ProtectedRoute><YoutubeVideoWritePage /></ProtectedRoute> }
+      { path: "youtube", element: <ProtectedRoute><YoutubeListPage /></ProtectedRoute> },
+      { path: "youtube/write", element: <ProtectedRoute><YoutubeVideoWritePage /></ProtectedRoute> }
     ]
   },
 

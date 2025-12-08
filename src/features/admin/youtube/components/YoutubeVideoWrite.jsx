@@ -1,7 +1,9 @@
-import { Box, Paper, TextField, Typography, Button } from "@mui/material";
+import { Box, Paper, TextField, Typography, IconButton, Button } from "@mui/material";
 import { useYoutubeVideoWrite } from "../hooks/useYoutubeVideoWrite";
 import AdminSidebar from "../../../../base/components/layout/AdminSidebar"
 import theme from "../../../../base/design/thema";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 /**
  * 유튜브 영상 등록 컴포넌트
@@ -17,6 +19,8 @@ export default function YoutubeVideoWrite() {
     handleYoutubeRegister
   } = useYoutubeVideoWrite()
 
+  const navigate = useNavigate();
+
   // 미리보기 기능
   const previewVideo = () => {
     const url = youtubeWriteRq.url
@@ -26,6 +30,7 @@ export default function YoutubeVideoWrite() {
     }
     window.open(url, "_blank")
   }
+
 
   // [2] UI 반환
   return (
@@ -44,10 +49,15 @@ export default function YoutubeVideoWrite() {
           backgroundColor: theme.palette.base.light
         }}
       >
-        {/* 제목 */}
-        <Typography variant="h5" sx={{ fontWeight: 600, mb: 4 }}>
-          유튜브 영상 등록(링크)
-        </Typography>
+        {/* 제목, 뒤로가기 */}
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, mx: "auto" }}>
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            유튜브 영상 등록(링크)
+          </Typography>
+        </Box>
 
         {/* 영상 링크 */}
         <TextField

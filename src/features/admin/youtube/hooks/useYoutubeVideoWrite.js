@@ -5,7 +5,7 @@ import { api } from "../../../../base/utils/fetchUtils";
 import { navigate } from './../../../../base/config/globalHookConfig';
 
 const INITIAL_YOUTUBE_WRITE_RQ = {
-  url: "",
+  videoUrl: "",
   title: "",
   content: "",
 }
@@ -38,7 +38,7 @@ export function useYoutubeVideoWrite() {
     }, 300)
   }
 
-  const onError = (rp) => {
+  const onError = () => {
     showSnackbar("유튜브 영상 등록에 실패했습니다.", "error")
   }
 
@@ -49,7 +49,7 @@ export function useYoutubeVideoWrite() {
     setYoutubeWriteRp(null)
 
     api.post(
-      "/admin/api/video-links",
+      "/video-links",
       { onSuccess, onError, onFinally, admin: true },
       youtubeWriteRq
     )
