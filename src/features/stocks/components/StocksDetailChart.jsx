@@ -1,21 +1,14 @@
-import { Box, Paper, ToggleButton, Typography } from "@mui/material";
+import { Box, Chip, Paper, ToggleButton, Tooltip, Typography } from "@mui/material";
 import thema from "../../../base/design/thema.js"
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
-import StocksChart from "./StocksChart.jsx";
-import CandleTypeTabs from "./CandleTypeTabs.jsx";
-import { useState } from "react";
-import CandleTooltip from "./CandleToopTip.jsx";
-import { candleTooltipText } from "../constants/chartToolTipText.js";
+import CandleTypeTabs from "./chart/CandleTypeTabs.jsx";
+import StocksCandleChart from "./chart/StocksCandleChart.jsx";
+import { useStocksDetailChart } from "../hooks/useStocksDetailChart.js";
+import StocksDetailTooltip from "./StocksDetailToopTip.jsx";
+import {chartToolTipText} from "../constants/stocksToolTipText.js";
 
 export default function StocksDetailChart(){
-  const [candleType, setCandleType] = useState("day");
-  const dummyItems = [
-    { stck_bsop_date: "20240101", stck_clpr: "260000" },
-    { stck_bsop_date: "20240102", stck_clpr: "264000" },
-    { stck_bsop_date: "20240103", stck_clpr: "259000" },
-    { stck_bsop_date: "20240104", stck_clpr: "262000" },
-    { stck_bsop_date: "20240105", stck_clpr: "265000" },
-  ];
+  const {items, candleType, setCandleType, loading} = useStocksDetailChart("005930"); //넘어온 주식코드 넣어야됨
 
   return(
     <Box sx={{backgroundColor: thema.palette.background.base}}>
@@ -26,18 +19,38 @@ export default function StocksDetailChart(){
         value={candleType} 
         onChange={(e,v) => v && setCandleType(v)} 
         renderButton={(type) => (
-          <CandleTooltip text={candleTooltipText[type]}>
+          <StocksDetailTooltip text={chartToolTipText[type]}>
             <ToggleButton value={type}>
               {type === "day" && "일"}
               {type === "week" && "주"}
               {type === "month" && "월"}
             </ToggleButton>
-          </CandleTooltip>
+          </StocksDetailTooltip>
       )} />
+      
       <Box sx={{display: "flex", gap: 3, mt: 2}}>
         
-        <Box sx={{ flex: 2, background: "#ffffff", p: 2, borderRadius: 2, boxShadow: 1 }}>
-          <StocksChart items={dummyItems} />
+        <Box sx={{ flex: 2, background: "#ffffff", p: 2, borderRadius: 2, boxShadow: 1}}>
+          <Box sx={{
+            display: "flex",
+            gap: 2,
+            mt: 1,
+            mb: 1,
+            alignItems: "center"
+          }}>
+            <Tooltip title="최근 5일 종가 평균">
+              <Chip label="MA5" sx={{ background: "#FF4D4D", color: "white" }} />
+            </Tooltip>
+
+            <Tooltip title="최근 20일 종가 평균">
+              <Chip label="MA20" sx={{ background: "#3A7AFE", color: "white" }} />
+            </Tooltip>
+
+            <Tooltip title="최근 60일 종가 평균">
+              <Chip label="MA60" sx={{ background: "#9B59B6", color: "white" }} />
+            </Tooltip>
+          </Box>
+          <StocksCandleChart items={items}/>
         </Box>
 
         <Paper sx={{ flex: 1, p: 2, borderRadius: 2 }} elevation={1}>

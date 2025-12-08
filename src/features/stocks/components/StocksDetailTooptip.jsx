@@ -1,6 +1,6 @@
 import { Tooltip, Box } from "@mui/material";
 import thema from "../../../base/design/thema.js"
-export default function CandleTooltip({ text, children }) {
+export default function StocksDetailTooltip({ text, children }) {
   return (
     <Tooltip 
       title={text}
