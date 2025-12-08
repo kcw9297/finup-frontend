@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import KeywordSection from "./KeywordSection";
 import KeywordContent from "./KeywordContent";
 
+// 핵심 키워드 + 뉴스 원문
 // 워드클라우드는 전역테마 적용 불가
 
 export default function KeywordNews() {

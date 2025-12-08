@@ -207,13 +207,10 @@ const theme = createTheme({
 
         root : {
           textTransform: 'none',  // 버튼 단어가 강제로 대문자로 변환되는걸 방지
-          borderRadius: 8,        // 버튼 모서리
+          borderColor: 'base.main'
         }
       },
 
-      defaultProps: {
-        color: 'base',  // 버튼 색상
-      }
     },
 
     // TextField
@@ -249,17 +246,19 @@ const theme = createTheme({
 
     // IconButton
     MuiIconButton: {
-      defaultProps: {
-        color: 'inherit',
-      },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          "&:hover": {
-            backgroundColor: `${theme.palette.background.light} !important`,
-          }
-        })
-      }
+    defaultProps: {
+      color: "inherit",
+      disableRipple: true,
+      disableFocusRipple: true,
     },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        "&:hover": {
+          backgroundColor: `${theme.palette.background.light} !important`,
+        }
+      })
+    }
+  },
 
 
     // Snackbar

@@ -102,9 +102,9 @@ export default function MemberList() {
           <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                <TableCell>회원번호(ID)</TableCell>
+                <TableCell>ID</TableCell>
                 <TableCell>이름</TableCell>
-                <TableCell>이메일</TableCell>
+                <TableCell sx={{ width: "25%" }}>이메일</TableCell>
                 <TableCell>활성여부</TableCell>
                 <TableCell>권한</TableCell>
                 <TableCell>소셜</TableCell>
@@ -131,8 +131,8 @@ export default function MemberList() {
                   <TableCell>{m.nickname}</TableCell>
                   <TableCell>{m.email}</TableCell>
                   <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
-                  <TableCell>{m.memberRole}</TableCell>
-                  <TableCell>{m.socialType}</TableCell>
+                  <TableCell>{m.memberRoleValue}</TableCell>
+                  <TableCell>{m.socialTypeValue}</TableCell>
                 </TableRow>)}
             </TableBody>
           </Table>
