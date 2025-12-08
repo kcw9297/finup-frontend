@@ -5,6 +5,11 @@ import { IconButton, TextField, Button, Typography, Box, Paper, Divider } from "
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNoticeEdit } from "../hooks/useNoticeEdit";
 
+/**
+ * 공지사항 게시글 편집
+ * @author khj
+ * @since 2025-12-03
+ */
 export default function AdminNoticeEdit() {
   const { noticeId } = useParams()
   const navigate = useNavigate()

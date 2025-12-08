@@ -4,12 +4,19 @@ import thema from "../../../base/design/thema.js"
 import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
-import { useStockDetail } from "../hooks/useStocksDetailStock.js";
+//import { useStockDetail } from "../hooks/useStocksDetailStock.js";
+import { useStockDetail } from "../hooks/useStocksDetail.js";
 
 export default function StocksDetailStock(){
   const { code } = useParams();
-  const { basic, price, valuation, flow, risk, loading} = useStockDetail(code);
-  
+  // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
+  const { nameCard, detailStock, loading, error } = useStockDetail(code);
+
+  const basicHead = detailStock.basicHead?.reduce((acc, item) => {
+    acc[item.label] = item.value;
+    return acc;
+  }, {});
+
   return (
     // <Box>
     <Box sx={{backgroundColor: thema.palette.background.base}}>
@@ -28,17 +35,24 @@ export default function StocksDetailStock(){
             flexWrap: "wrap",
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>
-            <Typography variant="h5" fontWeight={600}>
-              삼성전자
+            
+            {/* { detailStock.basicHead?.map((item) => (
+              <Typography variant= "body1" key={item.label}>
+                {item.value}
+              </Typography>
+            ))}  */}
+
+            <Typography variant="h5" fontWeight={600} >
+              {basicHead?.["종목명"]}
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              국내
+              국내   
+            </Typography>                    
+            <Typography variant="body1" /*color="text.secondary"*/>
+              {basicHead?.["종목코드"]}
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              005930
-            </Typography>
-            <Typography variant="body1" /*color="text.secondary"*/>
-              코스피
+              {basicHead?.["대표 시장 한글명"]}
             </Typography>
           </Box>
 
@@ -54,7 +68,7 @@ export default function StocksDetailStock(){
             }}
           >
             <Grid container sx={{ justifyContent: "space-between" }}>
-              {basic.map((item, index) => (
+              { detailStock.basic?.map((item, index) => (
                 <Grid
                   item               
                   key={index}
@@ -89,10 +103,10 @@ export default function StocksDetailStock(){
           </Box>
           
           <Box sx={{ display: "flex", px: 2, gap: 3, overflow: "hidden" }}>
-            <InfoCard title="가격" rows={price} />
-            <InfoCard title="가치평가" rows={valuation} />
-            <InfoCard title="수급·거래" rows={flow} />
-            <InfoCard title="리스크·상태" rows={risk} />
+            <InfoCard title="가격" rows={ detailStock.price } />
+            <InfoCard title="가치평가" rows={ detailStock.valuation } />
+            <InfoCard title="수급·거래" rows={ detailStock.flow } />
+            <InfoCard title="리스크·상태" rows={ detailStock.risk } />
           </Box>
         </Box>
 
@@ -143,7 +157,7 @@ function InfoCard({ title, rows }) {
       </Box>
 
       {/* 반복되는 행 */}
-      {rows.map((item, i) => (
+      {rows?.map((item, i) => (
         <Box key={i}>
           <Box
             sx={{

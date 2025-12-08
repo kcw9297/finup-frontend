@@ -103,7 +103,7 @@ const theme = createTheme({
           margin: 0,
           padding: 0
         }),
-        
+
       },
 
       // 기본 프롭스
@@ -129,7 +129,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           '& .MuiTableRow-root': {
-            backgroundColor: theme.palette.background.dark, // 배경 색상
+            backgroundColor: theme.palette.background.light, // 배경 색상
           },
           '& .MuiTableCell-root': {
             fontWeight: 'bold',
@@ -149,7 +149,6 @@ const theme = createTheme({
         },
       },
     },
-    
 
     // Typography
     MuiTypography: {
@@ -163,15 +162,29 @@ const theme = createTheme({
       },
     },
 
-    // p
+    // p + 스크롤바
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
+        // p
         p: {
           margin: 0,
           padding: 0,
           alignItems: 'center',
-        }
-      }
+        },
+
+        // 스크롤바
+        "*::-webkit-scrollbar": {
+          width: "2px",
+          height: "2px",
+        },
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: theme.palette.line.main,
+          borderRadius: 100,
+        },
+        "*::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+      }),
     },
 
     // Link
@@ -194,13 +207,10 @@ const theme = createTheme({
 
         root : {
           textTransform: 'none',  // 버튼 단어가 강제로 대문자로 변환되는걸 방지
-          borderRadius: 8,        // 버튼 모서리
+          borderColor: 'base.main'
         }
       },
 
-      defaultProps: {
-        color: 'base',  // 버튼 색상
-      }
     },
 
     // TextField
@@ -236,17 +246,19 @@ const theme = createTheme({
 
     // IconButton
     MuiIconButton: {
-      defaultProps: {
-        color: 'inherit',
-      },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          "&:hover": {
-            backgroundColor: `${theme.palette.background.light} !important`,
-          }
-        })
-      }
+    defaultProps: {
+      color: "inherit",
+      disableRipple: true,
+      disableFocusRipple: true,
     },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        "&:hover": {
+          backgroundColor: `${theme.palette.background.light} !important`,
+        }
+      })
+    }
+  },
 
 
     // Snackbar

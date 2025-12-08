@@ -1,6 +1,8 @@
 import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import WordCloud from "./WordCloud";
 
+// 핵심 키워드
+
 export default function KeywordSection({
   originalKeywords,     // 뉴스 키워드 원본
   filteredKeywords,     // 필터 적용된 목록 (색·보임용)
@@ -10,7 +12,7 @@ export default function KeywordSection({
   setShowNegative,
 }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: "10px" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 5}}>
       {/* 체크박스 */}
       <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
         <FormControlLabel
