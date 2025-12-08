@@ -58,7 +58,7 @@ export default function Header() {
           <Box sx={{display:'flex', alignItems:'center', flex:1, margin:0, padding:0, gap:'50px'}}>
             
             {/* 로고 */}
-            <Box component={Link} to="/" sx={{display:'flex', justifycontent:'center', alignItems:'center', cursor:'pointer'}} >
+            <Box component={Link} to="/" sx={{display:'flex', justifyContent:'center', alignItems:'center', cursor:'pointer'}} >
               <img src={logo} alt="로고" style={{height: 40}} />
             </Box>
             

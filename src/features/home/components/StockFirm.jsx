@@ -36,12 +36,18 @@ export default function StockFirm( {brokerList } ) {
 
         {/* < > 버튼 */}
         <Box>
-          <IconButton onClick={handlePrev}>
-            <ArrowBackIosNewIcon sx={{ color: isPrevDisabled ? "text.light" : "text.main" }}/>
+          <IconButton
+            onClick={handlePrev}
+            sx={{ cursor: isPrevDisabled ? 'default' : 'pointer', pointerEvents: isPrevDisabled ? 'none' : 'auto' }}
+          >
+            <ArrowBackIosNewIcon sx={{ color: isPrevDisabled ? 'text.light' : 'text.main' }}/>
           </IconButton>
 
-          <IconButton onClick={handleNext}>
-            <ArrowForwardIosIcon sx={{ color: isNextDisabled ? "text.light" : "text.main" }}/>
+          <IconButton
+            onClick={handleNext}
+            sx={{ cursor: isNextDisabled ? "default" : "pointer", pointerEvents: isNextDisabled ? "none" : "auto" }}
+          >
+            <ArrowForwardIosIcon sx={{ color: isNextDisabled ? 'text.light' : 'text.main' }}/>
           </IconButton>
         </Box>
       </Box>

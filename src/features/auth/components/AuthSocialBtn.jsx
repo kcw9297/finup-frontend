@@ -1,4 +1,4 @@
-import { Box, TextField, Button, Paper, Typography, Divider, Stack } from '@mui/material';
+import { Button} from '@mui/material';
 
 /**
  * 소셜 로그인 버튼 컴포넌트
@@ -12,18 +12,22 @@ export default function AuthSocialBtn ({ icon, text, onClick, ...props }) {
       size="large"
       onClick={onClick}
       sx={{
+        height: '40px',
         position: 'relative',
         justifyContent: 'center',
-        color: '#000', // 검은색 텍스트
-        borderColor: '#dadce0',
+        color: 'text.main',
+        backgroundColor: 'background.base',
+        border: 1,
+        borderColor: 'line.main',
+        borderRadius: 2,
         textTransform: 'none', // 대문자 변환 방지
         fontSize: '14px',
         fontWeight: 500,
-        padding: '10px 24px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        marginBottom: '30px',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
         '&:hover': {
-          backgroundColor: 'rgba(0, 0, 0, 0.04)',
-          borderColor: '#dadce0',
+          backgroundColor: 'background.light',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
         },
         // 아이콘을 왼쪽에 고정
         '& .MuiButton-startIcon': {
