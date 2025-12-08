@@ -1,4 +1,4 @@
-import { navigate, showSnackbar } from '../../base/config/globalHookConfig'
+import { navigate, showSnackbar, logout } from '../../base/config/globalHookConfig'
 
 // 환경 변수 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -67,6 +67,8 @@ async function fetchInner(endpoint, options = {}, body = {}) {
             setTimeout(() => {
               const currentPath = window.location.pathname;
               const currentSearch = window.location.search;
+              console.log("currentPath = ", currentPath, " currentSearch = ", currentSearch);
+              
 
               // 이미 /login 페이지에 있으면 리다이렉트 안 함
               if (currentPath === '/login') return;
@@ -74,6 +76,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
               params.delete('returnUrl'); // 이미 returnUrl 가 있는 경우, 삭제 후 다시 생성
               const cleanSearch = params.toString();
               const returnUrl = currentPath + (cleanSearch ? `?${cleanSearch}` : '');
+              logout() // 로그아웃 처리
 
               navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`, { replace: true })
             }, 300);
@@ -96,8 +99,6 @@ async function fetchInner(endpoint, options = {}, body = {}) {
             // 리다이렉트 값을 넘기고 반환
             return { ...rp, redirected: true }
           }
-
-          // fieldError 발생 시
           
           // 그 외 오류는 스낵바만 출력
           showSnackbar(rp.message || '오류가 발생했습니다.')
@@ -105,7 +106,6 @@ async function fetchInner(endpoint, options = {}, body = {}) {
 
       // 에러 콜백 함수 존재 시 처리
       if (options.onError) options.onError(rp)
-
 
       // 성공 처리
     } else {
@@ -115,7 +115,6 @@ async function fetchInner(endpoint, options = {}, body = {}) {
 
     // promise 반환
     return rp
-
 
     // 서버 요청 실패 처리 (서버에 요청을 보내지)
   } catch (err) {
