@@ -23,7 +23,7 @@ export default function PageBar({ pagination, onChange }) {
         boundaryCount={1} // 처음/끝에 보이는 페이지 수
         sx={(theme) => ({
           '& .MuiPaginationItem-root.Mui-selected': {
-            color: theme.palette.base.contrastText, // base 테마의 대비 색상
+            color: theme.palette.text.contrastText, // base 테마의 대비 색상
             backgroundColor: theme.palette.base.main, // base 테마 메인 색상
             '&:hover': {
               backgroundColor: theme.palette.base.main, // palette 색상 유지

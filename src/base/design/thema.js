@@ -230,7 +230,7 @@ const theme = createTheme({
 
           // 기본 테두리 색상 및 두께
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.main,  // 파란색 테두리
+            //borderColor: theme.palette.base.main,  // 파란색 테두리
             borderWidth: '3px',
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {

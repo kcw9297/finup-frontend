@@ -53,17 +53,17 @@ const nastedRoutes = [
   {
     path: '/admin/notices/*', // url : 관리자 공지사항
     children: [
-      { path: '', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
-      { path: ':noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: ':noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
-      { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      { path: '', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeListPage /></ProtectedRoute> },
+      { path: ':noticeId', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeDetailPage /></ProtectedRoute> },
+      { path: ':noticeId/edit', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeEditPage /></ProtectedRoute> },
+      { path: 'write', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeWritePage /></ProtectedRoute> },
     ]
   },
 
   {
     path: '/admin/members/*',
     children: [
-      { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+      { path: '', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
     ]
   },
 
@@ -112,7 +112,7 @@ export default function App() {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
     initGlobalHook(navigate, showSnackbar)
-  }, [])
+  }, [location.pathname])
 
   return (
     <>
