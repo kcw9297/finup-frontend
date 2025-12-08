@@ -58,7 +58,7 @@ export default function Header() {
           <Box sx={{display:'flex', alignItems:'center', flex:1, margin:0, padding:0, gap:'50px'}}>
             
             {/* 로고 */}
-            <Box component={Link} to="/" sx={{display:'flex', justifycontent:'center', alignItems:'center', cursor:'pointer'}} >
+            <Box component={Link} to="/" sx={{display:'flex', justifyContent:'center', alignItems:'center', cursor:'pointer'}} >
               <img src={logo} alt="로고" style={{height: 40}} />
             </Box>
             
@@ -86,7 +86,7 @@ export default function Header() {
           {/* 우측 프로필 + 로그인 */}
           <Box sx={{display:'flex', alignItems:'center', gap:3}}>
 
-            <Box onClick={() => alert('프로필 클릭')} sx={{
+            <Box onClick={() => navigate("/admin/members")} sx={{
               height:50,
               display:'flex',
               alignItems:'center',
@@ -97,7 +97,7 @@ export default function Header() {
               "&:hover": {backgroundColor:"background.light"}
               }}>
               {/* 프로필 아이콘 */}
-              <Box >
+              <Box>
                 <Avatar 
                   src={loginMember?.profileImageUrl} // 프로필 이미지 URL
                   sx={{width:35, height:35}}
@@ -106,7 +106,14 @@ export default function Header() {
                   <AccountCircleIcon sx={{fontSize:35, color:"inherit", backgroundColor:"action"}}/>
                 </Avatar>
               </Box>
-              <p style={{fontSize:14, color:"text.main"}}>로그인이 필요합니다</p>
+
+              {loading ? (
+                <p style={{fontSize:14, color:"text.main"}}>로딩중..</p>
+              ) : isAuthenticated ? (
+                <p style={{fontSize:14, color:"text.main"}}>{loginMember.nickname}님 환영합니다</p>
+              ) : (
+                <p style={{fontSize:14, color:"text.main"}}>로그인이 필요합니다</p>
+              )}
             </Box>
 
             {/* 로그인/로그아웃 아이콘 */}

@@ -22,13 +22,15 @@ import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
+import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
+import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
   { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
-  
+
 ]
 
 // 자식이 있는 라우팅 리스트
@@ -51,21 +53,28 @@ const nastedRoutes = [
   },
 
   {
-    path: '/admin/notices/*', // url : 관리자 공지사항
+    path: '/admin/*', // url : 관리자 공지사항
     children: [
-      { path: '', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
-      { path: ':noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: ':noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
-      { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      // url : 관리자 공지사항
+      { path: 'notices/', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
+      { path: 'notices/write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      // url : 회원 목록
+      { path: 'members', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+      // url : 유튜브 영상
+      { path: "youtube", element: <ProtectedRoute><YoutubeListPage /></ProtectedRoute> },
+      { path: "youtube/write", element: <ProtectedRoute><YoutubeVideoWritePage /></ProtectedRoute> }
     ]
   },
 
   {
-    path: '/admin/members/*',
+    path: '/admin/*',
     children: [
-      { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+
     ]
   },
+
 
   {
     path: '/stocks/*', //url : 종목 +
@@ -112,7 +121,7 @@ export default function App() {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
     initGlobalHook(navigate, showSnackbar)
-  }, [])
+  }, [location.pathname])
 
   return (
     <>
