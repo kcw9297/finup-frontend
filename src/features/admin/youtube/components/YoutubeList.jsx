@@ -8,10 +8,11 @@ import {
   TableBody, TableRow, TableCell, Typography, IconButton, Tooltip, Grid
 } from "@mui/material";
 
-import SearchBar from "../../../../base/components/bar/SearchBar";
-import PageBar from "../../../../base/components/bar/PageBar";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
+
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 // 검색 요청 초기값 (MemberList와 동일 구조 유지)
 const INITIAL_SEARCH_RQ = {
@@ -20,7 +21,8 @@ const INITIAL_SEARCH_RQ = {
   pageNum: 1,
   size: 10,
 };
-
+// 한 화면에 몇 개를 보여줄지(밑 슬라이드)
+const VISIBLE_COUNT = 3;
 /**
  * 유튜브 영상 목록 리스트
  * @since 2025-12-10
@@ -31,6 +33,8 @@ export default function YoutubeList() {
 
   // [1] 검색 요청 상태
   const [searchRq, setSearchRq] = useState(INITIAL_SEARCH_RQ)
+  const [slideIndex, setSlideIndex] = useState(0)
+
 
   const changeSearchRq = (rq) => {
     setSearchRq(prev => ({ ...prev, ...rq }))
@@ -43,6 +47,8 @@ export default function YoutubeList() {
     fetchYoutubeList
   } = useYoutubeList(searchRq)
 
+  // 총 슬라이드 페이지 수
+  const maxIndex = Math.ceil(youtubeList.length / VISIBLE_COUNT) - 1;
   // 검색 조건 바뀔 때마다 리스트 자동 조회
   useEffect(() => {
     fetchYoutubeList();
@@ -56,7 +62,15 @@ export default function YoutubeList() {
     { value: "url", label: "영상링크" },
   ]
 
+  // 슬라이드 버튼/위치 인덱스
+  const handlePrev = () => {
+    setSlideIndex(prev => Math.max(prev - 1, 0));
+  }
+  const handleNext = () => {
+    setSlideIndex(prev => Math.min(prev + 1, maxIndex))
+  }
 
+  // 필터 옵션
   const handleFilter = (value) => {
     changeSearchRq({ filter: value })
   }
@@ -71,7 +85,8 @@ export default function YoutubeList() {
     <Box sx={{ display: "flex", width: "100%" }}>
 
       {/* 우측 콘텐츠 영역 */}
-      <Box sx={{ flexGrow: 1, padding: 4 }}>
+      <Box sx={{ flexGrow: 1, padding: 4, pt: 6, pl: 6, position: "relative" }}>
+
         {/* 상단 타이틀 */}
         <Box sx={{
           display: "flex",
@@ -93,19 +108,33 @@ export default function YoutubeList() {
             </IconButton>
           </Tooltip>
         </Box>
-        {/* 검색 바 */}
-        <SearchBar
-          searchRq={searchRq}
-          onChange={(rq) => changeSearchRq(rq)}
-          onSubmit={(e) => {
-            e.preventDefault();
-            fetchYoutubeList();
-          }}
-          filterOnChange={handleFilter}
-          selectItems={youtubeFilterOptions}
-        />
-        <Box sx={{ mt: 4 }}>
-          <Grid container spacing={3}>
+        <Box sx={{
+          position: "absolute",
+          top: 20, right: 20,
+          display: "flex",
+          gap: 1, zIndex: 10
+        }}>
+          <IconButton size="small" onClick={handlePrev}>
+            <ArrowBackIosNewIcon fontSize="small" />
+          </IconButton>
+
+          <IconButton size="small" onClick={handleNext}>
+            <ArrowForwardIosIcon fontSize="small" />
+          </IconButton>
+        </Box>
+
+        <Box sx={{
+          mt: 4, ml: 10,
+          overflow: "hidden",
+          width: "80%"
+        }}>
+          <Box
+            sx={{
+              display: "flex",
+              transition: "transform 0.4s ease",
+              transform: `translateX(-${slideIndex * (100 / VISIBLE_COUNT)}%)`,
+            }}
+          >
             {youtubeList.length === 0 && (
               <Typography sx={{ mx: "auto", mt: 5 }}>
                 영상 데이터가 없습니다.
@@ -113,27 +142,18 @@ export default function YoutubeList() {
             )}
 
             {youtubeList.map((item) => (
-              <Grid item key={item.videoId} xs={12} sm={6} md={4} lg={3}>
+              <Box
+                key={item.videoId}
+                sx={{
+                  flex: `0 0 calc(100% / ${VISIBLE_COUNT})`,
+                  p: 1,
+                }}>
                 <YoutubeCard item={item} onClick={item.videoUrl} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+              </Box>
 
-        {/* 페이지네이션 */}
-        {pagination && (
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-            <PageBar
-              pagination={pagination}
-              page={pagination.pageNum + 1}
-              count={totalPages}
-              onChange={(value) => {
-                changeSearchRq({ pageNum: value });
-                fetchYoutubeList({});
-              }}
-            />
+            ))}
           </Box>
-        )}
+        </Box>
       </Box>
     </Box>
   )
