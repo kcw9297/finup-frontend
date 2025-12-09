@@ -1,25 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
+import { StockDetailContext } from "../context/StockDetailContext";
+import { useParams } from "react-router-dom";
+import thema from "../../../base/design/thema.js"
 import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
+//import { useStockDetail } from "../hooks/useStocksDetailStock.js";
+//import { useStockDetail } from "../hooks/useStocksDetail.js";
 
 export default function StocksDetailStock(){
-  const basic = [
-    { label: "업종", value: "전기·전자" },
-    { label: "액면가", value: "100원" },
-    { label: "시가총액", value: "648조 9,365억원" },
-    { label: "상장주수", value: "6,735,612,586주" },
-  ];
-  const price = [
-    { label: "52주 최고가", value: "112,400원", color: "#F15764" },
-    { label: "52주 최저가", value: "50,800원", color: "#3282F6" },
-    { label: "250일 최고가", value: "112,400원", color: "#F15764" },
-    { label: "250일 최저가", value: "50,800원", color: "#3282F6" },
-  ];
+  const { code } = useParams();
+  // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
+  //const { nameCard, detailStock, loading, error } = useStockDetail(code);
+  const { detailStock } = useContext(StockDetailContext);
+/*
+  const basicHead = detailStock.basicHead?.reduce((acc, item) => {
+    acc[item.label] = item.value;
+    return acc;
+  }, {});*/
 
   return (
     // <Box>
-    <Box sx={{backgroundColor: "#FFFFFF"}}>
+    <Box sx={{backgroundColor: thema.palette.background.base}}>
 
       {/* 학습방법 설명 박스 */}
       <Box sx={{py:3}}>
@@ -28,25 +30,25 @@ export default function StocksDetailStock(){
       <Box sx={{px: 3, width: "100%", display: "flex", flexDirection: "column", gap: 5 }}>
         {/* 기본정보 */}
         <Box sx={{display: "flex", flexDirection: "column", gap: 3 }}>
-          {/* 종목명 */}
+          {/* 종목명 헤더*/}
           <Box sx={{
             display: "flex",
             gap: 2,
             flexWrap: "wrap",
             alignItems: "flex-end", // 세로 기준 아래 정렬          
-          }}>
-            <Typography variant="h5" fontWeight={600}>
-              삼성전자
+          }}>           
+            <Typography variant="h5" fontWeight={600} >
+              { detailStock.basicHead.stockName }
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              국내
+              국내   
+            </Typography>                    
+            <Typography variant="body1" /*color="text.secondary"*/>
+              { detailStock.basicHead.code }
             </Typography>
             <Typography variant="body1" /*color="text.secondary"*/>
-              005930
-            </Typography>
-            <Typography variant="body1" /*color="text.secondary"*/>
-              코스피
-            </Typography>
+              { detailStock.basicHead.marketName }
+            </Typography>          
           </Box>
 
           {/* 정보 카드 */}
@@ -61,7 +63,7 @@ export default function StocksDetailStock(){
             }}
           >
             <Grid container sx={{ justifyContent: "space-between" }}>
-              {basic.map((item, index) => (
+              { detailStock.basic?.map((item, index) => (
                 <Grid
                   item               
                   key={index}
@@ -72,11 +74,11 @@ export default function StocksDetailStock(){
                     width: "23%",                  
                     px: 1,
                     py: 2,                    
-                    //borderBottom: "1px solid #B0C3EB",
+                    borderBottom: "1px solid #B0C3EB",
                   }}
                 >
                   <Typography /*color="text.primary"*/ sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
-                    <Box sx={{ /*color: "#B0C3EB",*/ display: 'flex', alignItems: 'center', px: 1 }}>
+                    <Box sx={{ color: "#B0C3EB", display: 'flex', alignItems: 'center', px: 1 }}>
                       <InfoIcon/>            
                     </Box>
                   </Typography>                                  
@@ -96,10 +98,10 @@ export default function StocksDetailStock(){
           </Box>
           
           <Box sx={{ display: "flex", px: 2, gap: 3, overflow: "hidden" }}>
-            <InfoCard title="가격" rows={price} />
-            <InfoCard title="가치평가" rows={price} />
-            <InfoCard title="수급·거래" rows={price} />
-            <InfoCard title="리스크·상태" rows={price} />
+            <InfoCard title="가격" rows={ detailStock.price } />
+            <InfoCard title="가치평가" rows={ detailStock.valuation } />
+            <InfoCard title="수급·거래" rows={ detailStock.flow } />
+            <InfoCard title="리스크·상태" rows={ detailStock.risk } />
           </Box>
         </Box>
 
@@ -138,8 +140,8 @@ function InfoCard({ title, rows }) {
       sx={{
         flex: 1,
         p: 2,
-       // background: "#F1F4F7",
-        borderRadius: 2,
+        //background: "#F1F4F7",
+        borderRadius: 4,
       }}
     >
       {/* 제목 */}
@@ -150,7 +152,7 @@ function InfoCard({ title, rows }) {
       </Box>
 
       {/* 반복되는 행 */}
-      {rows.map((item, i) => (
+      {rows?.map((item, i) => (
         <Box key={i}>
           <Box
             sx={{
@@ -163,7 +165,7 @@ function InfoCard({ title, rows }) {
             {/* 왼쪽 영역 */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography fontSize={16}>{item.label}</Typography>                  
-              <Box sx={{ /*color: "#B0C3EB",*/ display: 'flex', alignItems: 'center', px: 1 }}>
+              <Box sx={{ color: "#B0C3EB", display: 'flex', alignItems: 'center', px: 1 }}>
                 <InfoIcon/>            
               </Box>
             </Stack>
@@ -179,7 +181,7 @@ function InfoCard({ title, rows }) {
           </Box>
 
           {/* 행 구분선 */}
-          {i < rows.length - 1 && <Divider sx={{ /*borderColor: "#B0C3EB" */}} />}
+          {i < rows.length - 1 && <Divider sx={{ borderColor: "#B0C3EB" }} />}
         </Box>
       ))}
     </Box>

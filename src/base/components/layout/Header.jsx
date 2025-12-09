@@ -15,9 +15,14 @@ import { useLogout } from '../../hooks/useLogout';
 export default function Header() {
 
   // 메뉴 목록
-  const manuItems = ["개념+", "뉴스+", "종목+", "단어장+"];
+  const manuItems = [
+    { label: "개념+", path: "/" },
+    { label: "뉴스+", path: "/news/list" },
+    { label: "종목+", path: "/stocks" },
+    { label: "단어장+", path: "/" },
+  ]
   const { isAuthenticated, loading, loginMember } = useAuthStore()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const { handleLogout } = useLogout()
 
   return (
@@ -53,15 +58,17 @@ export default function Header() {
           <Box sx={{display:'flex', alignItems:'center', flex:1, margin:0, padding:0, gap:'50px'}}>
             
             {/* 로고 */}
-            <Box component={Link} to="/" sx={{display:'flex', justifycontent:'center', alignItems:'center', cursor:'pointer'}} >
+            <Box component={Link} to="/" sx={{display:'flex', justifyContent:'center', alignItems:'center', cursor:'pointer'}} >
               <img src={logo} alt="로고" style={{height: 40}} />
             </Box>
             
             {/* 메뉴 */}
-            <Box sx={{display:{md:'flex'}, gap:'30px'}}>
-              {manuItems.map((menu) => (
+            <Box sx={{display:'flex', gap:'30px'}}>
+              {manuItems.map((item) => (
                 <Typography
-                  key={menu}
+                  key={item.label}
+                  component={Link}
+                  to={item.path}
                   sx={{
                     cursor: "pointer",
                     fontSize: 16,
@@ -70,7 +77,7 @@ export default function Header() {
                     transition: "0.2s",
                     "&:hover": {color: "text.main"}
                   }}>
-                  {menu}
+                  {item.label}
                 </Typography>
               ))}
             </Box>
@@ -79,7 +86,7 @@ export default function Header() {
           {/* 우측 프로필 + 로그인 */}
           <Box sx={{display:'flex', alignItems:'center', gap:3}}>
 
-            <Box onClick={() => alert('프로필 클릭')} sx={{
+            <Box onClick={() => navigate("/admin/members")} sx={{
               height:50,
               display:'flex',
               alignItems:'center',
@@ -90,7 +97,7 @@ export default function Header() {
               "&:hover": {backgroundColor:"background.light"}
               }}>
               {/* 프로필 아이콘 */}
-              <Box >
+              <Box>
                 <Avatar 
                   src={loginMember?.profileImageUrl} // 프로필 이미지 URL
                   sx={{width:35, height:35}}
@@ -99,7 +106,14 @@ export default function Header() {
                   <AccountCircleIcon sx={{fontSize:35, color:"inherit", backgroundColor:"action"}}/>
                 </Avatar>
               </Box>
-              <p style={{fontSize:14, color:"text.main"}}>로그인이 필요합니다</p>
+
+              {loading ? (
+                <p style={{fontSize:14, color:"text.main"}}>로딩중..</p>
+              ) : isAuthenticated ? (
+                <p style={{fontSize:14, color:"text.main"}}>{loginMember.nickname}님 환영합니다</p>
+              ) : (
+                <p style={{fontSize:14, color:"text.main"}}>로그인이 필요합니다</p>
+              )}
             </Box>
 
             {/* 로그인/로그아웃 아이콘 */}

@@ -1,7 +1,8 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
 import StocksDetailStock from "./StocksDetailStock";
-
+import StocksDetailNews from "./StocksDetailNews";
+import StocksDetailChart from "./StocksDetailChart";
 export default function StocksDetailTab() {
   const [value, setValue] = React.useState(1);
 
@@ -46,9 +47,9 @@ export default function StocksDetailTab() {
       <ToggleButton value="뉴스">뉴스</ToggleButton>
       </ToggleButtonGroup>
 
-      {/* {value === "차트" && < />} */}
+      {value === "차트" && <StocksDetailChart  />}
       {value === "종목" && <StocksDetailStock />}
-      {/* {value === "뉴스" && < />} */}
+      {value === "뉴스" && <StocksDetailNews />}
     </>
   );
 }

@@ -11,10 +11,16 @@ const theme = createTheme({
 
     // 사이트 기본 색상
     base: {
+      light: '#e6ecf9', //채우기 적용
+      lightHover: '#d9e2f5',
+      lightActive: '#b0c3eb',
       main: '#003fbf',  // 메인 색상. focus 등 이벤트에 적용
-      light: '#F1F4F7', //채우기 적용
+      mainHover: '#0039ac',
+      mainActive: '#003299',
       dark: '#002f8f', // hover, 선 적용
-      contrastText: '#ffffff', // primary 배경 적용 시 글씨 색상
+      darkHover: '#002673',
+      darkActive: '#001c56',
+      darker: '#001643'
     },
 
     // 사이트 텍스트 색상
@@ -27,7 +33,7 @@ const theme = createTheme({
     line: {
       main: '#E5E8EB',
       light: '#F2F4F6',
-      dark: '#717783ff',
+      dark: '#CED4DA',
     },
 
     // 사이트 에러 색상
@@ -53,6 +59,12 @@ const theme = createTheme({
       disabled: '#bdbdbd',
       disabledBackground: '#e0e0e0',
       active: '#003fbf',
+    },
+
+    // 주가, 환율 등의 상승·하락 표시
+    stock: {
+      rise: '#F04452',
+      fall: '#3182F6'
     }
   },
 
@@ -88,8 +100,10 @@ const theme = createTheme({
           //borderStyle: 'solid', // 테두리 스타일
           //borderColor: theme.palette.line.main, // 테두리 색상
           boxShadow: 'none',  // 그림자 제거
+          margin: 0,
+          padding: 0
         }),
-        
+
       },
 
       // 기본 프롭스
@@ -115,7 +129,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           '& .MuiTableRow-root': {
-            backgroundColor: theme.palette.background.dark, // 배경 색상
+            backgroundColor: theme.palette.background.light, // 배경 색상
           },
           '& .MuiTableCell-root': {
             fontWeight: 'bold',
@@ -135,7 +149,6 @@ const theme = createTheme({
         },
       },
     },
-    
 
     // Typography
     MuiTypography: {
@@ -144,37 +157,64 @@ const theme = createTheme({
         root: ({ theme }) => ({
 
           color: theme.palette.text.main, // 버튼 색
-          textAlign: 'center',
+          alignItems: 'center',
         }),
       },
     },
 
-    // p
+    // p + 스크롤바
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
+        // p
         p: {
           margin: 0,
           padding: 0,
-          textAlign: 'center',
+          alignItems: 'center',
+        },
+
+        // 스크롤바
+        "*::-webkit-scrollbar": {
+          width: "2px",
+          height: "2px",
+        },
+        "*::-webkit-scrollbar-thumb": {
+          backgroundColor: theme.palette.line.main,
+          borderRadius: 100,
+        },
+        "*::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+      }),
+    },
+
+    // Link
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          color: "inherit",
+          "&:hover": {
+            textDecoration: "none",
+            color: "inherit",
+          },
         }
       }
     },
-
 
     // Button
     MuiButton: {
       styleOverrides: {
-
-        root : {
-          textTransform: 'none',  // 버튼 단어가 강제로 대문자로 변환되는걸 방지
-          borderRadius: 8,        // 버튼 모서리
-        }
+        root: ({ theme }) => ({
+          textTransform: 'none',
+          boxShadow: 'none',
+          '&:hover': { boxShadow: 'none' },
+          '&:active': { boxShadow: 'none' },
+          '&.Mui-focusVisible': { boxShadow: 'none' },
+        }),
       },
-
-      defaultProps: {
-        color: 'base',  // 버튼 색상
-      }
+      
     },
+
 
     // TextField
     MuiTextField: {
@@ -189,37 +229,54 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.base,
-          borderRadius: 8, // 모서리
+          borderRadius: 10,
 
           // 기본 테두리 색상 및 두께
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.main,  // 파란색 테두리
-            borderWidth: '3px',
+            borderColor: theme.palette.line.dark,
+            borderWidth: 1,
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.dark,  // 호버
+            borderColor: theme.palette.base.main,  // 호버
+            borderWidth: 1,
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.dark,  // 포커스 시 색상
+            borderColor: theme.palette.base.main,  // 포커스 시 색상
+            borderWidth: 1,
           },
         }),
       }
     },
 
+    // TextField - Label
+    MuiInputLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.text.light, // 기본 색
+
+          '&.Mui-focused': {
+            color: theme.palette.base.main, // 클릭 시 위로 올라가는 라벨의 색
+          },
+        }),
+      },
+    },
+
 
     // IconButton
     MuiIconButton: {
-      defaultProps: {
-        color: 'inherit',
-      },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          "&:hover": {
-            backgroundColor: `${theme.palette.background.light} !important`,
-          }
-        })
-      }
+    defaultProps: {
+      color: "inherit",
+      disableRipple: true,
+      disableFocusRipple: true,
     },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        "&:hover": {
+          backgroundColor: `${theme.palette.background.light} !important`,
+        }
+      })
+    }
+  },
 
 
     // Snackbar

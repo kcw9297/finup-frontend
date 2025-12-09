@@ -9,20 +9,22 @@ import { useEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
-import NoticeSummaryPage from './pages/notice/NoticeSummaryPage'
-import NoticeDetailPage from './pages/notice/NoticeDetailPage'
+import NoticeListPage from './pages/admin/notices/NoticeListPage'
+import NoticeDetailPage from './pages/admin/notices/NoticeDetailPage'
+import NoticeEditPage from './pages/admin/notices/NoticeEditPage'
+import NoticeWritePage from './pages/admin/notices/NoticeWritePage'
+import MemberListPage from './pages/admin/member/MemberListPage'
 import NewsPage from './pages/news/NewsPage'
-import NewsModalPage from './pages/news/NewsModalPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
-import NoticeEditPage from './pages/notice/NoticeEditPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
 import AuthSignupPage from './pages/auth/AuthSignupPage'
-
+import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
+import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -50,24 +52,38 @@ const nastedRoutes = [
     path: '/news/*', // url : 뉴스
     children: [
       { path: 'list', element: <NewsPage /> }, // 모두 공개
-      { path: 'detail', element: <NewsModalPage /> }, // 회원공개로 전환예정
     ]
   },
 
   {
-    path: '/admin/*', // url : 관리자
+    path: '/admin/*', // url : 관리자 공지사항
     children: [
-      { path: 'notices', element: <ProtectedRoute><NoticeSummaryPage /></ProtectedRoute> },
+      // url : 관리자 공지사항
+      { path: 'notices/', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
       { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> }
+      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
+      { path: 'notices/write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      // url : 회원 목록
+      { path: 'members', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+      // url : 유튜브 영상
+      { path: "youtube", element: <ProtectedRoute><YoutubeListPage /></ProtectedRoute> },
+      { path: "youtube/write", element: <ProtectedRoute><YoutubeVideoWritePage /></ProtectedRoute> }
     ]
   },
+
+  {
+    path: '/admin/*',
+    children: [
+
+    ]
+  },
+
 
   {
     path: '/stocks/*', //url : 종목 +
     children: [
       { path: '', element: <StocksListPage /> }, // 모두 공개
-      { path: 'detail', element: <StocksDetailPage /> },
+      { path: 'detail/:code', element: <StocksDetailPage /> },
     ]
   },
 
@@ -108,26 +124,30 @@ export default function App() {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
     initGlobalHook(navigate, showSnackbar)
-  }, [])
+  }, [location.pathname])
 
   return (
     <>
       <Routes>
 
         {/* 단순 라우트 */}
-        {simpleRoutes.map(({ path, element, roles }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
+        {
+          simpleRoutes.map(({ path, element, roles }) => (
+            <Route key={path} path={path} element={element} />
+          ))
+        }
 
         {/* 자식이 있는 라우트 */}
-        {nastedRoutes.map(({ path, layout, roles, children }) =>
-          <Route key={path} path={path} element={layout} >
-            {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
-          </Route>
-        )}
+        {
+          nastedRoutes.map(({ path, layout, roles, children }) =>
+            <Route key={path} path={path} element={layout} >
+              {children.map((child) => (<Route key={child.path} path={child.path} element={child.element} />))}
+            </Route>
+          )
+        }
 
 
-      </Routes>
+      </Routes >
     </>
   )
 }
