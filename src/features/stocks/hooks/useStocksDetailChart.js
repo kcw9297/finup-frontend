@@ -5,9 +5,9 @@ export function useStocksDetailChart(code){
   const [items, setItems ] = useState([]);
   const [candleType, setCandleType] = useState("day")
   const [loading, setLoading] = useState(false);
-
-  const fetchChart = async () => {
-    setLoading(true);  
+  const [error, setError] = useState(null)
+  
+  const fetchChart = async () => { 
     try{
         const res = await api.get("/stocks/chart",{
           params:{ code, candleType },
@@ -18,17 +18,28 @@ export function useStocksDetailChart(code){
       }
       catch(err){
         console.error("차트 불러오기 오류:", err)
+        setError(err)
+        setItems([])
+      }finally{
+        setLoading(false)
       }
-      setLoading(false)
-    }
-    useEffect(()=>{
-      fetchChart();
-    },[candleType])
-  
-    return {
-      items,
-      candleType,
-      setCandleType,
-      loading
-    }
+      
+  }
+
+  useEffect(()=>{
+    if(!code || !candleType) return;
+    
+    setLoading(true)
+    setError(null)
+
+    fetchChart();
+  },[code, candleType])
+
+  return {
+    items,
+    candleType,
+    setCandleType,
+    loading,
+    error
+  }
 }

@@ -14,7 +14,7 @@ export default function PageBar({ pagination, onChange }) {
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
       <Pagination
         count={pagination.totalPage || 1}
-        page={pagination.pageNum}
+        page={pagination.pageNum || 1}
         onChange={(event, value) => onChange(value)}
         shape="rounded"
         showFirstButton

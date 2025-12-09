@@ -34,15 +34,15 @@ export function useYoutubeVideoWrite() {
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
     setYoutubeWriteRp(rp)
-    showSnackbar("유튜브 영상을 등록했습니다.", "success")
+    showSnackbar(rp.message, "success")
 
     setTimeout(() => {
       navigate("/admin/youtube")
     }, 300)
   }
 
-  const onError = () => {
-    showSnackbar("유튜브 영상 등록에 실패했습니다.", "error")
+  const onError = (rp) => {
+    showSnackbar(rp.message, "error")
   }
 
   const onFinally = () => { }

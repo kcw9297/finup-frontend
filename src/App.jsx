@@ -25,6 +25,7 @@ import WordDetailPage from './pages/word/WordDetailPage'
 import AuthSignupPage from './pages/auth/AuthSignupPage'
 import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
 import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
+import AdminStudyListPage from './pages/admin/study/AdminStudyListPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -59,15 +60,20 @@ const nastedRoutes = [
     path: '/admin/*', // url : 관리자 공지사항
     children: [
       // url : 관리자 공지사항
-      { path: 'notices/', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
-      { path: 'notices/write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeListPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeDetailPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId/edit', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeEditPage /></ProtectedRoute> },
+      { path: 'notices/write', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeWritePage /></ProtectedRoute> },
+
       // url : 회원 목록
-      { path: 'members', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+      { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
+
       // url : 유튜브 영상
-      { path: "youtube", element: <ProtectedRoute><YoutubeListPage /></ProtectedRoute> },
-      { path: "youtube/write", element: <ProtectedRoute><YoutubeVideoWritePage /></ProtectedRoute> }
+      { path: "youtube", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeListPage /></ProtectedRoute> },
+      { path: "youtube/write", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeVideoWritePage /></ProtectedRoute> },
+
+      // url : 단계 개념 관리
+      { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
     ]
   },
 
@@ -114,7 +120,7 @@ export default function App() {
 
   // 페이지 마운트 시, 최초 1회 로그인 검증
   const { authenticate } = useAuth()
-  const { isAuthenticated, loginMember } = useAuthStore()
+  const { isAuthenticated, loginMember, logout } = useAuthStore()
 
   // 페이지 마운트 시, 전역적으로 사용할 함수 로드
   const navigate = useNavigate()          // redirect 수행할 네비게이션
@@ -123,7 +129,7 @@ export default function App() {
   useEffect(() => {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
-    initGlobalHook(navigate, showSnackbar)
+    initGlobalHook(navigate, showSnackbar, logout)
   }, [location.pathname])
 
   return (
