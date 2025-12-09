@@ -15,13 +15,13 @@ export function useNoticeRemove() {
   const navigate = useNavigate()
 
   // [2] 성공/실패/마지막 콜백 정의
-  const onSuccess = () => {
-    showSnackbar("해당 공지사항 게시물을 삭제했습니다.", "success")
+  const onSuccess = (rp) => {
+    showSnackbar(rp.message, "success")
     navigate("/admin/notices")
   }
 
   const onError = rp => {
-    showSnackbar("해당 공지사항 삭제에 실패했습니다.", "error")
+    showSnackbar(rp.message, "error")
   }
 
   const onFinally = () => {

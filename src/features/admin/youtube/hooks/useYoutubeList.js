@@ -26,15 +26,15 @@ export function useYoutubeList(searchRq) {
     setPagination(rp.pagination ?? null)
   }
 
-  const onError = () => {
-    showSnackbar("유튜브 영상 리스트를 불러오는 데 실패했습니다.", "error")
+  const onError = (rp) => {
+    showSnackbar(rp.message, "error")
   }
   const onFinally = () => { }
 
   // [3] URL 수동 조합
   const query = new URLSearchParams({
     ownerId: adminId,
-    videoLinkOwner: "HOME",
+    videoLinkOwner: "STUDY",
     keyword: searchRq.keyword,
     filter: searchRq.filter,
     pageNum: searchRq.pageNum,
@@ -49,7 +49,7 @@ export function useYoutubeList(searchRq) {
         onSuccess, onError, onFinally,
         params: {
           ownerId: adminId,
-          videoLinkOwner: "HOME",
+          videoLinkOwner: "STUDY",
           keyword: searchRq.keyword,
           filter: searchRq.filter,
           pageNum: searchRq.pageNum,

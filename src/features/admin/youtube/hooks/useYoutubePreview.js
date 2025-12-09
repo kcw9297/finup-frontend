@@ -26,14 +26,13 @@ export function useYoutubePreview() {
     setPreviewRp(rp.data)
   }
 
-  const onError = () => {
-    showSnackbar("존재하지 않거나 숨김 처리된 영상입니다.", "error")
+  const onError = (rp) => {
+    showSnackbar(rp.message, "error")
     setPreviewRp(null)
   }
 
   const onFinally = () => setLoading(false)
 
-  const cleanUrl = previewRq.videoUrl.split("&")[0].split("?")[0];
 
   // [4] 프리뷰 호출 함수
   const loadPreview = () => {
@@ -42,9 +41,10 @@ export function useYoutubePreview() {
     setLoading(true)
     setPreviewRp(null)
 
-    api.get(
-      `/videos?url=${encodeURIComponent(cleanUrl)}`,
-      { onSuccess, onError, onFinally, admin: "true" }
+    api.post(
+      `/videos`,
+      { onSuccess, onError, onFinally, admin: true },
+      { videoUrl: previewRq.videoUrl.trim() }
     )
   }
 

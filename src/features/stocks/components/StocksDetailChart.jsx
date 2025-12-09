@@ -6,9 +6,14 @@ import StocksCandleChart from "./chart/StocksCandleChart.jsx";
 import { useStocksDetailChart } from "../hooks/useStocksDetailChart.js";
 import StocksDetailTooltip from "./StocksDetailToopTip.jsx";
 import {chartToolTipText} from "../constants/stocksToolTipText.js";
+import { useContext } from "react";
+import { StockDetailContext } from "../context/StockDetailContext.js";
+import CandleChart from "./chart/CandleChart.jsx";
+import CombinedChart from "./chart/CombinedChart.jsx";
 
 export default function StocksDetailChart(){
-  const {items, candleType, setCandleType, loading} = useStocksDetailChart("005930"); //넘어온 주식코드 넣어야됨
+  const { nameCard } = useContext(StockDetailContext); 
+  const {items, candleType, setCandleType, loading, error} = useStocksDetailChart("005930"); //nameCard.stockName
 
   return(
     <Box sx={{backgroundColor: thema.palette.background.base}}>
@@ -30,7 +35,7 @@ export default function StocksDetailChart(){
       
       <Box sx={{display: "flex", gap: 3, mt: 2}}>
         
-        <Box sx={{ flex: 2, background: "#ffffff", p: 2, borderRadius: 2, boxShadow: 1}}>
+        <Box sx={{ flex: 3, flexShrink: 0, background: "#ffffff", p: 2, borderRadius: 2, boxShadow: 1, height:700, mb:2}}>
           <Box sx={{
             display: "flex",
             gap: 2,
@@ -50,7 +55,9 @@ export default function StocksDetailChart(){
               <Chip label="MA60" sx={{ background: "#9B59B6", color: "white" }} />
             </Tooltip>
           </Box>
-          <StocksCandleChart items={items}/>
+          {items.length > 0 && (
+            <CombinedChart items={items} />
+          )}
         </Box>
 
         <Paper sx={{ flex: 1, p: 2, borderRadius: 2 }} elevation={1}>

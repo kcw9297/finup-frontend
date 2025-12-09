@@ -1,18 +1,20 @@
 import { useEffect, useRef } from "react";
 import { createChart, ColorType } from "lightweight-charts";
 
-function converDate(yyyymmdd){
-  return (
-    yyyymmdd.slice(0,4) +
-    "-" +
-    yyyymmdd.slice(4,6) +
-    "-" +
-    yyyymmdd.slice(6,8)
-  );
-}
+
 export default function StocksCandleChart({ items }) {
   const ref = useRef(null);
   const chartRef = useRef(null);
+
+  function converDate(yyyymmdd){
+    return (
+      yyyymmdd.slice(0,4) +
+      "-" +
+      yyyymmdd.slice(4,6) +
+      "-" +
+      yyyymmdd.slice(6,8)
+    );
+  }
 
   useEffect(() => {
     if (!ref.current || !items || items.length === 0) return;
@@ -22,7 +24,7 @@ export default function StocksCandleChart({ items }) {
 
     const chart = createChart(ref.current, {
       width: ref.current.clientWidth,
-      height: 520, // 토스 비슷하게 높이 넉넉하게
+      height: 520, 
       layout: {
         background: { type: ColorType.Solid, color: "#ffffff" },
         textColor: "#222",
@@ -31,11 +33,17 @@ export default function StocksCandleChart({ items }) {
         vertLines: { color: "#f0f0f0" },
         horzLines: { color: "#f0f0f0" },
       },
+      timeScale: { 
+        borderColor: "#ccc",
+        barSpacing: 12, //캔들 간격 조절
+        minBarSpacing: 8,
+        fixLeftEdge: false,
+        fixRightEdge: false
+      },
       crosshair: { mode: 1 },
       rightPriceScale: { borderColor: "#ccc" },
-      timeScale: { borderColor: "#ccc" },
     });
-
+    chart.timeScale().fitContent();
     chartRef.current = chart;
 
     // ------------------------
@@ -48,7 +56,14 @@ export default function StocksCandleChart({ items }) {
       borderUpColor: "#e74c3c",
       wickDownColor: "#3498db",
       wickUpColor: "#e74c3c",
+      priceScaleId:'candles'
     });
+    chart.priceScale('candles').applyOptions({
+      scaleMargins:{
+        top: 0,
+        bottom: 0.4
+      }
+    })
 
     const sorted = [...items].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
@@ -65,16 +80,18 @@ export default function StocksCandleChart({ items }) {
     candleSeries.setData(candleData);
 
     // ------------------------
-    // 2) 거래량 시리즈 (토스처럼 크게!)
+    // 2) 거래량 시리즈 
     // ------------------------
     const volumeSeries = chart.addHistogramSeries({
       priceScaleId: "volume",
       priceFormat: { type: "volume" },
-      scaleMargins: {
-        top: 0.68,  // 캔들 68%
-        bottom: 0,  // 거래량 32%
-      },
     });
+    chart.priceScale('volume').applyOptions({
+      scaleMargins:{
+        top:0.6,
+        bottom:0,
+      }
+    })
 
     const volumeData = sorted.map((i) => ({
       time: converDate(i.stck_bsop_date),
@@ -87,7 +104,7 @@ export default function StocksCandleChart({ items }) {
     volumeSeries.setData(volumeData);
 
     // ------------------------
-    // 3) 거래량 MA20 (토스 특징)
+    // 3) 거래량 MA20 
     // ------------------------
     function calcVolumeMA(data, window) {
       if (data.length < window) return [];
@@ -109,7 +126,7 @@ export default function StocksCandleChart({ items }) {
 
     if (ma20Data.length > 0) {
       const ma20 = chart.addLineSeries({
-        color: "#2ecc71", // 토스 스타일 녹색 MA라인
+        color: "#2ecc71", 
         lineWidth: 2,
         priceScaleId: "volume",
       });

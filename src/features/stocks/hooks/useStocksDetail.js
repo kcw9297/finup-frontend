@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
+import theme from "../../../base/design/thema";
 
 export function useStockDetail(code) {
 
@@ -23,12 +24,9 @@ export function useStockDetail(code) {
   const fetchDetail = async () => {
     // const res = await axios.get(`http://localhost:8080/public/api/stocks/detail/${code}`)
     //const detail = res.data.data;
-    try{
-      setLoading(true);
+    try{     
     
-      const rp = await api.get(`/stocks/detail/${code}`, { public: true });
-      if (!rp.success) throw new Error(rp.message);
-
+      const rp = await api.get(`/stocks/detail/${code}`, { public: true });    
       const detail = rp.data;
 
       /* 네임 카드  */
@@ -59,10 +57,10 @@ export function useStockDetail(code) {
         /* 투자지표 */
         // 가격
         price: [
-          { label: "52주 최고가", value: Number(detail.w52Hgpr).toLocaleString() + "원", color: "#F15764" },
-          { label: "52주 최저가", value: Number(detail.w52Lwpr).toLocaleString() + "원", color: "#3282F6" },
-          { label: "250일 최고가", value: Number(detail.d250Hgpr).toLocaleString() + "원", color: "#F15764" },
-          { label: "250일 최저가", value: Number(detail.d250Lwpr).toLocaleString() + "원", color: "#3282F6" },
+          { label: "52주 최고가", value: Number(detail.w52Hgpr).toLocaleString() + "원", color: theme.palette.stock.rise },
+          { label: "52주 최저가", value: Number(detail.w52Lwpr).toLocaleString() + "원", color: theme.palette.stock.fall },
+          { label: "250일 최고가", value: Number(detail.d250Hgpr).toLocaleString() + "원", color: theme.palette.stock.rise },
+          { label: "250일 최저가", value: Number(detail.d250Lwpr).toLocaleString() + "원", color: theme.palette.stock.fall },
         ],
         //가치평가
         valuation: [
