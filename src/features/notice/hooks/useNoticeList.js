@@ -64,6 +64,8 @@ export function useNoticeList() {
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
+  // 파라미터 일치 여부 비교 함수
+  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(getSearchParams());
   // 검색 버튼 함수
   const handleSearch = e => {
 
@@ -77,8 +79,7 @@ export function useNoticeList() {
     setLoading(true)
     setSearchParams(searchRq)
   }
-  // 파라미터 일치 여부 비교 함수
-  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(getSearchParams());
+
 
   // 페이징 함수
   const handlePage = pageNum => {
@@ -121,27 +122,12 @@ export function useNoticeList() {
     setLoading(false)
   }
 
-  // [4] REST API 요청 함수
-  const fetchNoticeList = () => {
-    setLoading(true)
-
-    console.log("요청 params:", searchRq)
-
-    api.get(
-      '/notices',
-      {
-        onSuccess, onError, onFinally,
-        admin: true,
-        params: searchRq
-      })
-  }
-
-  // [5] 검색 조건 변경 시 자동 호출
   useEffect(() => {
-    (async () => {
-      await fetchNoticeList()
-    })()
-  }, [searchRq.keyword, searchRq.pageNum])
+    api.get('/notices', {
+      admin: true,
+      params: getSearchParams(), onSuccess, onError, onFinally,
+    })
+  }, [searchParams])
 
   return {
     searchRq,

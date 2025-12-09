@@ -22,7 +22,8 @@ export function useMemberList() {
   const [pagination, setPagination] = useState(null) // 페이징 데이터
   const [memberList, setMemberList] = useState([]) // 리스트 요청 결과 데이터
   const [searchParams, setSearchParams] = useSearchParams() // 검색 파라미터
-
+  // 스낵바
+  const { showSnackbar } = useSnackbar()  // 스낵바 전역 context
 
   // [2] 필요 함수 선언
   const getSearchParams = () => ({
@@ -42,8 +43,6 @@ export function useMemberList() {
   const handleChangeRq = rq => {
     setSearchRq(prev => ({ ...prev, ...rq }))
   }
-  // 스낵바
-  const { showSnackbar } = useSnackbar()  // 스낵바 전역 context
 
   // 페이징 함수
   const handlePage = pageNum => {
@@ -106,8 +105,8 @@ export function useMemberList() {
     setPagination(rp.pagination ?? null)
   }
 
-  const onError = () => {
-    showSnackbar("회원 목록을 불러오지 못했습니다.", "error")
+  const onError = (rp) => {
+    showSnackbar(rp.message, "error")
   }
 
   const onFinally = () => {

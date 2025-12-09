@@ -34,7 +34,7 @@ export function useYoutubeList(searchRq) {
   // [3] URL 수동 조합
   const query = new URLSearchParams({
     ownerId: adminId,
-    videoLinkOwner: "HOME",
+    videoLinkOwner: "STUDY",
     keyword: searchRq.keyword,
     filter: searchRq.filter,
     pageNum: searchRq.pageNum,
