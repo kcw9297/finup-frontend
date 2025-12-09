@@ -55,7 +55,7 @@ export default function StocksDetailNameCard() {
       <Card
         elevation={0}
         sx={{
-          background: "#F1F4F7",
+          background: thema.palette.background.light,
           borderRadius: 2,
         }}
       >
@@ -72,12 +72,12 @@ export default function StocksDetailNameCard() {
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
               { nameCard.stockName }{/* 종목명 */}
             </Typography>
-            <Typography sx={{ fontSize: 16, fontWeight: 500, color: "#8E98A8" }}>
+            <Typography sx={{ fontSize: 16, fontWeight: 500, color: thema.palette.text.light }}>
               { nameCard.code }{/* 종목코드 */}
             </Typography>
           </Box>
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            { nameCard.price }{/* 가격 */}           
+            { nameCard.price }{/* 가격 */}    
           </Typography>
         </CardContent>
       </Card>
