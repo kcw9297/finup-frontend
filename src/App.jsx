@@ -22,15 +22,20 @@ import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
+import AuthSignupPage from './pages/auth/AuthSignupPage'
 import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
 import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
 import AdminStudyListPage from './pages/admin/study/AdminStudyListPage'
+import AdminStudyDetailPage from './pages/admin/study/AdminStudyDetailPage'
+import YoutubeEditPage from './pages/admin/youtube/YoutubeEditPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
-  { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
+  { path: '/signup', element: <GuestRoute><AuthSignupPage /></GuestRoute> },
+  { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
+
 
 ]
 
@@ -68,9 +73,10 @@ const nastedRoutes = [
       // url : 유튜브 영상
       { path: "youtube", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeListPage /></ProtectedRoute> },
       { path: "youtube/write", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeVideoWritePage /></ProtectedRoute> },
-
+      { path: "youtube/:videoLinkId/edit", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeEditPage /></ProtectedRoute> },
       // url : 단계 개념 관리
       { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
+      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
     ]
   },
 

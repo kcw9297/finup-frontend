@@ -57,7 +57,7 @@ const theme = createTheme({
       hover: '#e1eafcff', // 대부분 호버 이벤트에 적용
       selected: '#003fbf', // 현재 페이지 버튼 등에 적용
       disabled: '#bdbdbd',
-      disabledBackground: '#e0e0e0',
+      disabledBackground: '#002f8f',
       active: '#003fbf',
     },
 
@@ -202,6 +202,12 @@ const theme = createTheme({
     },
 
     // Button
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -272,7 +278,7 @@ const theme = createTheme({
     styleOverrides: {
       root: ({ theme }) => ({
         "&:hover": {
-          backgroundColor: `${theme.palette.background.light} !important`,
+          backgroundColor: `${theme.palette.background.light}`,
         }
       })
     }

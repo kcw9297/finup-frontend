@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { QuizModal } from "../../quiz/components/QuizModal";
+import QuizModal from "/src/features/quiz/components/QuizModal.jsx";
 import banner from '../../../assets/banner.png';
 
 // 개념 테스트 이동 배너
