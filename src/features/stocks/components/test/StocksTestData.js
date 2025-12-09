@@ -1,21 +1,20 @@
 //test 폴더 내 파일은 나중에 다 삭제할거임
 
 // ✅ 테스트용 더미 데이터 (API 연동 전)
-  const data = {
-    output: [
+  const data = [    
   {
     data_rank: "1",
     mksc_shrn_iscd: "005930",
     hts_kor_isnm: "삼성전자",
     stck_prpr: "101100",
     prdy_vrss: "600",
-    prdy_vrss_sign: "2",
+    prdy_vrss_sign: "3",
     prdy_ctrt: "0.60",
     acml_vol: "6095566",
     lstn_stcn: "5919637922",
     stck_avls: "5984754",
     mrkt_whol_avls_rlim: "14.83"
-  },
+  },  
   {
     data_rank: "2",
     mksc_shrn_iscd: "000660",
@@ -146,7 +145,6 @@
     lstn_stcn: "46011155",
     stck_avls: "225455",
     mrkt_whol_avls_rlim: "0.56"
-  } 
-    ]
-  };
+  }     
+  ];
   export default data;

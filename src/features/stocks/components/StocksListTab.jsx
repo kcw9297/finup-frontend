@@ -5,7 +5,7 @@ import StocksListMarketCap from "./StocksListMarketCap";
 /* 종목+ 카테고리에서 공통적으로 사용하는 탭(시가총액, 거래량) */
 export default function StocksListTab() {
   console.log("StocksListTab 렌더됨");
-  const [value, setValue] = useState(0); // 두 번째 탭이 활성처럼 보기 위해
+  const [value, setValue] = useState(0); 
   
   return (    
     <>    
@@ -35,7 +35,7 @@ export default function StocksListTab() {
     >
       <Tab label="시가총액" />
       <Tab label="거래량" />
-      <Tab label="나머지는 아직 뭐할지 안정함111" />      
+      <Tab label="나머지는 아직 뭐할지 안정함" />      
     </Tabs>
 
     {value === 0 && <StocksListMarketCap />}

@@ -13,11 +13,6 @@ export default function StocksDetailStock(){
   // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
   //const { nameCard, detailStock, loading, error } = useStockDetail(code);
   const { detailStock } = useContext(StockDetailContext);
-/*
-  const basicHead = detailStock.basicHead?.reduce((acc, item) => {
-    acc[item.label] = item.value;
-    return acc;
-  }, {});*/
 
   return (
     // <Box>
@@ -38,23 +33,22 @@ export default function StocksDetailStock(){
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>           
             <Typography variant="h5" fontWeight={600} >
-              {/* { detailStock.basicHead.stockName } */}
+              { detailStock.basicHead.stockName }
             </Typography>
-            <Typography variant="body1" /*color="text.secondary"*/>
+            <Typography variant="body1" color="text.secondary">
               국내   
             </Typography>                    
-            <Typography variant="body1" /*color="text.secondary"*/>
-              {/* { detailStock.basicHead.code } */}
+            <Typography variant="body1" color="text.secondary">
+              { detailStock.basicHead.code }
             </Typography>
-            <Typography variant="body1" /*color="text.secondary"*/>
-              {/* { detailStock.basicHead.marketName } */}
+            <Typography variant="body1" color="text.secondary">
+              { detailStock.basicHead.marketName }
             </Typography>          
           </Box>
 
           {/* 정보 카드 */}
           <Box
-            sx={{
-              //backgroundColor: "white",
+            sx={{              
               borderRadius: 2,
               px: 2,
               display: "flex",
@@ -77,7 +71,7 @@ export default function StocksDetailStock(){
                     borderBottom: (theme) => `1px solid ${theme.palette.base.lightActive}`
                   }}
                 >
-                  <Typography /*color="text.primary"*/ sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
+                  <Typography sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
                     <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
                       <InfoIcon/>            
                     </Box>
