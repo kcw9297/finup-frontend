@@ -8,7 +8,17 @@ export function QuizModal ({ open, onClose }) {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box>
+      <Box
+        sx={{
+          width: 400,
+          margin: '120px auto',
+          backgroundColor: 'background.base',
+          borderRadius: 3,
+          padding: 3,
+          outline: 'none',
+          textAlign: 'center',
+        }}
+      >
         테스트 모달
       </Box>
     </Modal>
