@@ -10,14 +10,17 @@ export default function VolumeChart({ items, upperTimeScale }) {
   useEffect(() => {
     if (!containerRef.current || items.length === 0) return;
 
+    const width = containerRef.current.clinetWidth;
+
     const chart = createChart(containerRef.current, {
+      width,
       height: 180,
       layout: { background: { color: "#fff" }, textColor: "#333" },
       grid: {
         vertLines: { color: "#fff" },
         horzLines: { color: "#eee" },
       },
-      timeScale: { borderColor: "#ddd" },
+      timeScale: { borderColor: "transparent" },
       rightPriceScale: { borderColor: "#ddd" },
     });
     chartRef.current = chart
@@ -27,8 +30,23 @@ export default function VolumeChart({ items, upperTimeScale }) {
       priceFormat: { type: "volume" },
       scaleMargins: { top: 0, bottom: 0 },
     });
-    volMARef.current = chart.addLineSeries({color:"#16a34a"})
-    return () => chart.remove()
+    volMARef.current = chart.addLineSeries({
+      color:"#16a34a",
+      lineWidth:2
+    })
+    const handleResize = () => {
+      if(containerRef.current && chartRef.current){
+        chartRef.current.applyOptions({
+          width: containerRef.current.clinetWidth
+        })
+      }
+    }
+    window.addEventListener("resize", handleResize)
+    return () => 
+      {
+        window.removeEventListener("resize", handleResize)
+        chart.remove()
+      }
   },[]);
   useEffect(()=>{
     if (!items || !chartRef.current) return;

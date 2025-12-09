@@ -11,8 +11,10 @@ export default function CandleChart({ items, onTimeScaleReady }) {
 
   useEffect(() => {
     if (!containerRef.current || items.length === 0) return;
+    const width = containerRef.current.clientWidth;
 
     const chart = createChart(containerRef.current, {
+      width,
       height: 350,
       layout: { background: { color: "#fff" }, textColor: "#333" },
       grid: {
@@ -23,15 +25,64 @@ export default function CandleChart({ items, onTimeScaleReady }) {
       rightPriceScale: { borderColor: "#ddd" },
     });
     chartRef.current = chart;
-    candleSeriesRef.current = chart.addCandlestickSeries();
+    candleSeriesRef.current = chart.addCandlestickSeries({
+      upColor: "#26a69a",
+      downColor: "#ef5350",
+      borderVisible: false,
+      wickUpColor: "#26a69a",
+      wickDownColor: "#ef5350",
+    });
     ma5Ref.current = chart.addLineSeries({ color: "#ff5c5c" });
     ma20Ref.current = chart.addLineSeries({ color: "#3b82f6" });
     ma60Ref.current = chart.addLineSeries({ color: "#9333ea" });
 
     onTimeScaleReady(chart.timeScale());
-
-    return () => chart.remove();
+    const handleResize = () => {
+      if(containerRef.current && chartRef.current){
+        chartRef.current.applyOptions({
+          width: containerRef.current.clientWidth,
+        })
+      }
+    }
+    window.addEventListener("resize", handleResize)
+    return () => 
+      {
+        window.removeEventListener("resize", handleResize)
+        chart.remove()
+      };
   },[]);
+  
+  useEffect(() => {
+    if (!chartRef.current || !candleSeriesRef.current) return;
+
+    const ohlcBox = document.getElementById("ohlc-box");
+
+    chartRef.current.subscribeCrosshairMove((param) => {
+      if (!param.time) {
+        ohlcBox.innerHTML = `<b>—</b>`;
+        return;
+      }
+
+      const price = param.seriesPrices.get(candleSeriesRef.current);
+      if (!price) {
+        ohlcBox.innerHTML = `<b>—</b>`;
+        return;
+      }
+
+      const timeStr =
+        typeof param.time === "string"
+          ? param.time
+          : `${param.time.year}-${String(param.time.month).padStart(2, "0")}-${String(param.time.day).padStart(2, "0")}`;
+
+      ohlcBox.innerHTML = `
+        <b>${timeStr}</b><br />
+        시가: ${price.open.toLocaleString()}<br />
+        고가: ${price.high.toLocaleString()}<br />
+        저가: ${price.low.toLocaleString()}<br />
+        종가: ${price.close.toLocaleString()}
+      `;
+    });
+  }, []);
 
   //items 변경 시 데이터만 갱신
   useEffect(() => {
@@ -61,22 +112,26 @@ export default function CandleChart({ items, onTimeScaleReady }) {
 
     chartRef.current.timeScale().fitContent();
 
-    // // 상단 차트의 timeScale 객체 넘겨준다 → 하단 차트에서 sync 용
-    // chart.timeScale().fitContent();
-    // if (!chartRef.current?._timeScaleSent) {
-    //   onTimeScaleReady && onTimeScaleReady(chart.timeScale());
-    //   chartRef.current._timeScaleSent = true;
-    // }
-
-    // chartRef.current = chart;
-
-    // return () => {
-    //   if (chartRef.current) {
-    //     chartRef.current.remove();
-    //     chartRef.current = null;
-    //   }
-    // };
   }, [items]);
 
-  return <div ref={containerRef} style={{ width: "100%" }} />;
+  return (
+    <div style={{position:"relative", width:"100%"}}>
+      <div ref={containerRef} style={{ width: "100%" }} />
+      <div id="ohlc-box"
+        style={{
+          position: "absolute",
+          top: 10,
+          left: 5,
+          background: "rgba(255,255,255,0.9)",
+          padding: "6px 10px",
+          borderRadius: 6,
+          border: "1px solid #ccc",
+          fontSize: 11,
+          lineHeight: "14px",
+          pointerEvents: "none",
+          zIndex: 20,
+        }}></div>
+
+    </div>
+  )
 }
