@@ -5,6 +5,7 @@ import thema from "../../../base/design/thema.js"
 import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
+import StocksDetailTooltip from "./StocksDetailTooptip.jsx";
 //import { useStockDetail } from "../hooks/useStocksDetailStock.js";
 //import { useStockDetail } from "../hooks/useStocksDetail.js";
 
@@ -72,9 +73,11 @@ export default function StocksDetailStock(){
                   }}
                 >
                   <Typography sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
-                    <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
-                      <InfoIcon/>            
-                    </Box>
+                    <StocksDetailTooltip text={"설명..."}>
+                      <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
+                        <InfoIcon/>            
+                      </Box>
+                    </StocksDetailTooltip>
                   </Typography>                                  
                   <Typography fontWeight={500}>{item.value}</Typography>
                 </Grid>
@@ -161,9 +164,11 @@ function InfoCard({ title, rows }) {
             {/* 왼쪽 영역 */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography fontSize={16}>{item.label}</Typography>                  
-              <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
-                <InfoIcon/>            
-              </Box>
+              <StocksDetailTooltip text={"설명..."}>
+                <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
+                  <InfoIcon/>            
+                </Box>
+              </StocksDetailTooltip>
             </Stack>
 
             {/* 오른쪽 값 */}
