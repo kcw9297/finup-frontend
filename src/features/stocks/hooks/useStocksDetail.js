@@ -24,12 +24,9 @@ export function useStockDetail(code) {
   const fetchDetail = async () => {
     // const res = await axios.get(`http://localhost:8080/public/api/stocks/detail/${code}`)
     //const detail = res.data.data;
-    try{
-      setLoading(true);
+    try{     
     
-      const rp = await api.get(`/stocks/detail/${code}`, { public: true });
-      if (!rp.success) throw new Error(rp.message);
-
+      const rp = await api.get(`/stocks/detail/${code}`, { public: true });    
       const detail = rp.data;
 
       /* 네임 카드  */
