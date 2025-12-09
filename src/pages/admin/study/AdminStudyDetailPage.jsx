@@ -1,12 +1,12 @@
 import AdminSidebar from "../../../base/components/layout/AdminSidebar";
 import SidebarLayout from "../../../base/layouts/SidebarLayout";
-import StudyList from "../../../features/study/components/StudyList";
+import StudyDetail from "../../../features/study/components/StudyDetail";
 
-export default function AdminStudyListPage() {
+export default function AdminStudyDetailPage() {
 
   return (
     <SidebarLayout sidebar={<AdminSidebar />}>
-      <StudyList admin={true} />
+      <StudyDetail admin={true} />
     </SidebarLayout>
   )
 }

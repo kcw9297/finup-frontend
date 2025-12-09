@@ -64,22 +64,18 @@ async function fetchInner(endpoint, options = {}, body = {}) {
             showSnackbar(rp.message || "로그인이 필요합니다.")
 
             // 딜레이 후 리다이렉트
-            setTimeout(() => {
-              const currentPath = window.location.pathname;
-              const currentSearch = window.location.search;
-              console.log("currentPath = ", currentPath, " currentSearch = ", currentSearch);
-              
+            const currentPath = window.location.pathname;
+            const currentSearch = window.location.search;
+            
+            // 이미 /login 페이지에 있으면 리다이렉트 안 함
+            if (currentPath === '/login') return;
 
-              // 이미 /login 페이지에 있으면 리다이렉트 안 함
-              if (currentPath === '/login') return;
-              const params = new URLSearchParams(currentSearch);
-              params.delete('returnUrl'); // 이미 returnUrl 가 있는 경우, 삭제 후 다시 생성
-              const cleanSearch = params.toString();
-              const returnUrl = currentPath + (cleanSearch ? `?${cleanSearch}` : '');
-              logout() // 로그아웃 처리
-
-              navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`, { replace: true })
-            }, 300);
+            // returnUrl 생성
+            const returnUrl = currentPath + currentSearch;
+            const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
+            console.log('Navigate to:', loginUrl);
+            logout();
+            window.location.href = loginUrl;
 
             // 리다이렉트 값을 넘기고 반환
             return { ...rp, redirected: true }
