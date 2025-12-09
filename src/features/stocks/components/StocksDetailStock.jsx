@@ -33,16 +33,16 @@ export default function StocksDetailStock(){
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>           
             <Typography variant="h5" fontWeight={600} >
-              { detailStock.basicHead.stockName }
+              {detailStock?.basicHead?.stockName ?? "종목명(로딩 중...)"}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               국내   
             </Typography>                    
             <Typography variant="body1" color="text.secondary">
-              { detailStock.basicHead.code }
+              { detailStock?.basicHead?.code ?? "종목코드 로딩 중..."}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              { detailStock.basicHead.marketName }
+              { detailStock?.basicHead?.marketName ?? "코스피겠지...?"}
             </Typography>          
           </Box>
 
@@ -57,7 +57,7 @@ export default function StocksDetailStock(){
             }}
           >
             <Grid container sx={{ justifyContent: "space-between" }}>
-              { detailStock.basic?.map((item, index) => (
+              { detailStock.basic?? Array(4).fill({ label: "항목", value: "데이터" }).map((item, index) => (
                 <Grid
                   item               
                   key={index}
@@ -129,7 +129,8 @@ export default function StocksDetailStock(){
 }
 
 function InfoCard({ title, rows }) {
-  return (
+  const safeRows = rows ?? Array(4).fill({ label: "항목", value: "데이터" });
+  return (        
     <Box
       sx={{
         flex: 1,
@@ -146,7 +147,8 @@ function InfoCard({ title, rows }) {
       </Box>
 
       {/* 반복되는 행 */}
-      {rows?.map((item, i) => (
+      
+      { safeRows.map((item, i) => (
         <Box key={i}>
           <Box
             sx={{
@@ -175,7 +177,7 @@ function InfoCard({ title, rows }) {
           </Box>
 
           {/* 행 구분선 */}
-          {i < rows.length - 1 && <Divider sx={{ borderColor: (theme) => theme.palette.base.lightActive }} />}
+          {i < safeRows.length - 1 && <Divider sx={{ borderColor: (theme) => theme.palette.base.lightActive }} />}
         </Box>
       ))}
     </Box>

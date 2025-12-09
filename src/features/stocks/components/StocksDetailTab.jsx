@@ -1,10 +1,10 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import StocksDetailStock from "./StocksDetailStock";
 import StocksDetailNews from "./StocksDetailNews";
 import StocksDetailChart from "./StocksDetailChart";
 export default function StocksDetailTab() {
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = useState("차트");
 
   const handleChange = (e, newValue) => {
     if (newValue !== null) setValue(newValue);

@@ -54,10 +54,12 @@ export default function StocksListMarketCap() {
             </TableRow> 
           </TableHead> 
           <TableBody>
-            {stockList.map((row) => {                    
+            {data.map((row) => {                    
               return(
                 <TableRow
                   key={row.dataRank} 
+                  hover 
+                  sx={{ cursor: "pointer" }}
                   onClick={() => navigate(`/stocks/detail/${row.mkscShrnIscd}`)}                 
                 > 
                   <TableCell sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
