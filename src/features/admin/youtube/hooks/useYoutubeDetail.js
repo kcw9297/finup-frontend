@@ -1,34 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSnackbar } from "../../../../base/provider/SnackbarProvider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../../../base/utils/fetchUtils";
 import { useAuthStore } from "../../../../base/stores/useAuthStore";
 
-const INITIAL_YOUTUBE_WRITE_RQ = {
+const INITIAL_YOUTUBE_DETAIL_RQ = {
   videoUrl: "",
   title: "",
   content: "",
-}
+  thumbnailUrl: ""
+};
 
 /**
- * 유튜브 영상 등록 훅
+ * 유튜브 영상 수정 훅
  * @since 2025-12-10
  * @author khj
  */
 
-export function useYoutubeVideoWrite() {
+export function useYoutubeDetail() {
   // [1] 필요 데이터 선언
-  const [youtubeWriteRq, setYoutubeWriteRq] = useState(INITIAL_YOUTUBE_WRITE_RQ)
-  const [youtubeWriteRp, setYoutubeWriteRp] = useState(null)
+  // [1] 필요 데이터 선언
+  const [youtubeDetailRq, setYoutubeDetailRq] = useState(INITIAL_YOUTUBE_DETAIL_RQ);
+  const [youtubeDetailRp, setYoutubeDetailRp] = useState(null);
+
   const adminId = useAuthStore(state => state.loginMember?.memberId ?? null);
+  const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const { videoLinkId } = useParams(); // /admin/youtube/edit/:videoId
 
 
-  const { showSnackbar } = useSnackbar()
-  const navigate = useNavigate()
 
   // [2] 입력 상태 변경 함수, 유튜브 videoId 추출 함수
-  const changeYoutubeWriteRq = (rq) => {
-    setYoutubeWriteRq((prev) => ({ ...prev, ...rq }))
+  const changeYoutubeDetailRq = (rq) => {
+    setYoutubeDetailRq((prev) => ({ ...prev, ...rq }))
   }
 
 
@@ -58,8 +63,15 @@ export function useYoutubeVideoWrite() {
 
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
-    setYoutubeWriteRp(rp)
-    showSnackbar(rp.message, "success")
+    setYoutubeDetailRp(rp.data)
+
+    // 상세 조회 값 → 상태에 채우기
+    changeYoutubeDetailRq({
+      videoUrl: rp.data.videoUrl,
+      title: rp.data.title,
+      content: rp.data.content,
+      thumbnailUrl: rp.data.thumbnailUrl
+    })
 
     setTimeout(() => {
       navigate("/admin/youtube")
@@ -72,14 +84,26 @@ export function useYoutubeVideoWrite() {
 
   const onFinally = () => { }
 
-  // [4] API 요청 함수 정의
-  const handleYoutubeRegister = (rq) => {
+
+  // [5] 영상 상세 조회 함수
+  const loadYoutubeDetail = () => {
+    api.get(
+      `/video-links/${videoLinkId}`,
+      {
+        admin: true,
+      }
+    )
+  }
+
+  // [6] 수정 API 요청 함수 정의
+  const handleYoutubeEdit = (rq) => {
 
     if (!adminId) {
       showSnackbar(rq.message, "error");
       return;
     }
-    const videoId = extractYoutubeVideoId(youtubeWriteRq.videoUrl);
+
+    const videoId = extractYoutubeVideoId(youtubeDetailRq.videoUrl);
     if (!videoId) {
       showSnackbar(rq.message, "error");
       return;
@@ -88,14 +112,14 @@ export function useYoutubeVideoWrite() {
     const normalizedUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
     const body = {
+      videoLinkId: Number(videoLinkId),
       videoUrl: normalizedUrl,
-      ownerId: adminId,
-      videoLinkOwner: "STUDY",
+      videoId: videoId
     };
 
 
-    api.post(
-      "/video-links",
+    api.put(
+      `/video-links/${videoLinkId}`,
       {
         onSuccess, onError, onFinally,
         admin: true,
@@ -104,10 +128,16 @@ export function useYoutubeVideoWrite() {
     )
   }
 
+  // [7] 첫 렌더링 시 상세 조회
+  useEffect(() => {
+    loadYoutubeDetail();
+  }, [videoLinkId]);
+
   // [5] 반환
   return {
-    youtubeWriteRq, youtubeWriteRp,
-    changeYoutubeWriteRq,
-    handleYoutubeRegister
+    youtubeDetailRq,
+    youtubeDetailRp,
+    changeYoutubeDetailRq,
+    handleYoutubeEdit
   }
 }

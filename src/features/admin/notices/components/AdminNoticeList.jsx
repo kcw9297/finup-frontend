@@ -38,9 +38,14 @@ export default function AdminNoticeList() {
 
   // [1] 목록, 삭제 커스텀 훅
   const {
-    searchRq, changeSearchRq,
-    noticeList, pagination,
-    loading, fetchNoticeList
+    searchRq,
+    noticeList,
+    pagination,
+    handleChangeRq,
+    handleSearch,
+    handleFilter,
+    handlePage,
+    handleOrder
   } = useNoticeList()
 
 
@@ -50,9 +55,6 @@ export default function AdminNoticeList() {
   const { removeNotice } = useNoticeRemove()
 
   // [2] 검색 바 필터, 페이징 계산, 링크 네비게이션
-  const handleFilter = (value) => {
-    changeSearchRq({ filter: value })
-  }
 
   const totalPages = (pagination && pagination.dataCount)
     ? Math.ceil(pagination.dataCount / pagination.pageSize)
@@ -64,9 +66,6 @@ export default function AdminNoticeList() {
   // [3] 반환 컴포넌트 구성
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
-      {/* 좌측 관리자 메뉴 */}
-      <AdminSidebar />
-
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
         {/* 상단 타이틀 + 등록 버튼 */}
@@ -88,13 +87,8 @@ export default function AdminNoticeList() {
         <SearchBar
           searchRq={searchRq}
           filterOnChange={handleFilter}
-          onChange={(rq) => changeSearchRq(rq)}
-          onSubmit={(e) => {
-            // 이벤트 동작 방지
-            e.preventDefault()
-            // 검색 실행
-            fetchNoticeList()
-          }}
+          onChange={handleChangeRq}
+          onSubmit={handleSearch}
         />
         {/* 공지사항 테이블 */}
         <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "800px", mx: "auto" }}>
@@ -153,7 +147,6 @@ export default function AdminNoticeList() {
               onClose={() => setDialogOpen(false)}
               onConfirm={() => {
                 removeNotice(targetId).then(() => {
-                  fetchNoticeList()
                   setDialogOpen(false)
                 })
               }}
@@ -161,19 +154,8 @@ export default function AdminNoticeList() {
           </Table>
         </Paper>
         {/* 페이지네이션 */}
-        {pagination && (
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-            <PageBar
-              pagination={pagination}
-              page={pagination.pageNum + 1}
-              count={totalPages}
-              onChange={(value) => {
-                changeSearchRq({ pageNum: value })
-              }}
-            />
-          </Box>
-        )}
-
+        {/* 하단 페이징 */}
+        <PageBar pagination={pagination} onChange={handlePage} />
       </Box>
     </Box>
   )
