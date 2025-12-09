@@ -25,7 +25,7 @@ export default function StocksDetailStock(){
 
       {/* 학습방법 설명 박스 */}
       <Box sx={{py:3}}>
-        <StocksDetailInfoTooltipIcon />
+        <StocksDetailInfoTooltipIcon text={"아이콘에 마우스를 올리면 쉬운 설명을 볼 수 있어요!"} />
       </Box>
       <Box sx={{px: 3, width: "100%", display: "flex", flexDirection: "column", gap: 5 }}>
         {/* 기본정보 */}

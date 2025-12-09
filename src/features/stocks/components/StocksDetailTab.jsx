@@ -24,21 +24,17 @@ export default function StocksDetailTab() {
         width: 90,
         padding: "8px 0",
         borderRadius: 1,
+        borderColor: (theme) => theme.palette.background.light,
         fontSize: 16,
         fontWeight: 400,
-        //color: "#1E1E1E",
+        color: (theme) => theme.palette.text.light,
         textTransform: "none",
         "&.Mui-selected": {
-          backgroundColor: "white",
-          color: "#1E1E1E",
-          borderRadius: "8px 8px 0 0",
-          "&:hover": {
-            backgroundColor: "white",
-          },
-        },
-        "&:hover": {
-          backgroundColor: "#E4E8EE",
-        },
+          backgroundColor: (theme) => theme.palette.background.base,
+          color: (theme) => theme.palette.text.main,
+          borderBottom: (theme) => theme.palette.background.base,
+          borderRadius: "8px 8px 0 0",          
+        },        
       },
       }}
       >
