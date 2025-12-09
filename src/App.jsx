@@ -21,11 +21,14 @@ import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
+import AuthSignupPage from './pages/auth/AuthSignupPage'
+
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
+  { path: '/signup', element: <GuestRoute><AuthSignupPage /></GuestRoute> },
   { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
 
 
