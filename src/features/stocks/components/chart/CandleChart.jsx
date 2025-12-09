@@ -52,37 +52,37 @@ export default function CandleChart({ items, onTimeScaleReady }) {
       };
   },[]);
   
-  useEffect(() => {
-    if (!chartRef.current || !candleSeriesRef.current) return;
+  // useEffect(() => {
+  //   if (!chartRef.current || !candleSeriesRef.current) return;
 
-    const ohlcBox = document.getElementById("ohlc-box");
+  //   const ohlcBox = document.getElementById("ohlc-box");
 
-    chartRef.current.subscribeCrosshairMove((param) => {
-      if (!param.time) {
-        ohlcBox.innerHTML = `<b>—</b>`;
-        return;
-      }
+  //   chartRef.current.subscribeCrosshairMove((param) => {
+  //     if (!param.time) {
+  //       ohlcBox.innerHTML = `<b>—</b>`;
+  //       return;
+  //     }
 
-      const price = param.seriesPrices.get(candleSeriesRef.current);
-      if (!price) {
-        ohlcBox.innerHTML = `<b>—</b>`;
-        return;
-      }
+  //     const price = param.seriesPrices.get(candleSeriesRef.current);
+  //     if (!price) {
+  //       ohlcBox.innerHTML = `<b>—</b>`;
+  //       return;
+  //     }
 
-      const timeStr =
-        typeof param.time === "string"
-          ? param.time
-          : `${param.time.year}-${String(param.time.month).padStart(2, "0")}-${String(param.time.day).padStart(2, "0")}`;
+  //     const timeStr =
+  //       typeof param.time === "string"
+  //         ? param.time
+  //         : `${param.time.year}-${String(param.time.month).padStart(2, "0")}-${String(param.time.day).padStart(2, "0")}`;
 
-      ohlcBox.innerHTML = `
-        <b>${timeStr}</b><br />
-        시가: ${price.open.toLocaleString()}<br />
-        고가: ${price.high.toLocaleString()}<br />
-        저가: ${price.low.toLocaleString()}<br />
-        종가: ${price.close.toLocaleString()}
-      `;
-    });
-  }, []);
+  //     ohlcBox.innerHTML = `
+  //       <b>${timeStr}</b><br />
+  //       시가: ${price.open.toLocaleString()}<br />
+  //       고가: ${price.high.toLocaleString()}<br />
+  //       저가: ${price.low.toLocaleString()}<br />
+  //       종가: ${price.close.toLocaleString()}
+  //     `;
+  //   });
+  // }, []);
 
   //items 변경 시 데이터만 갱신
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function CandleChart({ items, onTimeScaleReady }) {
   return (
     <div style={{position:"relative", width:"100%"}}>
       <div ref={containerRef} style={{ width: "100%" }} />
-      <div id="ohlc-box"
+      {/* <div id="ohlc-box"
         style={{
           position: "absolute",
           top: 10,
@@ -130,7 +130,7 @@ export default function CandleChart({ items, onTimeScaleReady }) {
           lineHeight: "14px",
           pointerEvents: "none",
           zIndex: 20,
-        }}></div>
+        }}></div> */}
 
     </div>
   )
