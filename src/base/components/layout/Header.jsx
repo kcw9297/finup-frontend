@@ -108,7 +108,7 @@ export default function Header() {
               </Box>
 
               {loading ? (
-                <p style={{fontSize:14, color:"text.main"}}>로딩중..</p>
+                <p style={{fontSize:14, color:"text.main"}}></p>
               ) : isAuthenticated ? (
                 <p style={{fontSize:14, color:"text.main"}}>{loginMember.nickname}님 환영합니다</p>
               ) : (

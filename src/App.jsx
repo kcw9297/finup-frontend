@@ -25,6 +25,7 @@ import WordDetailPage from './pages/word/WordDetailPage'
 import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
 import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
 import AdminStudyListPage from './pages/admin/study/AdminStudyListPage'
+import AdminStudyDetailPage from './pages/admin/study/AdminStudyDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -71,6 +72,7 @@ const nastedRoutes = [
 
       // url : 단계 개념 관리
       { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
+      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
     ]
   },
 

@@ -8,13 +8,15 @@ import {
   Button
 } from "@mui/material";
 
-import PageBar from "../../../../base/components/bar/PageBar";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useAdminStudyList } from "../hooks/useAdminStudyList";
-import SortBar from "../../../../base/components/bar/OrderBar";
-import { useReloadStore } from "../../../../base/stores/useReloadStore";
+import OrderBar from "../../../base/components/bar/OrderBar";
+import PageBar from "../../../base/components/bar/PageBar";
+import { useStudyList } from "../hooks/useStudyList";
+import { useStudyModal } from "../hooks/useStudyModal";
+import FormModal from "../../../base/components/modal/FormModal";
+
 
 // 검색 요청 초기값 (MemberList와 동일 구조 유지)
 const INITIAL_SEARCH_RQ = {
@@ -30,15 +32,16 @@ const INITIAL_SEARCH_RQ = {
  * @author kcw
  */
 
-export default function AdminStudyList({ onOpenWriteModal }) {
+export default function StudyList({ admin = false }) {
 
   // [1] 검색 요청 상태
   const {
     searchRq, searchRp, loading, // 상태
-    setLoading, handleChangeRq, handleSearch, handleFilter, handlePage, handleOrder // 상태관리 함수
-  } = useAdminStudyList()
+    handlePage, handleOrder // 상태관리 함수
+  } = useStudyList({admin})
 
   const navigate = useNavigate()
+  const { openWriteModal, writeProps } = useStudyModal({admin}) // 사용 모달 프롭스
 
   // [2] 필요 데이터 정의
   const rows = searchRp ? searchRp.data : []
@@ -81,21 +84,26 @@ export default function AdminStudyList({ onOpenWriteModal }) {
           mx: 'auto'
         }}>
 
-          {/* 좌측 버튼 */}
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => onOpenWriteModal()}
-            sx={{ 
-              bgcolor: 'base.main',
-              '&:hover': { bgcolor: 'base.dark' }
-            }}
-          >
-            학습 등록
-          </Button>
+          {/* 좌측 버튼 (관리자용) */}
+          <Box sx={{ width: "140px", height: "40px" }}>
+            {admin && (
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={openWriteModal}
+                sx={{ 
+                  bgcolor: 'base.main',
+                  '&:hover': { bgcolor: 'base.dark' }
+                }}
+              >
+                학습 등록
+              </Button>
+            )}
+          </Box>
+
           
           {/* 우측 정렬 바 */}
-          <SortBar options={sortOptions} selected={searchRq.order} onChange={handleOrder} />
+          <OrderBar options={sortOptions} selected={searchRq.order} onChange={handleOrder} />
         </Box>
 
 
@@ -157,6 +165,9 @@ export default function AdminStudyList({ onOpenWriteModal }) {
         {/* 하단 페이징 */}
         <PageBar pagination={pagination} onChange={handlePage}/>
       </Box>
+
+        {/* 모달 영역 */}
+        <FormModal modalProps={writeProps} />
     </Box>
   )
 }
