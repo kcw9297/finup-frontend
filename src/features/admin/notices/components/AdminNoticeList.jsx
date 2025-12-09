@@ -64,9 +64,6 @@ export default function AdminNoticeList() {
   // [3] 반환 컴포넌트 구성
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
-      {/* 좌측 관리자 메뉴 */}
-      <AdminSidebar />
-
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
         {/* 상단 타이틀 + 등록 버튼 */}

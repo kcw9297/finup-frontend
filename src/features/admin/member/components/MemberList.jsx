@@ -46,24 +46,21 @@ export default function MemberList() {
     { value: "nickname", label: "닉네임" },
   ]
 
-  const [searchRq, setSearchRq] = useState(INITIAL_SEARCH_RQ)
 
-  const changeSearchRq = (rq) => {
-    setSearchRq(prev => ({ ...prev, ...rq }))
-  }
+  // [2] 필요 데이터 정의
+
   const {
-    memberList, pagination,
-    loading, fetchMemberList
-  } = useMemberList(searchRq)
+    memberList,
+    pagination,
+    searchRq,
+    handlePage,
+    handleFilter,
+    handleSearch,
+    handleChangeRq,
+    loading
+  } = useMemberList()
 
-  // [2] 검색 바 필터, 페이징 계산, 링크 네비게이션
-  const handleFilter = (value) => {
-    changeSearchRq({ filter: value })
-  }
-
-  const totalPages = (pagination && pagination.dataCount)
-    ? Math.ceil(pagination.dataCount / pagination.pageSize)
-    : 1;
+  const rows = memberList;
 
   // console.log("pagination >>>", pagination)
   const navigate = useNavigate();
@@ -71,9 +68,6 @@ export default function MemberList() {
   // [3] 반환 컴포넌트 구성
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
-
-      {/* 좌측 관리자 메뉴 */}
-      <AdminSidebar />
 
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
@@ -89,11 +83,8 @@ export default function MemberList() {
         <SearchBar
           searchRq={searchRq}
           filterOnChange={handleFilter}
-          onChange={(rq) => changeSearchRq(rq)}
-          onSubmit={(e) => {
-            e.preventDefault()
-            fetchMemberList(searchRq)
-          }}
+          onChange={handleChangeRq}
+          onSubmit={handleSearch}
           selectItems={memberFilterOptions}
         />
 
@@ -112,7 +103,7 @@ export default function MemberList() {
             </TableHead>
 
             <TableBody>
-              {memberList.length === 0 && (
+              {rows.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                     회원 목록이 없습니다.
@@ -120,7 +111,7 @@ export default function MemberList() {
                 </TableRow>
               )}
 
-              {memberList?.map((m, index) =>
+              {rows?.map((m, index) =>
                 <TableRow
                   key={m.memberId}
                   hover
@@ -138,18 +129,9 @@ export default function MemberList() {
           </Table>
         </Paper>
         {/* 페이지네이션 */}
-        {pagination && (
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-            <PageBar
-              pagination={pagination}
-              page={pagination.pageNum + 1}
-              count={totalPages}
-              onChange={(value) => {
-                changeSearchRq({ pageNum: value })
-                fetchMemberList({ ...searchRq, pageNum: value })
-              }}
-            />
-          </Box>
+        {/* 하단 페이징 */}
+        {pagination && pagination.totalPage > 0 && (
+          <PageBar pagination={pagination} onChange={handlePage} />
         )}
       </Box>
     </Box>
