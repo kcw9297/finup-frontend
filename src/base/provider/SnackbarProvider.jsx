@@ -1,6 +1,6 @@
 // src/base/contexts/SnackbarContext.jsx
 import { createContext, useCallback, useContext, useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert, Slide } from '@mui/material';
 
 
 /**
@@ -38,7 +38,12 @@ export function SnackbarProvider({ children }) {
       <Snackbar 
         open={open} 
         onClose={hideSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        autoHideDuration={5000}  // 지속 시간
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        slots={{ transition: Slide }}
+        slotProps={{
+          transition: { direction: 'left' }  // 오른쪽 → 왼쪽 슬라이드
+        }}
       >
         <Alert severity={severity} onClose={hideSnackbar}>
           {message}
