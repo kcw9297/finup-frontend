@@ -202,6 +202,12 @@ const theme = createTheme({
     },
 
     // Button
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -272,7 +278,7 @@ const theme = createTheme({
     styleOverrides: {
       root: ({ theme }) => ({
         "&:hover": {
-          backgroundColor: `${theme.palette.background.light} !important`,
+          backgroundColor: `${theme.palette.background.light}`,
         }
       })
     }
