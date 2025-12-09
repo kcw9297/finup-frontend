@@ -71,68 +71,75 @@ export default function MemberList() {
 
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
-        {/* 상단 타이틀 + 등록 버튼 */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, maxWidth: "750px", mx: "auto" }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            회원 목록 조회
-          </Typography>
-        </Box>
+        <Box sx={{ maxWidth: "980px", mx: "auto" }}>
+          {/* 상단 타이틀 + 등록 버튼 */}
+          <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              회원 목록 조회
+            </Typography>
+          </Box>
 
 
-        { /* 검색 바 */}
-        <SearchBar
-          searchRq={searchRq}
-          filterOnChange={handleFilter}
-          onChange={handleChangeRq}
-          onSubmit={handleSearch}
-          selectItems={memberFilterOptions}
-        />
+          { /* 검색 바 */}
+          <SearchBar
+            searchRq={searchRq}
+            filterOnChange={handleFilter}
+            onChange={handleChangeRq}
+            onSubmit={handleSearch}
+            selectItems={memberFilterOptions}
+          />
 
-        {/* 회원 목록 테이블 */}
-        <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "850px", mx: "auto" }}>
-          <Table sx={{ tableLayout: "fixed" }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>이름</TableCell>
-                <TableCell sx={{ width: "25%" }}>이메일</TableCell>
-                <TableCell>활성여부</TableCell>
-                <TableCell>권한</TableCell>
-                <TableCell>소셜</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {rows.length === 0 && (
+          {/* 회원 목록 테이블 */}
+          <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "1000px", mx: "auto" }}>
+            <Table sx={{ tableLayout: "fixed" }}>
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
-                    회원 목록이 없습니다.
-                  </TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell>이름</TableCell>
+                  <TableCell sx={{ width: "25%" }}>이메일</TableCell>
+                  <TableCell>활성여부</TableCell>
+                  <TableCell>권한</TableCell>
+                  <TableCell>소셜</TableCell>
                 </TableRow>
-              )}
+              </TableHead>
 
-              {rows?.map((m, index) =>
-                <TableRow
-                  key={m.memberId}
-                  hover
-                  sx={{ cursor: "pointer" }}
-                /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
-                >
-                  <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
-                  <TableCell>{m.nickname}</TableCell>
-                  <TableCell>{m.email}</TableCell>
-                  <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
-                  <TableCell>{m.memberRoleValue}</TableCell>
-                  <TableCell>{m.socialTypeValue}</TableCell>
-                </TableRow>)}
-            </TableBody>
-          </Table>
-        </Paper>
-        {/* 페이지네이션 */}
-        {/* 하단 페이징 */}
-        {pagination && pagination.totalPage > 0 && (
-          <PageBar pagination={pagination} onChange={handlePage} />
-        )}
+              <TableBody>
+                {rows.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                      회원 목록이 없습니다.
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {rows?.map((m, index) =>
+                  <TableRow
+                    key={m.memberId}
+                    hover
+                    sx={{ cursor: "pointer" }}
+                  /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
+                  >
+                    <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
+                    <TableCell>{m.nickname}</TableCell>
+                    <TableCell>{m.email}</TableCell>
+                    <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
+                    <TableCell>{m.memberRoleValue}</TableCell>
+                    <TableCell>{m.socialTypeValue}</TableCell>
+                  </TableRow>)}
+              </TableBody>
+            </Table>
+          </Paper>
+          {/* 페이지네이션 */}
+          {/* 하단 페이징 */}
+          {pagination && pagination.totalPage > 0 && (
+            <PageBar pagination={pagination} onChange={handlePage} />
+          )}
+        </Box>
       </Box>
     </Box>
   )
