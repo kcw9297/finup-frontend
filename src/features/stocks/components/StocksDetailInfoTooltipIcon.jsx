@@ -18,10 +18,10 @@ export default function StocksDetailInfoTooltipIcon({text}) {
     >
       {/* 학습방법 Chip */}
       <Chip        
-        icon={<BookmarkBorder sx={{ color: theme.palette.base.lightActive}} />} // 왜 MUI 아이콘 색깔 변경이 안되냐 "#b0c3eb !important" 하니까됨 
+        icon={<BookmarkBorder sx={{ color: theme.palette.base.lightActive + " !important" }} />} // 왜 MUI 아이콘 색깔 변경이 안되냐 "#b0c3eb !important" 하니까됨 
         label="학습방법"
         sx={{
-          backgroundColor: "white",
+          backgroundColor: theme.palette.background.base,
           borderRadius: 1,
           height: 32,
           fontWeight: 500,          
