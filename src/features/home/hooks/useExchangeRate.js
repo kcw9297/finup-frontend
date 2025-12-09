@@ -1,5 +1,5 @@
 // 환율, 코스피 등 공통 데이터 생성 함수
-function makeData(title, today, yesterday) {
+export function makeData(title, today, yesterday) {
   const diff = today - yesterday;
   return {
     title,
