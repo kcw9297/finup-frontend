@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 
-export function useStocksNews(isModalOpen){
+export function useStocksNews(stockName){
   const [category, setCategory] = useState("date");
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,6 @@ export function useStocksNews(isModalOpen){
     { label: "최신뉴스", value: "date" },
     { label: "주요뉴스", value: "sim" },
   ];
-  const stockName = "삼성전자";
 
   // 카테고리 변경 함수
   const changeCategory = (newCat) => {
@@ -26,7 +25,7 @@ export function useStocksNews(isModalOpen){
     setLoading(true);
     try {
       const res = await api.get("/stocks/news", {
-        params: { category, stockName},//종목명도 받아야됨
+        params: { category, stockName }, 
         public: true,
       });
       if (lastRequestRef.current != requestId) {
@@ -40,7 +39,7 @@ export function useStocksNews(isModalOpen){
         setLoading(false);
       }
     }
-  }, [category]);
+  }, [category, stockName]);
 
   const MoveToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -65,26 +64,26 @@ export function useStocksNews(isModalOpen){
   // 카테고리 바뀔 때 1번만 API 호출
   useEffect(() => {
     fetchNews();
-  }, [category]);
+  }, [category, stockName]);
 
-  useEffect(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    intervalRef.current = setInterval(() => {
-      if (!isModalOpen) {
-        fetchNews();
-        console.log("자동 새로고침 실행됨");
-      } else {
-        console.log("새로고침 중단");
-      }
-    }, 15 * 60 * 1000);
+  // useEffect(() => {
+  //   if (intervalRef.current) {
+  //     clearInterval(intervalRef.current);
+  //   }
+  //   intervalRef.current = setInterval(() => {
+  //     if (!isModalOpen) {
+  //       fetchNews();
+  //       console.log("자동 새로고침 실행됨");
+  //     } else {
+  //       console.log("새로고침 중단");
+  //     }
+  //   }, 15 * 60 * 1000);
 
-    return () => {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    };
-  }, [isModalOpen, category]);
+  //   return () => {
+  //     clearInterval(intervalRef.current);
+  //     intervalRef.current = null;
+  //   };
+  // }, [isModalOpen, category, stockName]);
 
   useEffect(() => {
     const onScroll = () => {
