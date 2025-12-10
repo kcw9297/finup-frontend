@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
+import { StockDetailContext } from "../context/StockDetailContext";
 import { useParams } from "react-router-dom";
 import thema from "../../../base/design/thema.js"
 import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
-import { useStockDetail } from "../hooks/useStocksDetailStock.js";
+import StocksDetailTooltip from "./StocksDetailTooptip.jsx";
+//import { useStockDetail } from "../hooks/useStocksDetailStock.js";
+//import { useStockDetail } from "../hooks/useStocksDetail.js";
 
 export default function StocksDetailStock(){
   const { code } = useParams();
-  const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
-  
+  // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
+  //const { nameCard, detailStock, loading, error } = useStockDetail(code);
+  const { detailStock } = useContext(StockDetailContext);
+
   return (
     // <Box>
     <Box sx={{backgroundColor: thema.palette.background.base}}>
 
       {/* 학습방법 설명 박스 */}
       <Box sx={{py:3}}>
-        <StocksDetailInfoTooltipIcon />
+        <StocksDetailInfoTooltipIcon text={"아이콘에 마우스를 올리면 쉬운 설명을 볼 수 있어요!"} />
       </Box>
       <Box sx={{px: 3, width: "100%", display: "flex", flexDirection: "column", gap: 5 }}>
         {/* 기본정보 */}
@@ -27,32 +32,24 @@ export default function StocksDetailStock(){
             gap: 2,
             flexWrap: "wrap",
             alignItems: "flex-end", // 세로 기준 아래 정렬          
-          }}>
-            
-            {headInfo.map((item) => (
-              <Typography variant= "body1">
-                {item.value}
-              </Typography>
-            ))} 
-
-            <Typography variant="h5" fontWeight={600}>
-              삼성전자
+          }}>           
+            <Typography variant="h5" fontWeight={600} >
+              {detailStock?.basicHead?.stockName ?? "종목명(로딩 중...)"}
             </Typography>
-            <Typography variant="body1" /*color="text.secondary"*/>
+            <Typography variant="body1" color="text.secondary">
               국내   
             </Typography>                    
-            <Typography variant="body1" /*color="text.secondary"*/>
-              005930
+            <Typography variant="body1" color="text.secondary">
+              { detailStock?.basicHead?.code ?? "종목코드 로딩 중..."}
             </Typography>
-            <Typography variant="body1" /*color="text.secondary"*/>
-              코스피
-            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              { detailStock?.basicHead?.marketName ?? "코스피겠지...?"}
+            </Typography>          
           </Box>
 
           {/* 정보 카드 */}
           <Box
-            sx={{
-              //backgroundColor: "white",
+            sx={{              
               borderRadius: 2,
               px: 2,
               display: "flex",
@@ -60,8 +57,13 @@ export default function StocksDetailStock(){
               gap: 1.5,
             }}
           >
-            <Grid container sx={{ justifyContent: "space-between" }}>
-              {basic.map((item, index) => (
+            <Grid container sx={{ justifyContent: "space-between" }}>              
+              {(detailStock.basic ?? Array(4).fill({
+                  label: "항목",
+                  value: "데이터",
+                  tooltip: "설명"
+                })
+              ).map((item, index) => (
                 <Grid
                   item               
                   key={index}
@@ -72,13 +74,15 @@ export default function StocksDetailStock(){
                     width: "23%",                  
                     px: 1,
                     py: 2,                    
-                    borderBottom: "1px solid #B0C3EB",
+                    borderBottom: (theme) => `1px solid ${theme.palette.base.lightActive}`
                   }}
                 >
-                  <Typography /*color="text.primary"*/ sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
-                    <Box sx={{ color: "#B0C3EB", display: 'flex', alignItems: 'center', px: 1 }}>
-                      <InfoIcon/>            
-                    </Box>
+                  <Typography sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
+                    <StocksDetailTooltip text={item.tooltip}>
+                      <Box component="span" sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
+                        <InfoIcon/>            
+                      </Box>
+                    </StocksDetailTooltip>
                   </Typography>                                  
                   <Typography fontWeight={500}>{item.value}</Typography>
                 </Grid>
@@ -96,10 +100,10 @@ export default function StocksDetailStock(){
           </Box>
           
           <Box sx={{ display: "flex", px: 2, gap: 3, overflow: "hidden" }}>
-            <InfoCard title="가격" rows={price} />
-            <InfoCard title="가치평가" rows={valuation} />
-            <InfoCard title="수급·거래" rows={flow} />
-            <InfoCard title="리스크·상태" rows={risk} />
+            <InfoCard title="가격" rows={ detailStock.price } />
+            <InfoCard title="가치평가" rows={ detailStock.valuation } />
+            <InfoCard title="수급·거래" rows={ detailStock.flow } />
+            <InfoCard title="리스크·상태" rows={ detailStock.risk } />
           </Box>
         </Box>
 
@@ -133,12 +137,13 @@ export default function StocksDetailStock(){
 }
 
 function InfoCard({ title, rows }) {
-  return (
+  const safeRows = rows ?? Array(4).fill({ label: "항목", value: "데이터", tooltip:"설명" });  
+  return (        
     <Box
       sx={{
         flex: 1,
         p: 2,
-        //background: "#F1F4F7",
+        background: (theme) => theme.palette.background.light,
         borderRadius: 4,
       }}
     >
@@ -150,7 +155,8 @@ function InfoCard({ title, rows }) {
       </Box>
 
       {/* 반복되는 행 */}
-      {rows.map((item, i) => (
+      
+      { safeRows.map((item, i) => (
         <Box key={i}>
           <Box
             sx={{
@@ -163,9 +169,11 @@ function InfoCard({ title, rows }) {
             {/* 왼쪽 영역 */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography fontSize={16}>{item.label}</Typography>                  
-              <Box sx={{ color: "#B0C3EB", display: 'flex', alignItems: 'center', px: 1 }}>
-                <InfoIcon/>            
-              </Box>
+              <StocksDetailTooltip text={item.tooltip}>
+                <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
+                  <InfoIcon/>            
+                </Box>
+              </StocksDetailTooltip>
             </Stack>
 
             {/* 오른쪽 값 */}
@@ -179,7 +187,7 @@ function InfoCard({ title, rows }) {
           </Box>
 
           {/* 행 구분선 */}
-          {i < rows.length - 1 && <Divider sx={{ borderColor: "#B0C3EB" }} />}
+          {i < safeRows.length - 1 && <Divider sx={{ borderColor: (theme) => theme.palette.base.lightActive }} />}
         </Box>
       ))}
     </Box>

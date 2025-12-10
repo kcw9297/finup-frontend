@@ -19,7 +19,7 @@ export default function Header() {
     { label: "개념+", path: "/login" },
     { label: "뉴스+", path: "/news/list" },
     { label: "종목+", path: "/stocks" },
-    { label: "단어장+", path: "/login" },
+    { label: "단어장+", path: "/words" },
   ]
   const { isAuthenticated, loading, loginMember } = useAuthStore()
   const navigate = useNavigate()
@@ -60,7 +60,7 @@ export default function Header() {
             <Box component={Link} to="/" sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}} >
               <img src={logo} alt="로고" style={{height: 40}} />
             </Box>
-            
+
             {/* 메뉴 */}
             <Box sx={{display: 'flex', gap: '30px'}}>
               {manuItems.map((item) => {
@@ -98,8 +98,8 @@ export default function Header() {
               "&:hover": {backgroundColor: 'background.light' }
               }}>
               {/* 프로필 아이콘 */}
-              <Box >
-                <Avatar 
+              <Box>
+                <Avatar
                   src={loginMember?.profileImageUrl} // 프로필 이미지 URL
                   sx={{width: 35, height: 35}}
                 >

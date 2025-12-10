@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import { useReboardSearch } from "../hooks/useReboardSearch"
 import PageBar from "../../../base/components/bar/PageBar"
-import SearchBar from "../../../base/components/bar/SearchBar"
+import SearchBar2 from "../../../base/components/bar/SearchBar2"
 
 export default function ReboardSearch() {
 
@@ -40,7 +40,7 @@ export default function ReboardSearch() {
       </Typography>
 
       {/* 검색 바 */}
-      < SearchBar searchRq={searchRq} onSubmit={handleSearch} onChange={updateSearchRq} filterOnChange={handleFilter} />
+      < SearchBar2 searchRq={searchRq} onSubmit={handleSearch} onChange={updateSearchRq} filterOnChange={handleFilter} />
 
       {/* 정렬 바 */}
       <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>

@@ -22,13 +22,22 @@ import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
+import AuthSignupPage from './pages/auth/AuthSignupPage'
+import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
+import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
+import AdminStudyListPage from './pages/study/AdminStudyListPage'
+import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
+import YoutubeEditPage from './pages/admin/youtube/YoutubeEditPage'
+import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
-  { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
-  
+  { path: '/signup', element: <GuestRoute><AuthSignupPage /></GuestRoute> },
+  { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
+
+
 ]
 
 // 자식이 있는 라우팅 리스트
@@ -51,21 +60,39 @@ const nastedRoutes = [
   },
 
   {
-    path: '/admin/notices/*', // url : 관리자 공지사항
+    path: '/admin/*', // url : 관리자 공지사항
     children: [
-      { path: '', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
-      { path: ':noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: ':noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
-      { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      // url : 관리자 공지사항
+      { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeListPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeDetailPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId/edit', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeEditPage /></ProtectedRoute> },
+      { path: 'notices/write', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeWritePage /></ProtectedRoute> },
+
+      // url : 회원 목록
+      { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
+
+      // url : 개념 학습 관리
+      { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
+      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
+
+      // url : 개념 단어 관리
+      { path: "study-words", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyWordListPage /></ProtectedRoute> },
+
+      // url : 유튜브 영상
+      { path: "youtube", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeListPage /></ProtectedRoute> },
+      { path: "youtube/write", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeVideoWritePage /></ProtectedRoute> },
+      { path: "youtube/:videoLinkId/edit", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeEditPage /></ProtectedRoute> },
+
     ]
   },
 
   {
-    path: '/admin/members/*',
+    path: '/admin/*',
     children: [
-      { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+
     ]
   },
+
 
   {
     path: '/stocks/*', //url : 종목 +
@@ -102,7 +129,7 @@ export default function App() {
 
   // 페이지 마운트 시, 최초 1회 로그인 검증
   const { authenticate } = useAuth()
-  const { isAuthenticated, loginMember } = useAuthStore()
+  const { isAuthenticated, loginMember, logout } = useAuthStore()
 
   // 페이지 마운트 시, 전역적으로 사용할 함수 로드
   const navigate = useNavigate()          // redirect 수행할 네비게이션
@@ -111,8 +138,8 @@ export default function App() {
   useEffect(() => {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
-    initGlobalHook(navigate, showSnackbar)
-  }, [])
+    initGlobalHook(navigate, showSnackbar, logout)
+  }, [location.pathname])
 
   return (
     <>
@@ -135,7 +162,7 @@ export default function App() {
         }
 
 
-      </Routes >
+      </Routes>
     </>
   )
 }

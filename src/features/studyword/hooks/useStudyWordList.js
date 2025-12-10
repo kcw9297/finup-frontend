@@ -1,0 +1,120 @@
+import { useEffect, useState } from "react";
+import { useReloadStore } from "../../../base/stores/useReloadStore";
+import { useSearchParams } from "react-router-dom";
+import { api } from "../../../base/utils/fetchUtils";
+import { DEFAULT_SEARCH_RQ } from "../constants/studyWordConstant";
+
+/**
+ * 개념 학습 단어 목록 custom hook
+ * @since 2025-12-08
+ * @author kcw
+ */
+
+export function useStudyWordList({ admin }) {
+
+  // [1] 필요 데이터 선언
+  const [ searchRp, setSearchRp ] = useState(null) // 검색 결과
+  const [ loading, setLoading ] = useState(true) // 로딩 상태
+  const [ searchParams, setSearchParams ] = useSearchParams() // 검색 파라미터
+  const { reloading } = useReloadStore() // 리로딩 감지
+  const [ keywordInput, setKeywordInput ] = useState('') // 검색어 상태
+
+  // [2] 필요 함수 선언 
+  // Object 생성 함수 (파라미터로부터 직접 뽑아옴)
+  const getSearchParams = () => ({
+    filter: searchParams.get('filter') || DEFAULT_SEARCH_RQ.filter,
+    keyword: searchParams.get('keyword') || DEFAULT_SEARCH_RQ.keyword,
+    order: searchParams.get('order') || DEFAULT_SEARCH_RQ.order,
+    pageNum: Number(searchParams.get('pageNum')) || DEFAULT_SEARCH_RQ.pageNum,
+  })
+
+  // 검색 요청 (현재 URL 기반 초기화 필수)
+  const searchRq = getSearchParams()
+
+  // 파라미터 일치 여부 비교 함수
+  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(getSearchParams());
+
+
+  // 키워드 변경 감지 함수
+  const handleKeyword = e => {
+    setKeywordInput()
+  }
+
+
+  // 검색 버튼 함수
+  const handleSearch = e => {
+
+    // 제출 이벤트 방지
+    e.preventDefault()
+
+    // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
+    if (isSameRq(searchRq)) return
+
+    // 검색 수행
+    setSearchParams(searchRq)
+  }
+
+  // 필터링 함수
+  const handleFilter = filter => {
+
+    // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
+    const nextRq = { ...searchRq, filter };
+    if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
+    
+    // 검색 수행
+    setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
+  }
+
+  // 페이징 함수
+  const handlePage = pageNum => {
+
+    // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
+    const nextRq = { ...searchRq, pageNum };
+    if (isSameRq(nextRq)) return
+
+    // 페이징 파라미터 갱신
+    setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
+  }
+
+  // 정렬 함수
+  const handleOrder = order => {
+    
+    // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
+    const nextRq = { ...searchRq, order, pageNum: DEFAULT_SEARCH_RQ.pageNum };
+    if (isSameRq(nextRq)) return
+
+    // 페이징 파라미터 갱신
+    setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
+  }
+
+  // [3] 성공/실패/마지막 콜백 정의
+  const onSuccess = (rp) => {
+    setSearchRp(rp)
+  }
+
+  const onError = rp => {
+    setSearchRp(null) // 검색 결과 제거
+  }
+
+  const onFinally = () => {
+    setLoading(false) // 로딩 상태 해제
+  }
+
+  // [4] useEffect 및 REST API 요청 함수 선언
+  // 리로드 발생 시, 기본 파라미터로 초기화
+  useEffect(() => {
+    setSearchParams(DEFAULT_SEARCH_RQ);
+  }, [reloading]);
+
+  // 파라미터 변동 시 검색
+  useEffect(() => {
+    setLoading(true)
+    api.get('/study-words/search', { params: searchRq, onSuccess, onError, onFinally, admin })
+  }, [searchParams, reloading])
+
+  // [5] 반환
+  return {
+    searchRq, searchRp, loading,
+    handleSearch, handleFilter, handlePage, handleOrder
+  }
+}
