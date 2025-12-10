@@ -23,6 +23,7 @@ import SearchBar2 from "../../../base/components/bar/SearchBar2";
 import SearchBar from "../../../base/components/bar/SearchBar";
 import { useStudyWordEditModal } from "../hooks/useStudyWordEditModal";
 import { useStudyWordRemoveModal } from "../hooks/useStudyWordRemoveModal";
+import { useUploadStudyWordImage } from "../hooks/useUploadStudyWordImage";
 
 
 /**
@@ -36,8 +37,14 @@ export default function StudyWordList({ admin = false }) {
   // [1] 검색 요청 상태
   const {
     searchRq, searchRp, loading, searchProps, // 상태
-    handlePage, handleOrder, handleAfterEdit, handleAfterRemove, // 상태관리 함수
+    handlePage, handleOrder, 
+    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile // 상태관리 함수
   } = useStudyWordList({admin})
+
+  const {
+    uploadRq, loading : fileLoading,
+    handleUploadImage
+  } = useUploadStudyWordImage({admin})
 
   // 사용 모달
   const { openWriteModal : openWordWriteModal, writeProps: wordWriteProps } = useStudyWordWriteModal({admin})
@@ -105,7 +112,7 @@ export default function StudyWordList({ admin = false }) {
         </Box>
 
         {/* 이미지 카드 리스트 (4 * 4) */}
-        {loading ? (
+        {(loading || fileLoading) ? (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 350 }}>
               <CircularProgress size={24} sx={{ color: 'white' }} />
           </Box>
@@ -122,8 +129,9 @@ export default function StudyWordList({ admin = false }) {
                 <WordCard 
                   word={{ ...row, id: row.studyWordId }} 
                   admin={admin}
-                  clickFunctions={{
-                   //onClickUploadImage: () => handleUploadImage(row),
+                  functions={{
+                    onChangeUploadImage: (file) => handleUploadImage(row.studyWordId, file),
+                    onChangeUploadImageAfter: (imageUrl) => handleAfterUploadImageFile(row.studyWordId, imageUrl),
                    //onClickRemoveImage: () => handleRemoveImage(row.studyWordId),
                     onClickEdit: () => openWordEditModal(row),
                     onClickRemove: () => openWordRemoveModal(row.studyWordId),

@@ -5,7 +5,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../provider/SnackbarProvider';
 import { api } from '../../utils/fetchUtils';
 import { useReloadStore } from '../../stores/useReloadStore';
@@ -29,14 +29,15 @@ export default function FormModal({ modalProps }) {
   */
   const { open, setOpen, title, initialValues = [], fields = [], submitText = "등록", submit = {}} = modalProps;
 
+  // Ref 추가
+  const dialogContentRef = useRef(null);
+
   // 기본 제출 옵션
   const modalSubmit = {
     endpoint: '', // REST API URL
-    method : 'POST', // HTTP Method
     admin: false, // 관리자 API
     public: false, // 공용 API
-    reload: true, // 리로딩 값 갱신 여부
-    handleAfterSuccess: null, // 응답 성공 시, 처리할 기능 (상태 갱신 등) 
+    handleSubmit: null, // 응답 성공 시, 처리할 기능 (상태 갱신 등) 
     ...submit
   }
 
@@ -44,8 +45,6 @@ export default function FormModal({ modalProps }) {
   const [rq, setRq] = useState({}) // 모달 요청 상태
   const [errors, setErrors] = useState({}) // 유효성 검사 오류 상태
   const [loading, setLoading] = useState(false) // 로딩 상태
-  const { reload } = useReloadStore()
-  const { showSnackbar } = useSnackbar()
 
   // [2] 필요 함수 선언
   // 입력 변경 처리 함수
@@ -94,23 +93,18 @@ export default function FormModal({ modalProps }) {
     setOpen(false); // 모달 닫기 (부모에서 제어 중인 상태를 false로)
   };
 
-
-  // [3] 성공/실패/마지막 콜백 정의
-  const onSuccess = (rp) => {
-    showSnackbar(rp.message, 'success')
-    init() // 초기화
-    if (modalSubmit.reload) reload() // 리로드 수행
-    if (modalSubmit.handleAfterSuccess) modalSubmit.handleAfterSuccess(rq, rp)
-    setOpen(false) // 모달 닫기
-  }
-
-  const onError = rp => {
-    if (rp.inputErrors) setErrors(rp.inputErrors) // 유효성 검사 오류인 경우 추가
-  }
-
-  const onFinally = () => {
-    setLoading(false) // 로딩 상태 해제
-  }
+  // 포커스 해제 함수
+  const removeAllFocus = () => {
+    // 현재 포커스된 요소에서 포커스 제거
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    
+    // DialogContent에 포커스를 주어 TextField의 포커스 제거
+    if (dialogContentRef.current) {
+      dialogContentRef.current.focus();
+    }
+  };
 
 
   // [4] useEffect 및 API 요청 함수 정의
@@ -118,30 +112,33 @@ export default function FormModal({ modalProps }) {
     init()
   }, [open])
 
+  // 폼 제출 처리 
   const handleSubmit = async () => {
 
-    // 빈 문자열 및 null/undefined 제거
-    const cleanedRq = Object.entries(rq).reduce((acc, [key, value]) => {
-      if (value !== '' && value !== null && value !== undefined) acc[key] = value;
-      return acc;
-    }, {});
-
-    // 로딩 활성화
-    setLoading(true)
-
     // 제출 수행
-    switch (modalSubmit.method.toUpperCase()) {
-      case 'POST':
-        await api.post(modalSubmit.endpoint, { onSuccess, onError, onFinally, admin : modalSubmit.admin, public: modalSubmit.public }, cleanedRq)
-        break
-      case 'PUT':
-        await api.put(modalSubmit.endpoint, { onSuccess, onError, onFinally, admin : modalSubmit.admin, public: modalSubmit.public }, cleanedRq)
-        break
-      case 'PATCH':
-        await api.patch(modalSubmit.endpoint, { onSuccess, onError, onFinally, admin : modalSubmit.admin, public: modalSubmit.public }, cleanedRq)
-        break
-      default:
-        throw new Error(`잘못된 메소드 입력 : ${modalSubmit.method}`)
+    try {
+
+      // 빈 문자열 및 null/undefined 제거
+      const cleanedRq = Object.entries(rq).reduce((acc, [key, value]) => {
+        if (value !== '' && value !== null && value !== undefined) acc[key] = value;
+        return acc;
+      }, {});
+
+      // 로딩 활성화
+      setLoading(true)
+
+      // 제출 수행
+      const json = await modalSubmit.handleSubmit(cleanedRq)
+      if(!json.success && json.inputErrors) {
+        setErrors(json.inputErrors) // 유효성 검사 오류 시
+        return
+      }
+
+      // 모달 닫기
+      setOpen(false)
+
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -172,7 +169,16 @@ export default function FormModal({ modalProps }) {
       </DialogTitle>
 
       {/* 내용 */}
-      <DialogContent sx={{ px: 5 }}>
+      <DialogContent 
+        ref={dialogContentRef} 
+        tabIndex={-1} 
+        sx={{ 
+          px: 5,
+          '&:focus': {
+            outline: 'none' // 포커스 시 outline 제거
+          }
+        }}
+      >
         
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
           {fields.map(field => (

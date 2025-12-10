@@ -1,4 +1,3 @@
-// WordCard.jsx
 import { Box, Paper, Typography, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,27 +6,49 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ImageIcon from '@mui/icons-material/Image';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * 단어 카드 컴포넌트
  * @param item - 단어 객체 { id, name, meaning }
- * @param clickFunctions - 수정, 삭제, 재정렬 등 핸들링 함수
+ * @param functions - 수정, 삭제, 재정렬 등 핸들링 함수
  * @param admin - 관리자 여부
  */
-export default function WordCard({ word, clickFunctions, admin }) {
+export default function WordCard({ word, functions, admin }) {
 
   // 카드에 담을 정보
   const { id, name, meaning, imageUrl } = word
 
   // 카드 버튼 클릭 이벤트
   const { 
-    onClickUploadImage = () => {}, 
-    onClickRemoveImage = () => {},
-    onClickEdit = () => {},
-    onClickRemove = () => {},
-  } = clickFunctions ?? {}
+    onChangeUploadImage,
+    onChangeUploadImageAfter,
+    onClickRemoveImage,
+    onClickEdit,
+    onClickRemove,
+  } = functions ?? {}
   
-  // 컴포넌트
+
+  // [1] 필요 상태 선언
+  const fileInputRef = useRef(null); // 파일 input ref
+
+  // [2] 필요 함수 선언 
+  // 파일 선택 창 열기
+  const handleImageUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleOnChangeFile = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return // 파일이 없는 경우 중단
+
+    // 업로드 수행
+    const json = await onChangeUploadImage(file)
+    if (json.success) onChangeUploadImageAfter(json.data) // 이미지 카드 변경 함수 (서버에서 업로드 파일 url 반환)
+  }
+
+
+  // [3] 컴포넌트 반환
   return (
     <Paper 
       key={id}
@@ -42,6 +63,16 @@ export default function WordCard({ word, clickFunctions, admin }) {
         flexDirection: 'column'
       }}
     >
+
+      {/* 숨겨진 파일 input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={(e) => handleOnChangeFile(e)
+        }
+      />
 
       {/* 이미지 상단 헤드 */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
@@ -67,7 +98,7 @@ export default function WordCard({ word, clickFunctions, admin }) {
       {/* 이미지 영역 */}
       <Box
         sx={{
-          position: "relative", // 부모를 relative로 설정
+          position: "relative",
           width: "100%",
           height: 180,
           bgcolor: "grey.200",
@@ -88,7 +119,8 @@ export default function WordCard({ word, clickFunctions, admin }) {
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "cover"
+              objectFit: "cover",
+              backgroundColor: "#f9f7f7ff"
             }}
           />
         ) : (
@@ -116,7 +148,7 @@ export default function WordCard({ word, clickFunctions, admin }) {
                 bgcolor: "rgba(255,255,255,0.9)",
                 "&:hover": { bgcolor: "white" }
               }}
-              onClick={(e) => {onClickUploadImage}}
+              onClick={(e) => handleImageUploadClick()}
             >
               <AddPhotoAlternateIcon fontSize="small" />
             </IconButton>
@@ -128,7 +160,7 @@ export default function WordCard({ word, clickFunctions, admin }) {
                 bgcolor: "rgba(255,255,255,0.9)",
                 "&:hover": { bgcolor: "white" }
               }}
-              onClick={(e) => {onClickRemoveImage}}
+              onClick={(e) => onClickRemoveImage()}
             >
               <DeleteIcon fontSize="small" color="error" />
             </IconButton>

@@ -27,10 +27,8 @@ export default function DeleteConfirmModal({ modalProps }) {
   // 기본 제출 옵션
   const modalSubmit = {
     endpoint: '', // REST API URL
-    method : 'DELETE', // HTTP Method
     admin: false, // 관리자 API
     public: false, // 공용 API
-    reload: true, // 리로딩 값 갱신 여부
     handleSubmit: null, // 확인 클릭 시 처리할 함수
     ...submit
   }
@@ -99,9 +97,16 @@ export default function DeleteConfirmModal({ modalProps }) {
       </DialogTitle>
 
       {/* 본문 */}
-      <DialogContent>
-        <DialogContentText>{content}</DialogContentText>
+      <DialogContent sx={{ px: 4, py: 6}}>
+        <DialogContentText sx={{ 
+          fontSize: '16px',
+          color: 'text.primary',
+          lineHeight: 1.6
+        }}>
+          {content}
+        </DialogContentText>
       </DialogContent>
+
 
 
       {/* 하단 버튼 */}

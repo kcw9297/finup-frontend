@@ -7,7 +7,6 @@ export function useStudyWordRemoveModal({ handleAfterRemove, admin = false }) {
   // [1] 사용 상태 선언
   const [open, setOpen] = useState(false)
   const [studyWordId, setStudyWordId] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { showSnackbar } = useSnackbar()
 
   // [2] 모달 열기/닫기 함수
@@ -16,24 +15,19 @@ export function useStudyWordRemoveModal({ handleAfterRemove, admin = false }) {
     setOpen(true);
   }
 
-  // [2] 성공/실패/최종 처리 함수 선언
+  // [3] 성공/실패/최종 처리 함수 선언
   const onSuccess = (rp) => {
     showSnackbar(rp.message, 'success');
     handleAfterRemove(studyWordId);
     setOpen(false);
   }
 
-  const onFinally = () => {
-    setLoading(false)
-  }
-
-  // [3] REST API 요청 함수 생성
-  const handleRemove = async () => {
-    setLoading(true)
-    await api.delete(`/study-words/${studyWordId}`, { onSuccess, onFinally, admin });
-  }
-
   // [4] REST API 요청 함수 생성
+  const handleRemove = async () => {
+    await api.delete(`/study-words/${studyWordId}`, { onSuccess, admin });
+  }
+
+  // [5] REST API 요청 함수 생성
   const removeProps = {
       open,
       setOpen,

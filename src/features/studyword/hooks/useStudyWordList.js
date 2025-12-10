@@ -116,6 +116,17 @@ export function useStudyWordList({ admin = false }) {
     setSearchRp(prev => ({...prev, data: prev.data.filter(word => word.studyWordId !== studyWordId)}));
   };
 
+   // 단어 파일 업로드 처리
+  const handleAfterUploadImageFile = (studyWordId, imageUrl) => {
+    setSearchRp(prev => ({
+      ...prev, 
+      data: prev.data.map(word => 
+        word.studyWordId === studyWordId 
+          ? { ...word, imageUrl } // imageUrl 업데이트
+          : word
+      )
+    }));
+  };
 
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
@@ -146,6 +157,7 @@ export function useStudyWordList({ admin = false }) {
   // [5] 반환
   return {
     searchRq, searchRp, loading, searchProps, 
-    handleKeyword, handleSearch, handleFilter, handlePage, handleOrder, handleAfterEdit, handleAfterRemove,
+    handleKeyword, handleSearch, handleFilter, handlePage, handleOrder, 
+    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile
   }
 }
