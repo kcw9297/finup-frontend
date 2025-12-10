@@ -27,7 +27,7 @@ export default function CombinedChart({items}){
     chartGuide()
   }
 
-  return(<div style={{ display: "flex", flexDirection: "column", width: "100%", position: "relative" }}>
+  return(<div id="chart-area" style={{ display: "flex", flexDirection: "column", width: "100%", position: "relative" }}>
     {showGuideButton && (
       <Button 
         variant="outlined" 
@@ -38,7 +38,7 @@ export default function CombinedChart({items}){
         가이드 다시보기
       </Button>
     )}
-    <ChipBar
+    <ChipBar 
       ohlc={{
         open: chipData?.open,
         high: chipData?.high,
