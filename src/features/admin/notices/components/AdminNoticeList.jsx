@@ -68,94 +68,101 @@ export default function AdminNoticeList() {
     <Box sx={{ display: "flex", width: "100%" }}>
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
-        {/* 상단 타이틀 + 등록 버튼 */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, maxWidth: "750px", mx: "auto" }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            공지사항 관리
-          </Typography>
+        <Box sx={{ maxWidth: "980px", mx: "auto" }}>
+          {/* 상단 타이틀 + 등록 버튼 */}
+          <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              공지사항 관리
+            </Typography>
 
-          <Tooltip title="공지사항 등록">
-            <IconButton
-              size="large"
-              onClick={() => navigate("/admin/notices/write")}
-            >
-              <AddIcon fontSize="large" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-        { /* 검색 바 */}
-        <SearchBar
-          searchRq={searchRq}
-          filterOnChange={handleFilter}
-          onChange={handleChangeRq}
-          onSubmit={handleSearch}
-        />
-        {/* 공지사항 테이블 */}
-        <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "800px", mx: "auto" }}>
-          <Table sx={{ tableLayout: "fixed" }}>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ width: 60 }}>No.</TableCell>
-                <TableCell>제목</TableCell>
-                <TableCell>내용</TableCell>
-                <TableCell sx={{ width: 140 }}>등록일자</TableCell>
-                <TableCell sx={{ width: 70 }}>삭제</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {noticeList.length === 0 && (
+            <Tooltip title="공지사항 등록">
+              <IconButton
+                size="large"
+                onClick={() => navigate("/admin/notices/write")}
+              >
+                <AddIcon fontSize="large" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          { /* 검색 바 */}
+          <SearchBar
+            searchRq={searchRq}
+            filterOnChange={handleFilter}
+            onChange={handleChangeRq}
+            onSubmit={handleSearch}
+          />
+          {/* 공지사항 테이블 */}
+          <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "1000px", mx: "auto" }}>
+            <Table sx={{ tableLayout: "fixed" }}>
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
-                    공지사항이 없습니다.
-                  </TableCell>
+                  <TableCell sx={{ width: 60 }}>No.</TableCell>
+                  <TableCell>제목</TableCell>
+                  <TableCell>내용</TableCell>
+                  <TableCell sx={{ width: 140 }}>등록일자</TableCell>
+                  <TableCell sx={{ width: 70 }}>삭제</TableCell>
                 </TableRow>
-              )}
+              </TableHead>
 
-              {noticeList.map((n, index) => (
-                <TableRow
-                  key={n.noticeId}
-                  hover
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/admin/notices/${n.noticeId}`)}
-                >
-                  <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
-                  <TableCell>{n.title}</TableCell>
-                  <TableCell sx={{ maxWidth: 300, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {n.content}
-                  </TableCell>
-                  <TableCell sx={{ width: 140 }}>{formatDate(n.cdate)}</TableCell>
-                  <TableCell sx={{ width: 70 }}><IconButton onClick={(e) => {
-                    // 상세 페이지 이동 막기
-                    e.stopPropagation()
-                    setTargetId(n.noticeId)
-                    setDialogOpen(true)
-                  }}
+              <TableBody>
+                {noticeList.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
+                      공지사항이 없습니다.
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {noticeList.map((n, index) => (
+                  <TableRow
+                    key={n.noticeId}
+                    hover
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/admin/notices/${n.noticeId}`)}
                   >
-                    <DeleteIcon />
-                  </IconButton></TableCell>
-                </TableRow>
-              ))}
+                    <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
+                    <TableCell>{n.title}</TableCell>
+                    <TableCell sx={{ maxWidth: 300, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {n.content}
+                    </TableCell>
+                    <TableCell sx={{ width: 140 }}>{formatDate(n.cdate)}</TableCell>
+                    <TableCell sx={{ width: 70 }}><IconButton onClick={(e) => {
+                      // 상세 페이지 이동 막기
+                      e.stopPropagation()
+                      setTargetId(n.noticeId)
+                      setDialogOpen(true)
+                    }}
+                    >
+                      <DeleteIcon />
+                    </IconButton></TableCell>
+                  </TableRow>
+                ))}
 
-            </TableBody>
+              </TableBody>
 
-            {/* 삭제 확인 Dialog*/}
-            <ConfirmDialog
-              open={dialogOpen}
-              title="공지사항 삭제"
-              content="정말로 이 공지사항을 삭제하시겠습니까?"
-              onClose={() => setDialogOpen(false)}
-              onConfirm={() => {
-                removeNotice(targetId).then(() => {
-                  setDialogOpen(false)
-                })
-              }}
-            />
-          </Table>
-        </Paper>
-        {/* 페이지네이션 */}
-        {/* 하단 페이징 */}
-        <PageBar pagination={pagination} onChange={handlePage} />
+              {/* 삭제 확인 Dialog*/}
+              <ConfirmDialog
+                open={dialogOpen}
+                title="공지사항 삭제"
+                content="정말로 이 공지사항을 삭제하시겠습니까?"
+                onClose={() => setDialogOpen(false)}
+                onConfirm={() => {
+                  removeNotice(targetId).then(() => {
+                    setDialogOpen(false)
+                  })
+                }}
+              />
+            </Table>
+          </Paper>
+          {/* 페이지네이션 */}
+          {/* 하단 페이징 */}
+          <PageBar pagination={pagination} onChange={handlePage} />
+        </Box>
       </Box>
     </Box>
   )

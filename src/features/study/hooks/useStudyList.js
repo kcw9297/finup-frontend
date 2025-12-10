@@ -65,7 +65,6 @@ export function useStudyList({ admin = false }) {
     if (isSameRq(searchRq)) return
 
     // 검색 수행
-    setLoading(true)
     setSearchParams(searchRq)
   }
 
@@ -77,7 +76,6 @@ export function useStudyList({ admin = false }) {
     if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
     
     // 검색 수행
-    setLoading(true)
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
@@ -90,7 +88,6 @@ export function useStudyList({ admin = false }) {
     if (isSameRq(nextRq)) return
 
     // 페이징 파라미터 갱신
-    setLoading(true)
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
@@ -103,7 +100,6 @@ export function useStudyList({ admin = false }) {
     if (isSameRq(nextRq)) return
 
     // 페이징 파라미터 갱신
-    setLoading(true)
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
@@ -122,6 +118,7 @@ export function useStudyList({ admin = false }) {
 
   // [4] API 요청 함수 정의
   useEffect(() => { // 검색의 경우, 페이지 입장 시 초기 값이 필요하므로, useEffect 사용
+    setLoading(true)
     api.get('/studies/search', { params: getSearchParams(), onSuccess, onError, onFinally, admin })
   }, [searchParams, reloading])
   

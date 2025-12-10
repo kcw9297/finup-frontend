@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import OrderBar from "../../../base/components/bar/OrderBar";
 import PageBar from "../../../base/components/bar/PageBar";
 import { useStudyList } from "../hooks/useStudyList";
-import { useStudyModal } from "../hooks/useStudyModal";
+import { useWriteModal } from "../hooks/useWriteModal";
 import FormModal from "../../../base/components/modal/FormModal";
 
 
@@ -41,7 +41,7 @@ export default function StudyList({ admin = false }) {
   } = useStudyList({admin})
 
   const navigate = useNavigate()
-  const { openWriteModal, writeProps } = useStudyModal({admin}) // 사용 모달 프롭스
+  const { openWriteModal, writeProps } = useWriteModal({admin}) // 사용 모달 프롭스
 
   // [2] 필요 데이터 정의
   const rows = searchRp ? searchRp.data : []
