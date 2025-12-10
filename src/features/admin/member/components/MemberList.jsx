@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useMemberList } from "../hooks/useMemberList"
-import AdminSidebar from "../../../../base/components/layout/AdminSidebar"
 import {
 
-  Box, IconButton, Paper, Table, TableHead,
+  Box, IconButton, Paper, Table, TableHead, Button,
   TableBody, TableRow, TableCell, Tooltip, Typography
 } from "@mui/material";
 import SearchBar from './../../../../base/components/bar/SearchBar';
 import { useState } from "react";
 import PageBar from './../../../../base/components/bar/PageBar';
+import { PDFDownloadLink, Page, Text, Document } from '@react-pdf/renderer';
+import MemberPdfDocument from "./MemberPdfDocument";
+
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -45,7 +47,6 @@ export default function MemberList() {
     { value: "email", label: "이메일" },
     { value: "nickname", label: "닉네임" },
   ]
-
 
   // [2] 필요 데이터 정의
 
@@ -85,7 +86,7 @@ export default function MemberList() {
           </Box>
 
 
-          { /* 검색 바 */}
+          { /* 검색 바, PDF 다운로드 */}
           <SearchBar
             searchRq={searchRq}
             filterOnChange={handleFilter}
@@ -93,6 +94,17 @@ export default function MemberList() {
             onSubmit={handleSearch}
             selectItems={memberFilterOptions}
           />
+          {/* 
+          <Button>
+            <PDFDownloadLink
+              document={<MemberPdfDocument list={memberList} />}
+              fileName="회원 목록.pdf"
+            >
+              {({ loading }) => loading ? "PDF 생성중..." : "PDF 다운로드"}
+            </PDFDownloadLink>
+          </Button>
+*/}
+
 
           {/* 회원 목록 테이블 */}
           <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "1000px", mx: "auto" }}>
@@ -141,6 +153,6 @@ export default function MemberList() {
           )}
         </Box>
       </Box>
-    </Box>
+    </Box >
   )
 }
