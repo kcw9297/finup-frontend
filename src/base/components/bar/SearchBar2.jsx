@@ -9,17 +9,19 @@ import SearchIcon from '@mui/icons-material/Search'
  * @param filterOnChange 필터가 존재하는 경우, 필터 변경을 처리할 함수 (ex. handleFilter) 필터가 없는 경우는 사용 x
  * @param selectItems 필터 옵션 메뉴 커스터마이징
  */
-export default function SearchBar({ searchProps }) {
+export default function SearchBar2({ searchRq, onSubmit, onChange, filterOnChange, selectItems = [] }) {
 
-  /*
-    keyword 검색어
-    filter 검색 필터
-    onKeywordChange 검색어 변경 함수
-    filterOnChange 필터가 존재하는 경우, 필터 변경을 처리할 함수 (ex. handleFilter) 필터가 없는 경우는 사용 x
-    onSubmit 검색 폼 제출 (검색 수행)
-    selectItems 필터 옵션 메뉴 커스터마이징
-  */
-  const [ keyword, filter, onKeywordChange, onFilterChange, onSubmit, filterItems ] = searchProps
+  // 필터 선택 안됐을 때 '선택' 표시
+  const items = selectItems.length > 0
+    ? [{ value: "", label: <em>선택</em> }, ...selectItems]
+    : [
+      { value: "", label: <em>선택</em> },
+      { value: "name", label: "이름" },
+      { value: "subject", label: "제목" },
+      { value: "content", label: "내용" },
+      { value: "subjectContent", label: "제목+내용" }
+    ]
+
 
   return (
     <Paper sx={{ p: 3, mb: 3 }}>
@@ -29,18 +31,18 @@ export default function SearchBar({ searchProps }) {
         sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}
       >
 
-        {filter && onFilterChange && (
+        {filterOnChange && (
           <FormControl size="small" sx={{ minWidth: 120, }}>
             <InputLabel>필터</InputLabel>
             <Select
-              value={filter}
-              onChange={e => onFilterChange(e.target.value)}
+              value={searchRq.filter}
+              onChange={e => filterOnChange(e.target.value)}
               autoWidth
               label="필터"
               sx={{ minWidth: 100, height: 40, }}
             >
               {/* 옵션 목록을 동적으로 생성 (커스터마이징 항목 없으면 기본 디폴트 옵션으로)*/}
-              {filterItems.map(opt => (
+              {items.map(opt => (
                 <MenuItem key={opt.value} value={opt.value}>
                   {opt.label}
                 </MenuItem>
@@ -54,8 +56,8 @@ export default function SearchBar({ searchProps }) {
         <TextField
           name="keyword"
           placeholder="검색어 입력"
-          value={keyword}
-          onChange={e => onKeywordChange({ keyword: e.target.value })}
+          value={searchRq.keyword}
+          onChange={e => onChange({ keyword: e.target.value })}
           size="small"
           sx={{ width: 500 }}
         />

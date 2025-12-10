@@ -44,7 +44,6 @@ export default function FormModal({ modalProps }) {
   const [rq, setRq] = useState({}) // 모달 요청 상태
   const [errors, setErrors] = useState({}) // 유효성 검사 오류 상태
   const [loading, setLoading] = useState(false) // 로딩 상태
-  const [initialized, setInitialized] = useState(false) // 초기화 상태
   const { reload } = useReloadStore()
   const { showSnackbar } = useSnackbar()
 
@@ -96,17 +95,6 @@ export default function FormModal({ modalProps }) {
   };
 
 
-  // 모달이 열렸을때, 닫혔을 때 초기화 함수
-  if (open && !initialized) {
-    init();
-    setInitialized(true);
-  }
-
-  if (!open && initialized) {
-    setInitialized(false);
-  }
-
-
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
     showSnackbar(rp.message, 'success')
@@ -124,7 +112,11 @@ export default function FormModal({ modalProps }) {
   }
 
 
-  // [4] API 요청 함수 정의
+  // [4] useEffect 및 API 요청 함수 정의
+  useEffect(() => {
+    init()
+  }, [open])
+
   const handleSubmit = async () => {
 
     // 빈 문자열 및 null/undefined 제거
