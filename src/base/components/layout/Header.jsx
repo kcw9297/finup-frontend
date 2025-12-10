@@ -31,7 +31,7 @@ export default function Header() {
     <AppBar 
       position='sticky'
       elevation={0}
-      sx={{ backgroundColor: 'white', color: 'text.primary' }}
+      sx={{ backgroundColor: 'white', color: 'text.primary', borderRadius: 0 }}
     >
       <Toolbar 
         sx={{ 
@@ -40,7 +40,7 @@ export default function Header() {
           display: 'flex',
           justifyContent: 'center',
           margin: 0,
-          padding: 0
+          padding: 0,
         }}
       >
         <Box sx={{
