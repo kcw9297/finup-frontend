@@ -1,10 +1,22 @@
-export default function QuizResult ({ score, onClose }) {
+import { Box, Button, Typography, IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
+import { Link } from 'react-router-dom';
 
+// 종료 + 학습 단계 추천
+
+export default function QuizResult ({ score, onClose }) {
   const getRecommendation = () => {
     if (score < 40) return "개념 학습을 추천해요!";
     if (score < 70) return "뉴스 학습을 추천해요!";
     return "종목 학습을 추천해요!";
   };
+
+  const recommendedLink = () => {
+    if (score < 40) return '/login';
+    if (score < 70) return '/news/list';
+    return '/stocks';
+  }
 
   return (
     <>
@@ -29,16 +41,11 @@ export default function QuizResult ({ score, onClose }) {
               alignItems: 'center',
               gap: '14px',
               color: 'base.lightActive',
-              '& .MuiSvgIcon-root': {
-                width: 28,
-                height: 28
-              }
+              '& .MuiSvgIcon-root': { width: 28, height: 28 }
             }}
           >
             <FormatQuoteIcon sx={{ transform: 'rotate(180deg)' }} />
-            <Typography
-              sx={{ fontSize: 28, fontWeight: 800, color: 'base.dark' }}
-            >
+            <Typography sx={{ fontSize: 28, fontWeight: 800, color: 'base.dark' }}>
               {score}점
             </Typography>
             <FormatQuoteIcon/>
@@ -55,26 +62,36 @@ export default function QuizResult ({ score, onClose }) {
           />
         </Box>
 
-        {/* 내용 */}
+        {/* 추천 */}
         <Typography
           sx={{
             lineHeight: 1.8,
-            fontSize: 16
+            fontSize: 20,
+            fontWeight: 800,
+            color: 'base.dark'
           }}
         >
-          이 테스트는 일상에서 자주 접하게 되는 핵심 개념을 중심으로, <br />
-          현재 나의 이해 수준을 객관적으로 점검할 수 있도록 구성되었습니다. <br /><br />
+          {getRecommendation()}
+        </Typography>
 
-          단순히 맞고 틀림을 확인하는 데 그치지 않고, 앞으로 어떤 학습이 <br />
-          필요한지 방향을 제시하여 기초를 탄탄히 다지는 데 도움을 줍니다. <br /><br />
+        {/* 내용 */}
+        <Typography sx={{ fontSize: 16, lineHeight: 1.8, padding: '0 50px' }}>
+          주식 공부는 단순한 투자 수익을 넘어 경제 흐름을 이해하는 힘을 길러줍니다. <br/>
+          기초 개념을 익히기만 해도 시장의 변화가 왜 일어나는지 빠르게 파악할 수 있고, <br/>
+          앞으로의 금융 생활을 스스로 주도할 수 있는 자신감이 생깁니다. <br/><br/>
 
-          지금 바로 나의 경제·금융 이해력을 진단해 보세요.
+          기업이 어떻게 돈을 벌고 성장하는지 알게 되면 소비·저축·재무 관리에 기준이 생깁니다. <br/>
+          예금·적금·채권·ETF 등 다양한 금융 상품을 비교하는 능력도 함께 커져요. <br/>
+          이 과정은 나의 돈을 더 현명하게 움직이게 해 주는 탄탄한 기반이 됩니다. <br/><br/>
+
+          지금의 작은 배움이 앞으로의 경제적인 선택을 더욱 단단하게 만들어 줄 거예요.
         </Typography>
 
         {/* 버튼 */}
         <Button
           variant='contained'
-          // onClick={onStart}
+          component={Link}
+          to={recommendedLink()}
           sx={{
             backgroundColor: 'background.base',
             color: 'base.dark',
@@ -84,13 +101,10 @@ export default function QuizResult ({ score, onClose }) {
             borderRadius: '10px',
             fontWeight: 700,
             fontSize: 16,
-            '&:hover': {
-              backgroundColor: 'base.dark',
-              color: 'text.contrastText',
-            }
+            '&:hover': { backgroundColor: 'base.dark', color: 'text.contrastText' }
           }}
         >
-          테스트 진행하기
+          학습하러 가기
         </Button>
       </Box>
     </>

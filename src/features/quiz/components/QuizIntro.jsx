@@ -2,6 +2,8 @@ import { Box, Button, Typography, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 
+// 시작 화면
+
 export default function QuizIntro({ onStart, onClose }) {
   return (
     <>
@@ -26,16 +28,11 @@ export default function QuizIntro({ onStart, onClose }) {
               alignItems: 'center',
               gap: '14px',
               color: 'base.lightActive',
-              '& .MuiSvgIcon-root': {
-                width: 28,
-                height: 28
-              }
+              '& .MuiSvgIcon-root': { width: 28, height: 28 }
             }}
           >
             <FormatQuoteIcon sx={{ transform: 'rotate(180deg)' }} />
-            <Typography
-              sx={{ fontSize: 28, fontWeight: 800, color: 'base.dark' }}
-            >
+            <Typography sx={{ fontSize: 28, fontWeight: 800, color: 'base.dark' }}>
               개념 확인하기
             </Typography>
             <FormatQuoteIcon/>
@@ -53,12 +50,7 @@ export default function QuizIntro({ onStart, onClose }) {
         </Box>
 
         {/* 내용 */}
-        <Typography
-          sx={{
-            lineHeight: 1.8,
-            fontSize: 16
-          }}
-        >
+        <Typography sx={{ lineHeight: 1.8, fontSize: 16 }}>
           이 테스트는 일상에서 자주 접하게 되는 핵심 개념을 중심으로, <br />
           현재 나의 이해 수준을 객관적으로 점검할 수 있도록 구성되었습니다. <br /><br />
 
@@ -79,12 +71,9 @@ export default function QuizIntro({ onStart, onClose }) {
             border: 2,
             borderColor: 'base.dark',
             borderRadius: '10px',
-            fontWeight: 700,
+            fontWeight: 600,
             fontSize: 16,
-            '&:hover': {
-              backgroundColor: 'base.dark',
-              color: 'text.contrastText',
-            }
+            '&:hover': { backgroundColor: 'base.dark', color: 'text.contrastText' }
           }}
         >
           테스트 진행하기
