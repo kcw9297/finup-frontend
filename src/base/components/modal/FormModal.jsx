@@ -1,4 +1,3 @@
-// FormModal.jsx
 import { 
   Dialog, DialogTitle, DialogContent, DialogActions, 
   TextField, Button, IconButton, Box, 
@@ -37,6 +36,7 @@ export default function FormModal({ modalProps }) {
     admin: false, // 관리자 API
     public: false, // 공용 API
     reload: true, // 리로딩 값 갱신 여부
+    handleAfterSuccess: null, // 응답 성공 시, 처리할 기능 (상태 갱신 등) 
     ...submit
   }
 
@@ -81,7 +81,7 @@ export default function FormModal({ modalProps }) {
 
   // 모달 초기화 함수
   const init = () => {
-    setRq(initialValues);
+    setRq(initialValues || {});
     setErrors({});
     setLoading(false);
   }
@@ -100,6 +100,7 @@ export default function FormModal({ modalProps }) {
     showSnackbar(rp.message, 'success')
     init() // 초기화
     if (modalSubmit.reload) reload() // 리로드 수행
+    if (modalSubmit.handleAfterSuccess) modalSubmit.handleAfterSuccess(rq, rp)
     setOpen(false) // 모달 닫기
   }
 

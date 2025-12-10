@@ -11,16 +11,21 @@ import ImageIcon from '@mui/icons-material/Image';
 /**
  * 단어 카드 컴포넌트
  * @param item - 단어 객체 { id, name, meaning }
- * @param handles - 수정, 삭제, 재정렬 등 핸들링 함수
+ * @param clickFunctions - 수정, 삭제, 재정렬 등 핸들링 함수
  * @param admin - 관리자 여부
  */
-export default function WordCard({ word, handles, admin }) {
+export default function WordCard({ word, clickFunctions, admin }) {
 
   // 카드에 담을 정보
   const { id, name, meaning, imageUrl } = word
 
-  // 카드 수정/삭제/재정렬 함수
-  const { handleUploadImage, handleRemoveImage, handleEdit, handleRemove } = handles ?? {}
+  // 카드 버튼 클릭 이벤트
+  const { 
+    onClickUploadImage = () => {}, 
+    onClickRemoveImage = () => {},
+    onClickEdit = () => {},
+    onClickRemove = () => {},
+  } = clickFunctions ?? {}
   
   // 컴포넌트
   return (
@@ -28,7 +33,7 @@ export default function WordCard({ word, handles, admin }) {
       key={id}
       elevation={0}
       sx={{ 
-        height: 350,
+        height: 380,
         width: 300,
         border: '2px solid',
         borderColor: 'base.main',
@@ -37,9 +42,11 @@ export default function WordCard({ word, handles, admin }) {
         flexDirection: 'column'
       }}
     >
+
+      {/* 이미지 상단 헤드 */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
 
-        {/* 단어 카드 제목(헤드) */}
+        {/* 단어 카드 제목 */}
         <Typography 
           variant="h6" 
           sx={{ 
@@ -55,27 +62,6 @@ export default function WordCard({ word, handles, admin }) {
         >
           {name}
         </Typography>
-
-        {/* 관리자 - 단어 카드 관리 버튼 */}
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
-          {admin && (
-            <>
-              {/* 단어 수정 */}
-              {handleEdit && (
-                <IconButton onClick={handleEdit} size="small" sx={{ p: 0.5 }}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              )}
-
-              {/* 단어 삭제 */}
-              {handleRemove && (
-                <IconButton onClick={handleRemove} size="small" sx={{ p: 0.5 }}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              )}
-            </>
-          )}
-        </Box>
       </Box>
 
       {/* 이미지 영역 */}
@@ -123,31 +109,30 @@ export default function WordCard({ word, handles, admin }) {
               transition: "opacity 0.2s",
             }}
           >
-            {handleUploadImage && (
-              <IconButton
-                size="small"
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.9)",
-                  "&:hover": { bgcolor: "white" }
-                }}
-                onClick={(e) => {handleUploadImage}}
-              >
-                <AddPhotoAlternateIcon fontSize="small" />
-              </IconButton>
-            )}
+            {/* 단어 이미지 수정 아이콘 */}
+            <IconButton
+              size="small"
+              sx={{
+                bgcolor: "rgba(255,255,255,0.9)",
+                "&:hover": { bgcolor: "white" }
+              }}
+              onClick={(e) => {onClickUploadImage}}
+            >
+              <AddPhotoAlternateIcon fontSize="small" />
+            </IconButton>
 
-            {handleRemoveImage && (
-              <IconButton
-                size="small"
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.9)",
-                  "&:hover": { bgcolor: "white" }
-                }}
-                onClick={(e) => {handleRemoveImage}}
-              >
-                <DeleteIcon fontSize="small" color="error" />
-              </IconButton>
-            )}
+            {/* 단어 이미지 삭제 아이콘 */}
+            <IconButton
+              size="small"
+              sx={{
+                bgcolor: "rgba(255,255,255,0.9)",
+                "&:hover": { bgcolor: "white" }
+              }}
+              onClick={(e) => {onClickRemoveImage}}
+            >
+              <DeleteIcon fontSize="small" color="error" />
+            </IconButton>
+            
           </Box>
         )}
       </Box>
@@ -169,6 +154,27 @@ export default function WordCard({ word, handles, admin }) {
       >
         {meaning}
       </Typography>
+
+
+
+      {admin && (
+        <Box sx={{ 
+          position: 'relative',
+          display: 'flex',  
+          justifyContent: 'flex-end',
+          p: 1
+        }}>
+          {/* 단어 수정 아이콘 */}
+          <IconButton onClick={onClickEdit} size="small" sx={{ p: 0.5 }}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+
+          {/* 단어 삭제 아이콘 */}
+          <IconButton onClick={onClickRemove} size="small" sx={{ p: 0.5 }}>
+            <DeleteIcon fontSize="small" color="error" />
+          </IconButton>
+        </Box>
+      )}
     </Paper> 
   )
 }

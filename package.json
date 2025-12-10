@@ -22,6 +22,7 @@
     "d3": "^7.9.0",
     "d3-cloud": "^1.2.8",
     "html2canvas": "^1.4.1",
+    "intro.js": "^8.3.2",
     "jspdf": "^3.0.4",
     "lightweight-charts": "^3.8.0",
     "moment": "^2.30.1",
