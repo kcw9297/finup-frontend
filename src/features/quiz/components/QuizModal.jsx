@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuiz } from "../hooks/useQuiz";
 import QuizIntro from "./QuizIntro";
 import QuizQuestion from "./QuizQuestion";
+import QuizResult from "./QuizResult";
 
 export default function QuizModal ({ open, onClose }) {
   const [step, setStep] = useState("intro");
@@ -43,6 +44,7 @@ export default function QuizModal ({ open, onClose }) {
       >
         {step === "intro" && <QuizIntro onStart={handleStart} onClose={onClose}/>}
         {step === "quiz" && (<QuizQuestion onClose={onClose} questions={useQuiz} onSubmit={handleSubmit}/>)}
+        {step === "result" && (<QuizResult score={score} onClose={handleClose}/>)}
       </Box>
     </Modal>
   )

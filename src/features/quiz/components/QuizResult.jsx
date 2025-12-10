@@ -1,8 +1,11 @@
-import { Box, Button, Typography, IconButton } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close';
-import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
+export default function QuizResult ({ score, onClose }) {
 
-export default function QuizIntro({ onStart, onClose }) {
+  const getRecommendation = () => {
+    if (score < 40) return "개념 학습을 추천해요!";
+    if (score < 70) return "뉴스 학습을 추천해요!";
+    return "종목 학습을 추천해요!";
+  };
+
   return (
     <>
       <Box sx={{display: 'flex', flexDirection: 'row-reverse', margin:'10px'}}>
@@ -36,7 +39,7 @@ export default function QuizIntro({ onStart, onClose }) {
             <Typography
               sx={{ fontSize: 28, fontWeight: 800, color: 'base.dark' }}
             >
-              개념 확인하기
+              {score}점
             </Typography>
             <FormatQuoteIcon/>
           </Box>
@@ -71,7 +74,7 @@ export default function QuizIntro({ onStart, onClose }) {
         {/* 버튼 */}
         <Button
           variant='contained'
-          onClick={onStart}
+          // onClick={onStart}
           sx={{
             backgroundColor: 'background.base',
             color: 'base.dark',
