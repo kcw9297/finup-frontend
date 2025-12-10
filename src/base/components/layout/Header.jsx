@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Box, IconButton, Typography, CircularProgress, Avatar} from '@mui/material';
+import { AppBar, Toolbar, Box, IconButton, Typography, CircularProgress, Avatar } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -19,51 +19,51 @@ export default function Header() {
     { label: "개념+", path: "/" },
     { label: "뉴스+", path: "/news/list" },
     { label: "종목+", path: "/stocks" },
-    { label: "단어장+", path: "/" },
+    { label: "단어장+", path: "/words" },
   ]
   const { isAuthenticated, loading, loginMember } = useAuthStore()
   const navigate = useNavigate()
   const { handleLogout } = useLogout()
 
   return (
-    <AppBar 
+    <AppBar
       position="sticky"
       elevation={0}
       sx={{
-        backgroundColor:'white',
-        color:'text.primary'
+        backgroundColor: 'white',
+        color: 'text.primary'
       }}
     >
-      <Toolbar 
-        sx={{ 
-          minHeight:'80px !important', // 최소 높이 조절 (height 와 값이 일치해야 함)
-          height:80,
-          display:"flex",
-          justifyContent:"center",
-          margin:0,
-          padding:0
+      <Toolbar
+        sx={{
+          minHeight: '80px !important', // 최소 높이 조절 (height 와 값이 일치해야 함)
+          height: 80,
+          display: "flex",
+          justifyContent: "center",
+          margin: 0,
+          padding: 0
         }}
       >
         <Box sx={{
-          display:'flex',
-          justifyContent:'space-between',
-          alignItems:"center",
-          width:"100%",
-          maxWidth:"1440px",
-          margin:0,
-          padding:0
-          }}>
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "1440px",
+          margin: 0,
+          padding: 0
+        }}>
 
           {/* 좌측 로고 + 메뉴 */}
-          <Box sx={{display:'flex', alignItems:'center', flex:1, margin:0, padding:0, gap:'50px'}}>
-            
+          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, margin: 0, padding: 0, gap: '50px' }}>
+
             {/* 로고 */}
-            <Box component={Link} to="/" sx={{display:'flex', justifyContent:'center', alignItems:'center', cursor:'pointer'}} >
-              <img src={logo} alt="로고" style={{height: 40}} />
+            <Box component={Link} to="/" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} >
+              <img src={logo} alt="로고" style={{ height: 40 }} />
             </Box>
-            
+
             {/* 메뉴 */}
-            <Box sx={{display:'flex', gap:'30px'}}>
+            <Box sx={{ display: 'flex', gap: '30px' }}>
               {manuItems.map((item) => (
                 <Typography
                   key={item.label}
@@ -75,7 +75,7 @@ export default function Header() {
                     color: "text.light",
                     fontWeight: 'bold',
                     transition: "0.2s",
-                    "&:hover": {color: "text.main"}
+                    "&:hover": { color: "text.main" }
                   }}>
                   {item.label}
                 </Typography>
@@ -84,41 +84,41 @@ export default function Header() {
           </Box>
 
           {/* 우측 프로필 + 로그인 */}
-          <Box sx={{display:'flex', alignItems:'center', gap:3}}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
 
             <Box onClick={() => navigate("/admin/members")} sx={{
-              height:50,
-              display:'flex',
-              alignItems:'center',
-              gap:'10px',
-              padding:'10px',
-              borderRadius:2,
+              height: 50,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px',
+              borderRadius: 2,
               cursor: "pointer",
-              "&:hover": {backgroundColor:"background.light"}
-              }}>
+              "&:hover": { backgroundColor: "background.light" }
+            }}>
               {/* 프로필 아이콘 */}
               <Box>
-                <Avatar 
+                <Avatar
                   src={loginMember?.profileImageUrl} // 프로필 이미지 URL
-                  sx={{width:35, height:35}}
+                  sx={{ width: 35, height: 35 }}
                 >
                   {/* 이미지 없을 때 Avatar 컴포넌트에서 자동으로 기본 이미지로 처리 */}
-                  <AccountCircleIcon sx={{fontSize:35, color:"inherit", backgroundColor:"action"}}/>
+                  <AccountCircleIcon sx={{ fontSize: 35, color: "inherit", backgroundColor: "action" }} />
                 </Avatar>
               </Box>
 
               {loading ? (
-                <p style={{fontSize:14, color:"text.main"}}></p>
+                <p style={{ fontSize: 14, color: "text.main" }}></p>
               ) : isAuthenticated ? (
-                <p style={{fontSize:14, color:"text.main"}}>{loginMember.nickname}님 환영합니다</p>
+                <p style={{ fontSize: 14, color: "text.main" }}>{loginMember.nickname}님 환영합니다</p>
               ) : (
-                <p style={{fontSize:14, color:"text.main"}}>로그인이 필요합니다</p>
+                <p style={{ fontSize: 14, color: "text.main" }}>로그인이 필요합니다</p>
               )}
             </Box>
 
             {/* 로그인/로그아웃 아이콘 */}
             {loading ? (
-              <Box sx={{display:'flex', alignItems:'center', justifyContent:'center', width:40, height:40 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40 }}>
                 <CircularProgress size={24} /> {/* 로딩 중에는 로딩 중으로 표시 */}
               </Box>
             ) : isAuthenticated ? (
