@@ -95,113 +95,114 @@ export default function YoutubeList() {
     <Box sx={{ display: "flex", width: "100%" }}>
 
       {/* 우측 전체 영역 */}
-      <Box sx={{ flexGrow: 1, padding: 4, pt: 6 }}>
+      <Box sx={{ flexGrow: 1, padding: 4 }}>
+        <Box sx={{ maxWidth: "980px", mx: "auto" }}>
+          {/* 타이틀 영역*/}
+          <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              유튜브 영상 목록 조회
+            </Typography>
 
-        {/* 타이틀 영역*/}
-        <Box sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3
-        }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, pl: 20 }}>
-            유튜브 영상 목록 조회
-          </Typography>
+            <Tooltip title="유튜브 링크 등록">
+              <IconButton
+                size="large"
+                disableRipple
+                sx={{
+                  width: 40,
+                  height: 40,
+                  padding: 0,
+                }}
+                onClick={() => navigate("/admin/youtube/write")}
+              >
+                <AddIcon fontSize="large" />
+              </IconButton>
+            </Tooltip>
+          </Box>
 
-          <Tooltip title="유튜브 링크 등록">
+          {/* 슬라이드 Wrapper */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "105%",
+              mt: 4,
+              paddingTop: "30px",
+              gap: 2,
+            }}
+          >
+
+
+            {/* ← 이전 버튼 */}
             <IconButton
-              disableRipple
               sx={{
                 width: 40,
                 height: 40,
-                padding: 0,
-                mr: 23,
+                backgroundColor: "#f5f5f5",
+                "&:hover": { backgroundColor: "#eaeaea" }
               }}
-              onClick={() => navigate("/admin/youtube/write")}
+              onClick={handlePrev}
+              disabled={slideIndex === 0}
             >
-              <AddIcon fontSize="large" />
+              <ArrowBackIosNewIcon />
             </IconButton>
-          </Tooltip>
-        </Box>
-
-        {/* 슬라이드 Wrapper */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            mt: 4,
-            gap: 2,
-          }}
-        >
 
 
-          {/* ← 이전 버튼 */}
-          <IconButton
-            sx={{
-              width: 40,
-              height: 40,
-              backgroundColor: "#f5f5f5",
-              "&:hover": { backgroundColor: "#eaeaea" }
-            }}
-            onClick={handlePrev}
-            disabled={slideIndex === 0}
-          >
-            <ArrowBackIosNewIcon />
-          </IconButton>
-
-
-          {/* 카드 리스트 영역 */}
-          <Box sx={{ overflow: "hidden", width: "900px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                transition: "transform 0.4s ease",
-                transform: `translateX(-${slideIndex * (100 / VISIBLE_COUNT)}%)`,
-              }}
-            >
-              {youtubeList.length === 0 && (
-                <Typography sx={{ mx: "auto", mt: 5 }}>
-                  영상 데이터가 없습니다.
-                </Typography>
-              )}
-              {youtubeList.map((item) => (
-                <Box
-                  key={item.videoId}
-                  sx={{
-                    flex: `0 0 calc(100% / ${VISIBLE_COUNT})`,
-                    p: 1
-                  }}
-                >
-                  <YoutubeCard
-                    item={item}
-                    onEdit={() => navigate(`/admin/youtube/${item.videoId}/edit`)}
-                    onDelete={() => handleDelete(item)}
-                  />
-                </Box>
-              ))}
+            {/* 카드 리스트 영역 */}
+            <Box sx={{ overflow: "hidden", width: "900px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  transition: "transform 0.4s ease",
+                  transform: `translateX(-${slideIndex * (100 / VISIBLE_COUNT)}%)`,
+                }}
+              >
+                {youtubeList.length === 0 && (
+                  <Typography sx={{ mx: "auto", mt: 5 }}>
+                    영상 데이터가 없습니다.
+                  </Typography>
+                )}
+                {youtubeList.map((item) => (
+                  <Box
+                    key={item.videoId}
+                    sx={{
+                      flex: `0 0 calc(100% / ${VISIBLE_COUNT})`,
+                      p: 1
+                    }}
+                  >
+                    <YoutubeCard
+                      item={item}
+                      onEdit={() => navigate(`/admin/youtube/${item.videoId}/edit`)}
+                      onDelete={() => handleDelete(item)}
+                    />
+                  </Box>
+                ))}
+              </Box>
             </Box>
+
+
+
+            {/* → 다음 버튼 */}
+            <IconButton
+              sx={{
+                width: 40,
+                height: 40,
+                backgroundColor: "#f5f5f5",
+                "&:hover": { backgroundColor: "#eaeaea" }
+              }}
+              onClick={handleNext}
+              disabled={slideIndex === maxIndex}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+
           </Box>
-
-
-
-          {/* → 다음 버튼 */}
-          <IconButton
-            sx={{
-              width: 40,
-              height: 40,
-              backgroundColor: "#f5f5f5",
-              "&:hover": { backgroundColor: "#eaeaea" }
-            }}
-            onClick={handleNext}
-            disabled={slideIndex === maxIndex}
-          >
-            <ArrowForwardIosIcon />
-          </IconButton>
-
         </Box>
-
       </Box>
     </Box>
   )
