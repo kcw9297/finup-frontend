@@ -25,9 +25,10 @@ import WordDetailPage from './pages/word/WordDetailPage'
 import AuthSignupPage from './pages/auth/AuthSignupPage'
 import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
 import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
-import AdminStudyListPage from './pages/admin/study/AdminStudyListPage'
-import AdminStudyDetailPage from './pages/admin/study/AdminStudyDetailPage'
+import AdminStudyListPage from './pages/study/AdminStudyListPage'
+import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
 import YoutubeEditPage from './pages/admin/youtube/YoutubeEditPage'
+import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -70,13 +71,18 @@ const nastedRoutes = [
       // url : 회원 목록
       { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
 
+      // url : 개념 학습 관리
+      { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
+      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
+
+      // url : 개념 단어 관리
+      { path: "study-words", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyWordListPage /></ProtectedRoute> },
+
       // url : 유튜브 영상
       { path: "youtube", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeListPage /></ProtectedRoute> },
       { path: "youtube/write", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeVideoWritePage /></ProtectedRoute> },
       { path: "youtube/:videoLinkId/edit", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeEditPage /></ProtectedRoute> },
-      // url : 단계 개념 관리
-      { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
-      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
+
     ]
   },
 
@@ -156,7 +162,7 @@ export default function App() {
         }
 
 
-      </Routes >
+      </Routes>
     </>
   )
 }

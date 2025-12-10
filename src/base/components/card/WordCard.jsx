@@ -2,6 +2,9 @@
 import { Box, Paper, Typography, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ImageIcon from '@mui/icons-material/Image';
 
@@ -14,10 +17,10 @@ import ImageIcon from '@mui/icons-material/Image';
 export default function WordCard({ word, handles, admin }) {
 
   // 카드에 담을 정보
-  const { id, imageUrl, meaning } = word
+  const { id, name, meaning, imageUrl } = word
 
   // 카드 수정/삭제/재정렬 함수
-  const { handleUploadImage, handleEdit, handleRemove, handleReorder } = handles ?? {}
+  const { handleUploadImage, handleRemoveImage, handleEdit, handleRemove } = handles ?? {}
   
   // 컴포넌트
   return (
@@ -26,7 +29,8 @@ export default function WordCard({ word, handles, admin }) {
       elevation={0}
       sx={{ 
         height: 350,
-        border: '1.5px solid',
+        width: 300,
+        border: '2px solid',
         borderColor: 'base.main',
         borderRadius: 2,
         display: 'flex',
@@ -49,20 +53,13 @@ export default function WordCard({ word, handles, admin }) {
             maxWidth: '70%'
           }}
         >
-          {word.name}
+          {name}
         </Typography>
 
         {/* 관리자 - 단어 카드 관리 버튼 */}
         <Box sx={{ display: 'flex', gap: 0.5 }}>
           {admin && (
             <>
-              {/* 이미지 수정 */}
-              {handleUploadImage && (
-                <IconButton onClick={handleUploadImage} size="small" sx={{ p: 0.5 }}>
-                  <ImageIcon fontSize="small" />
-                </IconButton>
-              )}
-
               {/* 단어 수정 */}
               {handleEdit && (
                 <IconButton onClick={handleEdit} size="small" sx={{ p: 0.5 }}>
@@ -76,45 +73,84 @@ export default function WordCard({ word, handles, admin }) {
                   <DeleteIcon fontSize="small" />
                 </IconButton>
               )}
-
-              {/* 단어 재정렬 */}
-              {handleReorder && (
-                <IconButton onClick={handleReorder} size="small" sx={{ p: 0.5 }}>
-                  <DragIndicatorIcon fontSize="small" />
-                </IconButton>
-              )}
             </>
           )}
         </Box>
       </Box>
 
-      {/* 이미지 영역 (★ 추가됨) */}
-      {(imageUrl || admin) && (
-        <Box
-          sx={{
-            width: '100%',
-            mb: 1.2,
-            borderRadius: 1,
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: imageUrl ? 'transparent' : '#f5f5f5',
-          }}
-        >
-          {imageUrl ? (
-            <img 
-              src={imageUrl} 
-              alt={word.name}
-              style={{ width: '100%', height: 'auto', display: 'block' }}
-            />
-          ) : (
-            admin && <ImageIcon sx={{ fontSize: 180, color: 'grey.400' }} />
-          )}
-        </Box>
-      )}
+      {/* 이미지 영역 */}
+      <Box
+        sx={{
+          position: "relative", // 부모를 relative로 설정
+          width: "100%",
+          height: 180,
+          bgcolor: "grey.200",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+          // 이 Box에 hover 시 자식 버튼들이 나타남
+          "&:hover .image-buttons": {
+            opacity: 1,
+          }
+        }}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={name}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover"
+            }}
+          />
+        ) : (
+          <ImageIcon sx={{ fontSize: 100, color: "grey.400" }} />
+        )}
 
+        {/* 이미지 수정/삭제 버튼 (관리자) */}
+        {admin && (
+          <Box
+            className="image-buttons" // hover 타겟용 클래스
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              display: "flex",
+              gap: 1,
+              opacity: 0, // 기본은 숨김
+              transition: "opacity 0.2s",
+            }}
+          >
+            {handleUploadImage && (
+              <IconButton
+                size="small"
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.9)",
+                  "&:hover": { bgcolor: "white" }
+                }}
+                onClick={(e) => {handleUploadImage}}
+              >
+                <AddPhotoAlternateIcon fontSize="small" />
+              </IconButton>
+            )}
 
+            {handleRemoveImage && (
+              <IconButton
+                size="small"
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.9)",
+                  "&:hover": { bgcolor: "white" }
+                }}
+                onClick={(e) => {handleRemoveImage}}
+              >
+                <DeleteIcon fontSize="small" color="error" />
+              </IconButton>
+            )}
+          </Box>
+        )}
+      </Box>
 
       {/* 단어 카드 본문 */}
       <Typography 
@@ -127,7 +163,8 @@ export default function WordCard({ word, handles, admin }) {
           textOverflow: 'ellipsis',
           display: '-webkit-box',
           WebkitLineClamp: 6,
-          WebkitBoxOrient: 'vertical'
+          WebkitBoxOrient: 'vertical',
+          whiteSpace: 'pre-wrap',
         }}
       >
         {meaning}
