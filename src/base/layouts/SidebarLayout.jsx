@@ -28,7 +28,7 @@ export default function SidebarLayout({ sidebar, children }) {
           px: { xs: 2, sm: 3, md: 4 },
           display: "flex",
           alignItems: "flex-start",
-          gap: 4,
+          gap: 10,
           pt: 4,
           pb: 4,
         }}

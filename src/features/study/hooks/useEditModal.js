@@ -23,61 +23,39 @@ const MODAL_FIELDS = [
 
 
 /**
- * 단계 학습에 이용하는 모달 제공 custom hook
+ * 단계 학습 수정 모달 상태관리 custom hook
  * @since 2025-12-09
  * @author kcw
  */
 
-export function useStudyModal({ admin = false }) {
+export function useEditModal({ admin = false }) {
 
   // [1] 모달 상태
-  const [writeModalOpen, setWriteModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editData, setEditData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [initData, setInitData] = useState(null);
   
   // [2] 모달 열기/닫기 함수
-  const openWriteModal = () => {
-    setWriteModalOpen(true);
-  };
-
   const openEditModal = (initialValues) => {
-    setEditData(initialValues);
-    setEditModalOpen(true);
+    setInitData(initialValues);
+    setOpen(true);
   };
 
   // [3] 모달 프롭스 설정
-  const writeProps = {
-    open: writeModalOpen,
-    setOpen: setWriteModalOpen,
-    title: "단계 학습 등록",
-    fields: MODAL_FIELDS,
-    submitText: "등록",
-    submit: {
-      endpoint: '/studies',
-      method: 'POST',
-      reload: true,
-      admin,
-    }
-  };
-
   const editProps = {
-    open: editModalOpen,
-    setOpen: setEditModalOpen,
+    open,
+    setOpen,
     title: "단계 학습 수정",
     fields: MODAL_FIELDS,
     submitText: "수정",
     submit: {
-      endpoint: `/studies/${editData?.studyId}`,
+      endpoint: `/studies/${initData?.studyId}`,
       method: 'PUT',
       reload: true,
       admin,
     },
-    initialValues: editData
+    initialValues: initData
   };
 
   // [3] 반환
-  return {
-    openWriteModal, openEditModal, 
-    writeProps, editProps
-  }
+  return { openEditModal, editProps }
 }
