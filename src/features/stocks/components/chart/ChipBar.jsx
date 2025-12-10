@@ -1,6 +1,5 @@
-import { Chip, Tooltip } from "@mui/material";
+import { Chip } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import { chartToolTipText } from "../../constants/stocksToolTipText";
 import StocksDetailTooltip from "../StocksDetailTooptip";
 
 export default function ChipBar({ohlc, ma}){

@@ -10,11 +10,6 @@ export function chartGuide(){
         position: "bottom"
       },
       {
-        element: "#candle-ohlc-box",
-        intro: "여기에 마우스 위치에 따른 OHLC 정보가 표시됩니다.",
-        position: "right"
-      },
-      {
         element: "#volume-chart-area",
         intro: "이곳은 거래량 영역입니다. 막대의 높이로 관심도를 파악할 수 있어요.",
         position: "top"
