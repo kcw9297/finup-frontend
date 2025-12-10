@@ -58,7 +58,7 @@ export default function StocksDetailStock(){
             }}
           >
             <Grid container sx={{ justifyContent: "space-between" }}>
-              { detailStock.basic?? Array(4).fill({ label: "항목", value: "데이터" }).map((item, index) => (
+              { detailStock.basic.map((item, index) => (//?? Array(4).fill({ label: "항목", value: "데이터" })
                 <Grid
                   item               
                   key={index}
@@ -74,7 +74,7 @@ export default function StocksDetailStock(){
                 >
                   <Typography sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
                     <StocksDetailTooltip text={"설명..."}>
-                      <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
+                      <Box component="span" sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
                         <InfoIcon/>            
                       </Box>
                     </StocksDetailTooltip>
