@@ -38,9 +38,7 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
           onClick={onClose}
           disableRipple
           disableFocusRipple
-          sx={{ color: 'text.contrastText', padding: '5px',
-            "&:hover": { backgroundColor: 'base.darkHover' }
-          }}
+          sx={{ color: 'text.contrastText', padding: '5px' }}
         >
           <CloseIcon/>
         </IconButton>
