@@ -5,16 +5,18 @@ import NewsScrollToTop from "../../news/components/NewsScrollToTop.jsx";
 import { useNewsList } from "../../news/hooks/useNewsList.js";
 import { useNewsModal } from "../../news/hooks/useNewsModal.js";
 import { useStocksNews } from "../hooks/useStocksNews.js";
+import { useContext } from "react";
+import { StockDetailContext } from "../context/StockDetailContext.js";
 
 export default function StocksDetailNews(){
+  const {nameCard} = useContext(StockDetailContext)
   const { category, setCategory : changeCategory,
       news,
       visibleCount,
       CATEGORY_LIST,
       refreshNews, showTop,
-      } = useStocksNews();
+      } = useStocksNews(nameCard.stockName);
   const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal(refreshNews);
-  
   return (
     <Box sx={{backgroundColor: thema.palette.background.base}}>
       {/* <Box sx={{ maxWidth: "900px", mx: "auto", mt: 4 }}> */}

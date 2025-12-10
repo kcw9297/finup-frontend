@@ -162,7 +162,7 @@ export default function App() {
         }
 
 
-      </Routes >
+      </Routes>
     </>
   )
 }
