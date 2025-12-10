@@ -275,13 +275,6 @@ const theme = createTheme({
       disableRipple: true,
       disableFocusRipple: true,
     },
-    styleOverrides: {
-      root: ({ theme }) => ({
-        "&:hover": {
-          backgroundColor: `${theme.palette.background.light}`,
-        }
-      })
-    }
   },
 
 
