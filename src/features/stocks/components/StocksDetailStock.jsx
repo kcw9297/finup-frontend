@@ -57,8 +57,13 @@ export default function StocksDetailStock(){
               gap: 1.5,
             }}
           >
-            <Grid container sx={{ justifyContent: "space-between" }}>
-              { detailStock.basic.map((item, index) => (//?? Array(4).fill({ label: "항목", value: "데이터" })
+            <Grid container sx={{ justifyContent: "space-between" }}>              
+              {(detailStock.basic ?? Array(4).fill({
+                  label: "항목",
+                  value: "데이터",
+                  tooltip: "설명"
+                })
+              ).map((item, index) => (
                 <Grid
                   item               
                   key={index}
@@ -73,7 +78,7 @@ export default function StocksDetailStock(){
                   }}
                 >
                   <Typography sx={{ display: 'flex', alignItems: 'center'}}>{item.label}
-                    <StocksDetailTooltip text={"설명..."}>
+                    <StocksDetailTooltip text={item.tooltip}>
                       <Box component="span" sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
                         <InfoIcon/>            
                       </Box>
@@ -132,7 +137,7 @@ export default function StocksDetailStock(){
 }
 
 function InfoCard({ title, rows }) {
-  const safeRows = rows ?? Array(4).fill({ label: "항목", value: "데이터" });
+  const safeRows = rows ?? Array(4).fill({ label: "항목", value: "데이터", tooltip:"설명" });  
   return (        
     <Box
       sx={{
@@ -164,7 +169,7 @@ function InfoCard({ title, rows }) {
             {/* 왼쪽 영역 */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography fontSize={16}>{item.label}</Typography>                  
-              <StocksDetailTooltip text={"설명..."}>
+              <StocksDetailTooltip text={item.tooltip}>
                 <Box sx={{ color: (theme) => theme.palette.base.lightActive, display: 'flex', alignItems: 'center', px: 1 }}>
                   <InfoIcon/>            
                 </Box>

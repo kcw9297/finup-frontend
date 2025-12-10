@@ -115,7 +115,7 @@ export function useNoticeList() {
   }
 
   const onError = (rp) => {
-    showSnackbar("공지사항을 불러오지 못했습니다.", "error")
+    showSnackbar(rp.message, "error")
   }
 
   const onFinally = () => {
@@ -129,6 +129,8 @@ export function useNoticeList() {
     })
   }, [searchParams])
 
+
+  // [4] 반환
   return {
     searchRq,
     noticeList,
