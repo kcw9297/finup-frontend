@@ -27,12 +27,13 @@ import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
 import AdminStudyListPage from './pages/study/AdminStudyListPage'
 import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
 import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
+import MemberJoinPage from './pages/member/MemberJoinPage';
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
-  { path: '/signup', element: <GuestRoute><AuthSignupPage /></GuestRoute> },
+  { path: '/join', element: <GuestRoute><MemberJoinPage /></GuestRoute> }, // 회원가입 페이지
   { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
 
 

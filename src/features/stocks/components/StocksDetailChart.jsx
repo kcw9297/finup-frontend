@@ -33,7 +33,7 @@ export default function StocksDetailChart(){
       
       <Box sx={{display: "flex", gap: 3, mt: 2}}>
         
-        <Box sx={{ flex: 3, flexShrink: 0, background: "#ffffff", p: 2, borderRadius: 2, boxShadow: 1, height:700, mb:2}}>
+        <Box sx={{ flex: 3, flexShrink: 0, background: "#ffffff", p: 2, borderRadius: 2, border:1, borderColor:'line.main' , height:700, mb:2}}>
           {items.length > 0 && (
             <CombinedChart items={items} />
           )}

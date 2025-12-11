@@ -12,9 +12,9 @@ import { navigate } from '../../../base/config/globalHookConfig.js';
  */
 
 export default function AuthLogin() {
-  
+
   // [1] 로그인 custom hook
-  const { 
+  const {
     authloginRq, changeAuthLoginRq, loading,// 상태 (1번째 줄)
     handleLogin // 함수 (2번째 줄)
   } = useAuthLogin()
@@ -27,31 +27,32 @@ export default function AuthLogin() {
       flexDirection: 'column',
       justifyContent: 'center',
       gap: '30px',
-      width: '100%', 
+      width: '100%',
       maxWidth: 350,
-      border:1,
+      border: 1,
       borderColor: 'base.main', // 테두리 색상
       padding: '0 30px',
     }}>
-      <Box sx={{display: 'flex', flexDirection: 'row-reverse', marginTop: '30px'}}>
-        <IconButton 
-          onClick={() => navigate('/')}  
+      <Box sx={{ display: 'flex', flexDirection: 'row-reverse', marginTop: '30px' }}>
+        <IconButton
+          onClick={() => navigate('/')}
           disabled={loading} // 로딩 중에는 비활성화
           sx={{ padding: '5px' }}
         >
-        <CloseIcon/></IconButton>
-        
+          <CloseIcon /></IconButton>
+
       </Box>
-      <Box sx={{display:'flex', justifyContent:'center', alignItems:'center'}} >
-        <img src={logo} alt="로고" style={{height: 35}} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+        <img src={logo} alt="로고" style={{ height: 35 }} />
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', 
+      <Box sx={{
+        display: 'flex', flexDirection: 'column', gap: '10px',
         '& .MuiOutlinedInput-root': { height: 40, borderRadius: 2, }, // TextField
         '& .MuiOutlinedInput-input': { padding: '6px 10px', fontSize: 14, },
         '& .MuiInputLabel-root': { fontSize: 14, transform: 'translate(10px, 10px) scale(1)', }, // 라벨
         '& .MuiInputLabel-shrink': { transform: 'translate(15px, -8px) scale(0.75)', }
-        }}
+      }}
       >
         <TextField
           label="이메일"
@@ -74,35 +75,37 @@ export default function AuthLogin() {
           disabled={loading} // 로딩 중에는 비활성화
           autoComplete="off" // 자동완성 기능 제거
         />
-      
+
         <Button
           fullWidth
           variant="contained"
           size="large"
           onClick={handleLogin}
           disabled={loading} // 로딩 중에는 비활성화
-          sx={{ height: '40px', marginTop: '10px', borderRadius: 2, backgroundColor: 'base.main', 
-            '&:hover': { backgroundColor: 'base.dark',} }}
+          sx={{
+            height: '40px', marginTop: '10px', borderRadius: 2, backgroundColor: 'base.main',
+            '&:hover': { backgroundColor: 'base.dark', }
+          }}
         >
           {loading ? (<CircularProgress size={24} sx={{ color: 'white' }} />) : '로그인'}
         </Button>
 
         <Typography
-          component={Link} to="/login"
-          sx={{display:'flex', flexDirection:'row-reverse', fontSize:'12px', textDecorationLine: 'underline !important'}}
+          component={Link} to="/join"
+          sx={{ display: 'flex', flexDirection: 'row-reverse', fontSize: '12px', textDecorationLine: 'underline !important' }}
           disabled={loading} // 로딩 중에는 비활성화
         >
           회원가입
         </Typography>
       </Box>
-      
+
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', }}>
         <Box sx={{ flex: 1, height: '1px', backgroundColor: 'line.dark' }} />
         <Typography sx={{ color: 'text.light', fontSize: 12 }}>간편 로그인</Typography>
         <Box sx={{ flex: 1, height: '1px', backgroundColor: 'line.dark' }} />
       </Box>
 
-      <AuthSocialBtn icon={<GoogleIcon />} text="구글 계정으로 로그인" onClick={() => alert('구글 로그인')}/>
+      <AuthSocialBtn icon={<GoogleIcon />} text="구글 계정으로 로그인" onClick={() => alert('구글 로그인')} />
 
     </Paper>
   );

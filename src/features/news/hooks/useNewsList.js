@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 
-export function useNewsList(isModalOpen) {
+export function useNewsList(fetchUrl, params={}, isModalOpen) {
   const [category, setCategory] = useState("date");
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export function useNewsList(isModalOpen) {
 
     setLoading(true);
     try {
-      const res = await api.get("/news/list", {
+      const res = await api.get(fetchUrl, {
         params: { category },
         public: true,
       });
