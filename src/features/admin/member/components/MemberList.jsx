@@ -12,6 +12,7 @@ import { PDFDownloadLink, Page, Text, Document } from '@react-pdf/renderer';
 import MemberPdfDocument from "./MemberPdfDocument";
 import { pdf } from "@react-pdf/renderer";
 import { api } from "../../../../base/utils/fetchUtils";
+import SearchBar2 from "../../../../base/components/bar/SearchBar2";
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -115,7 +116,7 @@ export default function MemberList() {
 
 
           { /* 검색 바, PDF 다운로드 */}
-          <SearchBar
+          <SearchBar2
             searchRq={searchRq}
             filterOnChange={handleFilter}
             onChange={handleChangeRq}

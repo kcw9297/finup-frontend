@@ -12,6 +12,7 @@ import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
 import SearchBar from "../../../../base/components/bar/SearchBar"
 import { useNoticeList } from "../../../notice/hooks/useNoticeList";
+import SearchBar2 from "../../../../base/components/bar/SearchBar2";
 
 /**
  * 공지사항 게시글 리스트
@@ -90,7 +91,7 @@ export default function AdminNoticeList() {
             </Tooltip>
           </Box>
           { /* 검색 바 */}
-          <SearchBar
+          <SearchBar2
             searchRq={searchRq}
             filterOnChange={handleFilter}
             onChange={handleChangeRq}
