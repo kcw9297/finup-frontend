@@ -1,7 +1,7 @@
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import MemberPdfTable from "./MemberPdfTable";
 import { Font } from "@react-pdf/renderer";
-
+import { registerPdfFonts } from "../../../../base/config/pdfFontConfig";
 /**
  * 회원 목록 리스트 PDF 변환 저장
  * @author khj
@@ -11,14 +11,7 @@ import { Font } from "@react-pdf/renderer";
  */
 
 // 폰트 설정
-Font.register({
-  family: "NotoSansKR",
-  src: "/fonts/NOTOSANSKR-REGULAR.TTF",
-})
-Font.register({
-  family: "NotoSansKR-Bold",
-  src: "/fonts/NOTOSANSKR-BOLD.TTF"
-})
+registerPdfFonts();
 
 export default function MemberPdfDocument({ list }) {
 

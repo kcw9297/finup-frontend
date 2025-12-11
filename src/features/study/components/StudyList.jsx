@@ -18,14 +18,6 @@ import { useWriteModal } from "../hooks/useWriteModal";
 import FormModal from "../../../base/components/modal/FormModal";
 
 
-// 검색 요청 초기값 (MemberList와 동일 구조 유지)
-const INITIAL_SEARCH_RQ = {
-  keyword: "",
-  filter: "",
-  pageNum: 1,
-  size: 10,
-};
-
 /**
  * 학습 개념 목록
  * @since 2025-12-08

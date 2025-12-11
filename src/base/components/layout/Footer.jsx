@@ -32,7 +32,7 @@ export default function Footer() {
         <p>ㅣ</p>
         <Link className="footer-text" href=''>공지사항</Link>
         <p>ㅣ</p>
-        <Link className="footer-text"  href='https://www.chunjae.co.kr'>(주)천재교육</Link>
+        <Link className="footer-text"  href='https://www.chunjae.co.kr' target='_blank'>(주)천재교육</Link>
       </Box>
 
       <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', gap:'5px'}}>

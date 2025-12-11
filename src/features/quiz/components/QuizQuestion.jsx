@@ -2,16 +2,21 @@ import { Box, Typography, IconButton, RadioGroup, FormControlLabel, Radio, Butto
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
 
-export default function QuizQuestion ({ onClose, questions, onSubmit }) {
-  const [answers, setAnswers] = useState(Array(questions.length).fill(null))
-  const [index, setIndex] = useState(0)
+// 문제 제출
 
+export default function QuizQuestion ({ onClose, questions, onSubmit }) {
+  // 배열 생성 + 제출 버튼 활성화
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null))
+  const isAllAnswered = answers.every((a) => a !== null);
+  
+  // 답안 선택
   const handleSelect = (questionIndex, value) => {
     const newAnswers = [...answers]
     newAnswers[questionIndex] = Number(value)
     setAnswers(newAnswers)
   }
 
+  // 제출(답안 제출 -> 부모가 채점)
   const finish = () => onSubmit(answers);
 
   return(
@@ -33,12 +38,7 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
           onClick={onClose}
           disableRipple
           disableFocusRipple
-          sx={{
-            color: 'text.contrastText', padding: '5px',
-            "&:hover": {
-              backgroundColor: 'base.darkHover'
-            }
-          }}
+          sx={{ color: 'text.contrastText', padding: '5px' }}
         >
           <CloseIcon/>
         </IconButton>
@@ -51,7 +51,7 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
           flexDirection: 'column',
           gap: '30px',
           margin: '30px 20px',
-          maxHeight: '60vh',
+          maxHeight: '520px',
           overflowY: 'auto'
         }}
       >
@@ -79,6 +79,7 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
         <Button
           variant='contained'
           onClick={finish}
+          disabled={!isAllAnswered}
           sx={{
             width: 'fit-content',
             alignSelf: 'center',
@@ -88,8 +89,13 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
             border: 2,
             borderColor: 'base.dark',
             borderRadius: '10px',
-            fontWeight: 700,
+            fontWeight: 600,
             fontSize: 16,
+            '&.Mui-disabled': {
+              backgroundColor: 'background.base',
+              color: 'text.light',
+              borderColor: 'line.dark',
+            },
             '&:hover': {
               backgroundColor: 'base.dark',
               color: 'text.contrastText',

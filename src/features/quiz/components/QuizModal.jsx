@@ -6,13 +6,17 @@ import QuizIntro from "./QuizIntro";
 import QuizQuestion from "./QuizQuestion";
 import QuizResult from "./QuizResult";
 
+// 기본 모달 창
+
 export default function QuizModal ({ open, onClose }) {
+  // 화면 관리
   const [step, setStep] = useState("intro");
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(0);
 
   const handleStart = () => setStep("quiz");
 
+  // 점수 계산
   const handleSubmit = (userAnswers) => {
     const result = userAnswers.reduce((acc, curr, idx) => {
       return curr === useQuiz[idx].answer ? acc + 10 : acc;
@@ -23,6 +27,7 @@ export default function QuizModal ({ open, onClose }) {
     setStep("result");
   };
 
+  // 닫으면 초기화
   const handleClose = () => {
     setStep("intro");
     setAnswers([]);
@@ -43,7 +48,7 @@ export default function QuizModal ({ open, onClose }) {
         }}
       >
         {step === "intro" && <QuizIntro onStart={handleStart} onClose={onClose}/>}
-        {step === "quiz" && (<QuizQuestion onClose={onClose} questions={useQuiz} onSubmit={handleSubmit}/>)}
+        {step === "quiz" && (<QuizQuestion onClose={handleClose} questions={useQuiz} onSubmit={handleSubmit}/>)}
         {step === "result" && (<QuizResult score={score} onClose={handleClose}/>)}
       </Box>
     </Modal>

@@ -10,7 +10,9 @@ import { useState } from "react";
 import PageBar from './../../../../base/components/bar/PageBar';
 import { PDFDownloadLink, Page, Text, Document } from '@react-pdf/renderer';
 import MemberPdfDocument from "./MemberPdfDocument";
-
+import { pdf } from "@react-pdf/renderer";
+import { api } from "../../../../base/utils/fetchUtils";
+import SearchBar2 from "../../../../base/components/bar/SearchBar2";
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -29,8 +31,8 @@ export default function MemberList() {
 
   // [0] 날짜 포맷 함수
   function formatDate(dateString) {
-    if (!dateString) return "";
-    const date = new Date(dateString);
+    if (!dateString) return ""
+    const date = new Date(dateString)
     return date.toLocaleString("ko-KR", {
       year: "numeric",
       month: "2-digit",
@@ -39,7 +41,7 @@ export default function MemberList() {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit"
-    });
+    })
   }
   // [1] 필요한 상수들
 
@@ -47,6 +49,33 @@ export default function MemberList() {
     { value: "email", label: "이메일" },
     { value: "nickname", label: "닉네임" },
   ]
+
+  // PDF 렌더링
+  const handleDownload = async () => {
+    // [1] 회원 전체 목록 조회 요청 (PDF Export 전용 엔드포인트 사용)
+    const allMembers = await api.get("/members/list/all", {
+      params: {
+        size: 9999  // 전체 불러오기
+      },
+    })
+    // [2] 응답 데이터에서 실제 회원 배열만 추출
+    const list = allMembers.data
+
+    // [3] React-PDF Document를 Blob(binary 데이터)으로 변환
+    const blob = await pdf(<MemberPdfDocument list={list} />).toBlob()
+
+    // [4] Blob을 브라우저 임시 URL로 변환하여 다운로드 링크 생성
+    const url = URL.createObjectURL(blob)
+
+    // [5] 가상의 <a> 태그를 만들어 자동으로 다운로드 트리거
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "회원목록.pdf"
+    a.click()
+
+    // [6] 메모리 누수 방지를 위해 URL 해제
+    URL.revokeObjectURL(url)
+  }
 
   // [2] 필요 데이터 정의
 
@@ -61,10 +90,10 @@ export default function MemberList() {
     loading
   } = useMemberList()
 
-  const rows = memberList;
+  const rows = memberList
 
   // console.log("pagination >>>", pagination)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // [3] 반환 컴포넌트 구성
   return (
@@ -87,23 +116,17 @@ export default function MemberList() {
 
 
           { /* 검색 바, PDF 다운로드 */}
-          <SearchBar
+          <SearchBar2
             searchRq={searchRq}
             filterOnChange={handleFilter}
             onChange={handleChangeRq}
             onSubmit={handleSearch}
             selectItems={memberFilterOptions}
           />
-          {/* 
-          <Button>
-            <PDFDownloadLink
-              document={<MemberPdfDocument list={memberList} />}
-              fileName="회원 목록.pdf"
-            >
-              {({ loading }) => loading ? "PDF 생성중..." : "PDF 다운로드"}
-            </PDFDownloadLink>
+
+          <Button onClick={handleDownload}>
+            PDF 다운로드
           </Button>
-*/}
 
 
           {/* 회원 목록 테이블 */}
@@ -153,6 +176,6 @@ export default function MemberList() {
           )}
         </Box>
       </Box>
-    </Box >
+    </Box>
   )
 }

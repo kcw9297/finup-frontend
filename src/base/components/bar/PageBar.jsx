@@ -8,7 +8,7 @@ import { Box, Pagination } from '@mui/material';
 
 export default function PageBar({ pagination, onChange }) {
 
-  if (!pagination) return null;  // 초기 렌더링 보호막(로딩 스피너)
+  if (!pagination) return null;  // 초기 렌더링 보호막
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
