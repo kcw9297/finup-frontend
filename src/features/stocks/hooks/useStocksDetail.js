@@ -27,7 +27,6 @@ export function useStockDetail(code) {
     //const detail = res.data.data;
     try{     
       const rp = await api.get(`/stocks/detail/${code}`, { public: true });
-
       const detail = rp.data;
 
       /* 네임 카드  */
