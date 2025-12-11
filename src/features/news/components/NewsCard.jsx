@@ -6,6 +6,7 @@ import { Box, Card, CardMedia, IconButton, Typography } from "@mui/material";
 import { useNewsCard } from "../hooks/useNewsCard";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import thema from "../../../base/design/thema.js"
+import { Iron } from "@mui/icons-material";
 
 export default function NewsCard({ title, summary, thumbnail, publisher, publishedAt, link, onClick }) {
   const {detailDate} = useNewsCard()
@@ -31,7 +32,10 @@ export default function NewsCard({ title, summary, thumbnail, publisher, publish
         image={
           thumbnail
        }
-        onError={(e) => (e.target.src = "/default-news.png")}
+        onError={(e) => {
+          if(e.target.src.includes("/default-news.png")) return
+          e.target.src = "/default-news.png"
+          }}
       />
 
       {/* 텍스트 */}
