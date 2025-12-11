@@ -23,11 +23,9 @@ import WordHomePage from './pages/word/WordHomePage'
 import WordSearchPage from './pages/word/WordSearchPage'
 import WordDetailPage from './pages/word/WordDetailPage'
 import AuthSignupPage from './pages/auth/AuthSignupPage'
-import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
-import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
+import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
 import AdminStudyListPage from './pages/study/AdminStudyListPage'
 import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
-import YoutubeEditPage from './pages/admin/youtube/YoutubeEditPage'
 import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
 
 // 자식이 없는 단순 라우팅 리스트
@@ -79,9 +77,7 @@ const nastedRoutes = [
       { path: "study-words", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyWordListPage /></ProtectedRoute> },
 
       // url : 유튜브 영상
-      { path: "youtube", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeListPage /></ProtectedRoute> },
-      { path: "youtube/write", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeVideoWritePage /></ProtectedRoute> },
-      { path: "youtube/:videoLinkId/edit", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeEditPage /></ProtectedRoute> },
+      { path: "video-links", element: <ProtectedRoute allowedRoles="ADMIN"><AdminVideoLinkListPage /></ProtectedRoute> },
 
     ]
   },

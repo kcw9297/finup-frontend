@@ -24,6 +24,7 @@ import SearchBar from "../../../base/components/bar/SearchBar";
 import { useStudyWordEditModal } from "../hooks/useStudyWordEditModal";
 import { useStudyWordRemoveModal } from "../hooks/useStudyWordRemoveModal";
 import { useUploadStudyWordImage } from "../hooks/useUploadStudyWordImage";
+import { useStudyWordRemoveImageModal } from "../hooks/useStudyWordRemoveImageModal";
 
 
 /**
@@ -37,8 +38,8 @@ export default function StudyWordList({ admin = false }) {
   // [1] 검색 요청 상태
   const {
     searchRq, searchRp, loading, searchProps, // 상태
-    handlePage, handleOrder, 
-    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile // 상태관리 함수
+    handlePage, handleOrder, // 상태관리 함수
+    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile, handleAfterRemoveImageFile
   } = useStudyWordList({admin})
 
   const {
@@ -47,9 +48,14 @@ export default function StudyWordList({ admin = false }) {
   } = useUploadStudyWordImage({admin})
 
   // 사용 모달
-  const { openWriteModal : openWordWriteModal, writeProps: wordWriteProps } = useStudyWordWriteModal({admin})
-  const { openEditModal : openWordEditModal, editProps: wordEditProps } = useStudyWordEditModal({handleAfterEdit, admin})
-  const { openRemoveModal : openWordRemoveModal, removeProps: wordRemoveProps } = useStudyWordRemoveModal({handleAfterRemove,admin})
+  const { openWriteModal : openWordWriteModal, writeProps: wordWriteProps } 
+    = useStudyWordWriteModal({admin})
+  const { openEditModal : openWordEditModal, editProps: wordEditProps } 
+    = useStudyWordEditModal({handleAfterEdit, admin})
+  const { openRemoveModal : openWordRemoveModal, removeProps: wordRemoveProps } 
+    = useStudyWordRemoveModal({handleAfterRemove, admin})
+  const { openRemoveModal : openWordRemoveFileModal, removeProps: wordRemoveFileProps } 
+    = useStudyWordRemoveImageModal({handleAfterRemoveImageFile, admin})
 
   // [2] 필요 데이터 정의
   const rows = searchRp?.data ?? []
@@ -132,7 +138,7 @@ export default function StudyWordList({ admin = false }) {
                   functions={{
                     onChangeUploadImage: (file) => handleUploadImage(row.studyWordId, file),
                     onChangeUploadImageAfter: (imageUrl) => handleAfterUploadImageFile(row.studyWordId, imageUrl),
-                   //onClickRemoveImage: () => handleRemoveImage(row.studyWordId),
+                    onClickRemoveImage: () => openWordRemoveFileModal(row.studyWordId),
                     onClickEdit: () => openWordEditModal(row),
                     onClickRemove: () => openWordRemoveModal(row.studyWordId),
                   }}
@@ -152,6 +158,7 @@ export default function StudyWordList({ admin = false }) {
         <FormModal modalProps={wordWriteProps} />
         <FormModal modalProps={wordEditProps} />
         <DeleteConfirmModal modalProps={wordRemoveProps} />
+        <DeleteConfirmModal modalProps={wordRemoveFileProps} />
     </Box>
   )
 }
