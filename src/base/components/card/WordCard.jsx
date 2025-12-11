@@ -7,6 +7,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ImageIcon from '@mui/icons-material/Image';
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 /**
  * 단어 카드 컴포넌트
@@ -43,8 +44,16 @@ export default function WordCard({ word, functions, admin }) {
     if (!file) return // 파일이 없는 경우 중단
 
     // 업로드 수행
+    const scrollY = window.scrollY;
     const json = await onChangeUploadImage(file)
-    if (json.success) onChangeUploadImageAfter(json.data) // 이미지 카드 변경 함수 (서버에서 업로드 파일 url 반환)
+    if (json.success) {
+
+      // flushSync로 동기 업데이트 후 즉시 스크롤 복원
+      flushSync(() => {
+        onChangeUploadImageAfter(json.data)
+      });
+      window.scrollTo(0, scrollY)
+    }
   }
 
 
