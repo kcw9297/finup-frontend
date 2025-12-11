@@ -1,6 +1,7 @@
 import { Box, Chip, Stack } from "@mui/material";
 import thema from "../../../base/design/thema.js"
 import NewsCard from "../../news/components/NewsCard.jsx";
+import NewsModal from "../../news/components/NewsModal.jsx";
 import NewsScrollToTop from "../../news/components/NewsScrollToTop.jsx";
 import { useNewsModal } from "../../news/hooks/useNewsModal.js";
 import { useContext, useState } from "react";
@@ -66,6 +67,14 @@ export default function StocksDetailNews(){
           
           <NewsScrollToTop show={showTop} onClick={scrollToTop}/>
         </Box>
+        {/* 뉴스 상세 모달 */}
+        <NewsModal 
+          open={open} 
+          onClose={closeModal} 
+          article={article}
+          loading={aiLoading}
+        />
+        <div id="bottom-observer" />
       </Box>
     </Box>
   )
