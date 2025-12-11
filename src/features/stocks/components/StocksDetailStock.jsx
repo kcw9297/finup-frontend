@@ -2,18 +2,29 @@ import React, { useContext } from "react";
 import { StockDetailContext } from "../context/StockDetailContext";
 import { useParams } from "react-router-dom";
 import thema from "../../../base/design/thema.js"
-import { Box, Grid, Typography, Stack, Divider, Card, CardContent } from "@mui/material";
+import { Box, Grid, Typography, Stack, Divider, Card, CardContent, CardMedia, keyframes } from "@mui/material";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
 import StocksDetailTooltip from "./StocksDetailTooptip.jsx";
 //import { useStockDetail } from "../hooks/useStocksDetailStock.js";
 //import { useStockDetail } from "../hooks/useStocksDetail.js";
 
+import {useRecommendedVideo} from "../../home/hooks/useRecommendedVideo.js"
+import { useStockDetailStockAi } from "../hooks/useStocksDetailStockAi.js";
+
 export default function StocksDetailStock(){
   const { code } = useParams();
   // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
   //const { nameCard, detailStock, loading, error } = useStockDetail(code);
-  const { detailStock } = useContext(StockDetailContext);
+  const { detailStock, loading } = useContext(StockDetailContext);
+  const { detailStockAi, loadingAi } = useStockDetailStockAi(code);
+  const { videoList } = useRecommendedVideo();
+  const sparkle = keyframes`
+    0% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 0.4; transform: scale(1); }
+  `;
 
   return (
     // <Box>
@@ -34,16 +45,16 @@ export default function StocksDetailStock(){
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>           
             <Typography variant="h5" fontWeight={600} >
-              {detailStock?.basicHead?.stockName ?? "종목명(로딩 중...)"}
+              {detailStock?.basicHead?.stockName ?? "종목명 "}{loading && "로딩중..."}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               국내   
             </Typography>                    
             <Typography variant="body1" color="text.secondary">
-              { detailStock?.basicHead?.code ?? "종목코드 로딩 중..."}
+              { detailStock?.basicHead?.code ?? "종목코드 "}{loading && "로딩중..."}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              { detailStock?.basicHead?.marketName ?? "코스피겠지...?"}
+              { detailStock?.basicHead?.marketName ?? "코스피/코스닥 정보 "}{loading && "로딩중..."}
             </Typography>          
           </Box>
 
@@ -51,7 +62,7 @@ export default function StocksDetailStock(){
           <Box
             sx={{              
               borderRadius: 2,
-              px: 2,
+              //px: 2,
               display: "flex",
               flexDirection: "column",
               gap: 1.5,
@@ -95,11 +106,11 @@ export default function StocksDetailStock(){
         <Box sx={{display: "flex", flexDirection: "column", gap: 3 }}>
           <Box sx={{display: "flex"}}>
             <Typography variant="h5" fontWeight={600}>
-              투자지표
+              투자지표 {loading && "로딩중..."}
             </Typography>
           </Box>
           
-          <Box sx={{ display: "flex", px: 2, gap: 3, overflow: "hidden" }}>
+          <Box sx={{ display: "flex", gap: 3, overflow: "hidden" }}>
             <InfoCard title="가격" rows={ detailStock.price } />
             <InfoCard title="가치평가" rows={ detailStock.valuation } />
             <InfoCard title="수급·거래" rows={ detailStock.flow } />
@@ -118,18 +129,77 @@ export default function StocksDetailStock(){
           </Box>
           
           {/* 내용 카드 */}
-          <Card variant="outlined" sx={{ mx: 2, borderRadius: 2 }}>
+          <Card variant="outlined" sx={{ borderRadius: 2 }}>
             <CardContent>
+              {loadingAi && (
+                <Box sx={{ 
+                  display: "flex", 
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 1
+                }}>
+                  <AutoAwesomeIcon 
+                    sx={{ 
+                      color: "#3B5BDB",
+                      animation: `${sparkle} 1.5s ease-in-out infinite`,
+                    }} 
+                  />
+                  <Typography sx={{ fontSize: 14, color: "#3B5BDB", fontWeight: 600 }}>
+                    AI 분석 중…
+                  </Typography>
+                </Box>
+              )}
               <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-line" }}>
-                시가총액 / 업종 한글 종목명(전기전자) 상장주수
-                {"\n"}누적 거래 대금, 거래량, 전일 대비 거래량 비율
-                {"\n"}최고 최저 상한 하한
-                {"\n"}250일 최저, 최고 (날짜)
-                {"\n"}52주 최고 / 최저, 날짜, 현재가 대비
+                [요약]<br />
+                {detailStockAi.summary}<br /><br />
+                [투자 포인트]<br /> {detailStockAi.investmentPoint}<br /><br />
+                [가격]<br /> {detailStockAi.price}<br /><br />
+                [가치평가]<br /> {detailStockAi.valuation}<br /><br />
+                [수급·거래]<br /> {detailStockAi.flow}<br /><br />
+                [리스크·상태]<br /> {detailStockAi.risk}
               </Typography>
             </CardContent>
           </Card>
         </Box>
+
+        {/* 추천 영상 */}       
+        <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 3 }}>          
+        
+          {/* 제목 */}
+          <Box sx={{display: "flex"}}>
+            <Typography variant="h5" fontWeight={600}>
+              추천 영상 {detailStockAi.youtubeKeywords}
+            </Typography>
+          </Box>
+          
+          {/* 내용 카드 */}
+          <Box sx={{display: 'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'20px'}}>
+            {videoList.map((video) => (
+              <Card
+                key={video.id}
+                sx={{ cursor: "pointer", border:1, borderColor:'line.main' }}
+                onClick={() => window.open(`https://www.youtube.com/watch?v=${video.videoId}`, "_blank")}
+              >
+                <CardMedia
+                  component="img"
+                  height="180"
+                  image={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
+                  alt={video.title}
+                />
+                <CardContent
+                  sx={{ display: 'flex', flexDirection:'column', gap: 1,
+                    "& .MuiTypography-root": { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}}>
+                  <Typography sx={{fontSize:18, fontWeight:600}}>
+                    {video.title}
+                  </Typography>
+                  <Typography sx={{color:'text.light'}}>
+                    {video.channelTitle}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        </Box> 
 
       </Box>
     </Box>
@@ -154,8 +224,7 @@ function InfoCard({ title, rows }) {
         </Typography>
       </Box>
 
-      {/* 반복되는 행 */}
-      
+      {/* 반복되는 행 */}      
       { safeRows.map((item, i) => (
         <Box key={i}>
           <Box

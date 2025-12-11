@@ -66,24 +66,6 @@ export function useStocksNews(stockName){
     fetchNews();
   }, [category, stockName]);
 
-  // useEffect(() => {
-  //   if (intervalRef.current) {
-  //     clearInterval(intervalRef.current);
-  //   }
-  //   intervalRef.current = setInterval(() => {
-  //     if (!isModalOpen) {
-  //       fetchNews();
-  //       console.log("자동 새로고침 실행됨");
-  //     } else {
-  //       console.log("새로고침 중단");
-  //     }
-  //   }, 15 * 60 * 1000);
-
-  //   return () => {
-  //     clearInterval(intervalRef.current);
-  //     intervalRef.current = null;
-  //   };
-  // }, [isModalOpen, category, stockName]);
 
   useEffect(() => {
     const onScroll = () => {

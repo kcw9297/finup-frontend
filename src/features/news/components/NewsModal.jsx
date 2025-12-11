@@ -94,7 +94,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
             {loading ? (
               <Skeleton variant="rectangular" height={80} sx={{borderRadius:2}}/>
             ):(
-              <p>{article?.ai?.summary}</p>
+              <p>{article?.ai?.summary ?? "AI 분석을 제공할 수 없는 기사입니다."}</p>
             )}
           </Box>
           
@@ -112,7 +112,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                 <Skeleton height={20} width="80%" />
               </>
             ) : (
-              <p>{article?.ai?.insight}</p>
+              <p>{article?.ai?.insight ?? "인사이트 없음"}</p>
             )}
           </Box>
           {/* 필수 개념 */}
@@ -136,20 +136,6 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
               ))
             )}
           </Box>
-
-          {/* 추천 콘텐츠 */}
-          <Box>
-            <h3>추천 콘텐츠</h3>
-            <Box
-              mb={3}
-              sx={{ display: "flex", gap: 2 }}
-            >
-              <Box sx={{ width: 120, height: 120, background: "#e9ecef", borderRadius: "12px" }} />
-              <Box sx={{ width: 120, height: 120, background: "#e9ecef", borderRadius: "12px" }} />
-              <Box sx={{ width: 120, height: 120, background: "#e9ecef", borderRadius: "12px" }} />
-            </Box>
-          </Box>
-
         </Box>
       </Box>
     </Modal>
