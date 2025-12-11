@@ -4,10 +4,10 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
-import StudyWords from '../../studyword/components/StudyWords';
 import FormModal from '../../../base/components/modal/FormModal';
 import { useStudyDetail } from '../hooks/useStudyDetail';
 import { useEditModal } from '../hooks/useEditModal';
+import StudyWords from './StudyWords';
 
 
   // 임시 단어 데이터

@@ -24,8 +24,13 @@ export default function Header() {
   const { isAuthenticated, loading, loginMember } = useAuthStore()
   const navigate = useNavigate()
   const { handleLogout } = useLogout()
-
   const {pathname} = useLocation()
+
+  const onProfileCilck = () => {
+    if (!isAuthenticated || !loginMember) navigate('/login');
+    else if (loginMember.role === 'ADMIN') navigate('/admin/members');
+    else navigate('/mypage');
+  }
 
   return (
     <AppBar 
@@ -87,7 +92,7 @@ export default function Header() {
           {/* 우측 프로필 + 로그인 */}
           <Box sx={{display: 'flex', alignItems: 'center', gap: 3}}>
 
-            <Box onClick={() => alert('프로필 클릭')} sx={{
+            <Box onClick={() => {onProfileCilck()}} sx={{
               height: 50,
               display: 'flex',
               alignItems: 'center',
@@ -97,6 +102,7 @@ export default function Header() {
               cursor: 'pointer',
               "&:hover": {backgroundColor: 'background.light' }
               }}>
+                
               {/* 프로필 아이콘 */}
               <Box>
                 <Avatar
@@ -107,7 +113,15 @@ export default function Header() {
                   <AccountCircleIcon sx={{fontSize: 35, color: 'inherit', backgroundColor: 'action'}}/>
                 </Avatar>
               </Box>
-              <p style={{fontSize: 14, color: 'text.main'}}>로그인이 필요합니다</p>
+              
+              {loading ? (
+                <p style={{fontSize:14, color:"text.main"}}></p>
+              ) : isAuthenticated ? (
+                <p style={{fontSize:14, color:"text.main"}}>{loginMember.nickname}님 환영합니다</p>
+              ) : (
+                <p style={{fontSize:14, color:"text.main"}}>로그인이 필요합니다</p>
+              )}
+
             </Box>
 
             {/* 로그인/로그아웃 아이콘 */}

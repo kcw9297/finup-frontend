@@ -9,7 +9,6 @@ export const DEFAULT_SEARCH_RQ = {
 
 // 검색 키워드 filter
 export const FILTER_OPTIONS = [
-  { value: "studyWordId", label: "단어번호" },
   { value: "name", label: "단어명" },
   { value: "meaning", label: "단어뜻" },
   { value: "nameMeaning", label: "단어명+뜻" },

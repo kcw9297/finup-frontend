@@ -19,7 +19,6 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     headers : {},       // HTTP Header
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
-    handleError: true,  // 기본 에러 처리 활성화 
   }
 
 
@@ -53,52 +52,49 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     // [5] 성공/실패 처리
     if (!response.ok || !rp.success) {
       console.log('요청 처리 실패', rp)
-      
-      // 기본 처리가 활성화 된 경우 실행
-      if (options.handleError) {
 
-          // 토큰 만료 혹은 로그인이 필요한 서비스인 경우
-          if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
+      // 토큰 만료 혹은 로그인이 필요한 서비스인 경우
+      if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
 
-            // 스낵바 출력
-            showSnackbar(rp.message || "로그인이 필요합니다.")
+        // 스낵바 출력
+        showSnackbar(rp.message || "로그인이 필요합니다.")
 
-            // 딜레이 후 리다이렉트
-            const currentPath = window.location.pathname;
-            const currentSearch = window.location.search;
-            
-            // 이미 /login 페이지에 있으면 리다이렉트 안 함
-            if (currentPath === '/login') return;
+        // 딜레이 후 리다이렉트
+        const currentPath = window.location.pathname;
+        const currentSearch = window.location.search;
+        
+        // 이미 /login 페이지에 있으면 리다이렉트 안 함
+        if (currentPath === '/login') return;
 
-            // returnUrl 생성
-            const returnUrl = currentPath + currentSearch;
-            const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
-            console.log('Navigate to:', loginUrl);
-            logout();
-            window.location.href = loginUrl;
+        // returnUrl 생성
+        const returnUrl = currentPath + currentSearch;
+        const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
+        console.log('Navigate to:', loginUrl);
+        logout();
+        window.location.href = loginUrl;
 
-            // 리다이렉트 값을 넘기고 반환
-            return { ...rp, redirected: true }
-          }
-
-          // 권한이 부족한 경우
-          if (rp.status === 'ACCESS_DENIED') {
-
-            // 스낵바 출력
-            showSnackbar(rp.message || '잘못된 요청입니다.')
-
-            // 딜레이 후 리다이렉트
-            setTimeout(() => {
-              navigate('/', { replace: true })
-            }, 300);
-
-            // 리다이렉트 값을 넘기고 반환
-            return { ...rp, redirected: true }
-          }
-          
-          // 그 외 오류는 스낵바만 출력
-          showSnackbar(rp.message || '오류가 발생했습니다.')
+        // 리다이렉트 값을 넘기고 반환
+        return { ...rp, redirected: true }
       }
+
+      // 권한이 부족한 경우
+      if (rp.status === 'ACCESS_DENIED') {
+
+        // 스낵바 출력
+        showSnackbar(rp.message || '잘못된 요청입니다.')
+
+        // 딜레이 후 리다이렉트
+        setTimeout(() => {
+          navigate('/', { replace: true })
+        }, 300);
+
+        // 리다이렉트 값을 넘기고 반환
+        return { ...rp, redirected: true }
+      }
+      
+      // 유효성 검사 이외 오류는 메세지 출력 (유효성 검사 오류는 미출력)
+      if (rp.status !== 'VALIDATION_INVALID_PARAMETER') 
+        showSnackbar(rp.message || '오류가 발생했습니다.')
 
       // 에러 콜백 함수 존재 시 처리
       if (options.onError) options.onError(rp)
@@ -155,7 +151,6 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
     headers : {},       // HTTP Header
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
-    handleError: true,  // 기본 에러 처리 활성화 
   }
 
 
@@ -186,51 +181,48 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
     if (!response.ok || !rp.success) {
       console.log('요청 처리 실패', rp)
       
-      // 기본 처리가 활성화 된 경우 실행
-      if (options.handleError) {
+      // 토큰 만료 혹은 로그인이 필요한 서비스인 경우
+      if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
 
-          // 토큰 만료 혹은 로그인이 필요한 서비스인 경우
-          if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
+        // 스낵바 출력
+        showSnackbar(rp.message || "로그인이 필요합니다.")
 
-            // 스낵바 출력
-            showSnackbar(rp.message || "로그인이 필요합니다.")
+        // 딜레이 후 리다이렉트
+        const currentPath = window.location.pathname;
+        const currentSearch = window.location.search;
+        
+        // 이미 /login 페이지에 있으면 리다이렉트 안 함
+        if (currentPath === '/login') return;
 
-            // 딜레이 후 리다이렉트
-            const currentPath = window.location.pathname;
-            const currentSearch = window.location.search;
-            
-            // 이미 /login 페이지에 있으면 리다이렉트 안 함
-            if (currentPath === '/login') return;
+        // returnUrl 생성
+        const returnUrl = currentPath + currentSearch;
+        const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
+        console.log('Navigate to:', loginUrl);
+        logout();
+        window.location.href = loginUrl;
 
-            // returnUrl 생성
-            const returnUrl = currentPath + currentSearch;
-            const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
-            console.log('Navigate to:', loginUrl);
-            logout();
-            window.location.href = loginUrl;
-
-            // 리다이렉트 값을 넘기고 반환
-            return { ...rp, redirected: true }
-          }
-
-          // 권한이 부족한 경우
-          if (rp.status === 'ACCESS_DENIED') {
-
-            // 스낵바 출력
-            showSnackbar(rp.message || '잘못된 요청입니다.')
-
-            // 딜레이 후 리다이렉트
-            setTimeout(() => {
-              navigate('/', { replace: true })
-            }, 300);
-
-            // 리다이렉트 값을 넘기고 반환
-            return { ...rp, redirected: true }
-          }
-          
-          // 그 외 오류는 스낵바만 출력
-          showSnackbar(rp.message || '오류가 발생했습니다.')
+        // 리다이렉트 값을 넘기고 반환
+        return { ...rp, redirected: true }
       }
+
+      // 권한이 부족한 경우
+      if (rp.status === 'ACCESS_DENIED') {
+
+        // 스낵바 출력
+        showSnackbar(rp.message || '잘못된 요청입니다.')
+
+        // 딜레이 후 리다이렉트
+        setTimeout(() => {
+          navigate('/', { replace: true })
+        }, 300);
+
+        // 리다이렉트 값을 넘기고 반환
+        return { ...rp, redirected: true }
+      }
+
+      // 유효성 검사 이외 오류는 메세지 출력 (유효성 검사 오류는 미출력)
+      if (rp.status !== 'VALIDATION_INVALID_PARAMETER') 
+        showSnackbar(rp.message || '오류가 발생했습니다.')
 
       // 에러 콜백 함수 존재 시 처리
       if (options.onError) options.onError(rp)

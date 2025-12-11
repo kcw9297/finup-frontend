@@ -31,14 +31,14 @@ const MODAL_FIELDS = [
 export function useEditModal({ admin = false }) {
 
   // [1] 모달 상태
-  const [open, setOpen] = useState(false);
-  const [initData, setInitData] = useState(null);
+  const [open, setOpen] = useState(false)
+  const [initialValues, setInitialValues] = useState(null)
   
   // [2] 모달 열기/닫기 함수
   const openEditModal = (initialValues) => {
-    setInitData(initialValues);
+    setInitialValues(initialValues);
     setOpen(true);
-  };
+  }
 
   // [3] 모달 프롭스 설정
   const editProps = {
@@ -48,14 +48,14 @@ export function useEditModal({ admin = false }) {
     fields: MODAL_FIELDS,
     submitText: "수정",
     submit: {
-      endpoint: `/studies/${initData?.studyId}`,
+      endpoint: `/studies/${initialValues?.studyId}`,
       method: 'PUT',
       reload: true,
       admin,
     },
-    initialValues: initData
-  };
+    initialValues
+  }
 
-  // [3] 반환
+  // [4] 반환
   return { openEditModal, editProps }
 }
