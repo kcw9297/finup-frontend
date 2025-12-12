@@ -1,4 +1,3 @@
-// src/features/member/components/MemberJoin.jsx
 import React from 'react';
 import {
   Box,
@@ -40,7 +39,7 @@ export default function MemberJoin() {
     handleClickSendVerification,
     handleClickCheckVerification,
     handleSubmit,
-  } = useMemberJoin();
+  } = useMemberJoin(); //완
 
   const primaryBlue = '#2563EB';
   const primaryBlueDark = '#1D4ED8';
@@ -64,8 +63,23 @@ export default function MemberJoin() {
   const isVerifying = verifyStatus === 'verifying';
   const isVerified = verifyStatus === 'verified';
 
+  // 인증 완료면 "인증" 버튼도 잠금
+  const isEmailLocked = emailVerified;
+
   const emailButtonDisabled =
-    globalDisabled || isEmailSending || cooldown > 0;
+    globalDisabled || isEmailSending || cooldown > 0 || isEmailLocked;
+
+  const emailButtonText = isEmailLocked
+    ? '완료'
+    : isEmailSending
+      ? '전송 중…'
+      : cooldown > 0
+        ? `재전송(${cooldown}s)`
+        : isEmailSent
+          ? '전송완료'
+          : '인증';
+
+  const verifyButtonText = isVerified ? '완료' : isVerifying ? '확인 중…' : '확인';
 
   return (
     <Box
@@ -110,6 +124,7 @@ export default function MemberJoin() {
               >
                 이메일
               </Typography>
+
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <TextField
                   name="email"
@@ -118,7 +133,8 @@ export default function MemberJoin() {
                   onChange={handleChange}
                   fullWidth
                   placeholder="email@example.com"
-                  disabled={globalDisabled || isEmailSent}
+                  disabled={globalDisabled} //  도커 다운일 때만 disabled
+                  inputProps={{ readOnly: emailVerified }} //  인증 완료 후 수정만 막기
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -127,21 +143,19 @@ export default function MemberJoin() {
                     ),
                     sx: {
                       borderRadius: radiusInput,
-                      backgroundColor: isEmailSent
+                      backgroundColor: globalDisabled
                         ? inputDisabledBg
                         : isEmailSending
                           ? inputSoftBg
                           : inputBg,
+
                       '& input::placeholder': {
                         color: '#94A3B8',
                         fontSize: 14,
                       },
+
                       '& fieldset': {
-                        borderColor: isEmailError
-                          ? errorRed
-                          : isEmailSent
-                            ? primaryBlue
-                            : borderColor,
+                        borderColor: isEmailError ? errorRed : borderColor,
                         borderWidth: '0.8px',
                       },
                       '&:hover fieldset': {
@@ -151,12 +165,22 @@ export default function MemberJoin() {
                         borderColor: primaryBlue,
                         borderWidth: '1px',
                       },
-                      '&.Mui-disabled fieldset': {
-                        backgroundColor: inputDisabledBg,
-                      },
+
+                      //  disabled인데 텍스트가 "가려져 보이는" 느낌 방지
+                      '&.Mui-disabled': { opacity: 1 },
+
+                      //  인증 완료면 회색 글씨/아이콘
+                      ...(emailVerified && {
+                        '& input': {
+                          color: '#94A3B8',
+                          WebkitTextFillColor: '#94A3B8',
+                        },
+                        '& svg': { color: '#94A3B8' },
+                      }),
                     },
                   }}
                 />
+
                 <Button
                   variant="contained"
                   onClick={handleClickSendVerification}
@@ -168,27 +192,23 @@ export default function MemberJoin() {
                     fontSize: 14,
                     minWidth: 90,
                     bgcolor:
-                      isEmailSending || cooldown > 0
+                      isEmailSending || cooldown > 0 || isEmailSent || isEmailLocked
                         ? '#E5E7EB'
                         : primaryBlue,
                     color:
-                      isEmailSending || cooldown > 0
+                      isEmailSending || cooldown > 0 || isEmailSent || isEmailLocked
                         ? '#6B7280'
                         : '#FFFFFF',
                     whiteSpace: 'nowrap',
                     '&:hover': {
                       bgcolor:
-                        isEmailSending || cooldown > 0
+                        isEmailSending || cooldown > 0 || isEmailSent || isEmailLocked
                           ? '#E5E7EB'
                           : primaryBlueDark,
                     },
                   }}
                 >
-                  {isEmailSending
-                    ? '전송 중…'
-                    : cooldown > 0
-                      ? `재전송(${cooldown}s)`
-                      : '인증'}
+                  {emailButtonText}
                 </Button>
               </Box>
 
@@ -198,7 +218,7 @@ export default function MemberJoin() {
                   인증번호를 전송 중입니다…
                 </Typography>
               )}
-              {isEmailSent && (
+              {isEmailSent && !emailVerified && (
                 <Typography sx={{ mt: 0.6, fontSize: 12, color: successGreen }}>
                   인증번호를 발송했습니다. 메일함을 확인해 주세요.
                 </Typography>
@@ -227,6 +247,7 @@ export default function MemberJoin() {
                 >
                   인증번호
                 </Typography>
+
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <TextField
                     name="verificationCode"
@@ -234,20 +255,20 @@ export default function MemberJoin() {
                     onChange={handleChange}
                     fullWidth
                     placeholder="인증번호 6자리"
-                    disabled={globalDisabled || isVerified}
+                    disabled={globalDisabled} //  도커 다운일 때만 disabled
+                    inputProps={{ readOnly: isVerified }} //  인증 완료 후 수정만 막기
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleClickCheckVerification();
-                      }
+                      if (e.key === 'Enter') handleClickCheckVerification();
                     }}
                     InputProps={{
                       sx: {
                         borderRadius: radiusInput,
-                        backgroundColor: isVerified
+                        backgroundColor: globalDisabled
                           ? inputDisabledBg
                           : isVerifying
                             ? inputSoftBg
                             : inputBg,
+
                         '& input::placeholder': {
                           color: '#94A3B8',
                           fontSize: 14,
@@ -263,12 +284,19 @@ export default function MemberJoin() {
                           borderColor: primaryBlue,
                           borderWidth: '1px',
                         },
-                        '&.Mui-disabled fieldset': {
-                          backgroundColor: inputDisabledBg,
-                        },
+
+                        '&.Mui-disabled': { opacity: 1 },
+
+                        ...(isVerified && {
+                          '& input': {
+                            color: '#94A3B8',
+                            WebkitTextFillColor: '#94A3B8',
+                          },
+                        }),
                       },
                     }}
                   />
+
                   <Button
                     variant="outlined"
                     onClick={handleClickCheckVerification}
@@ -279,17 +307,17 @@ export default function MemberJoin() {
                       fontWeight: 600,
                       fontSize: 14,
                       minWidth: 90,
-                      color: isVerifying ? '#6B7280' : 'text.primary',
-                      borderColor: isVerifying ? '#E5E7EB' : borderColor,
-                      backgroundColor: isVerifying ? '#E5E7EB' : 'transparent',
+                      color: isVerifying || isVerified ? '#6B7280' : 'text.primary',
+                      borderColor: isVerifying || isVerified ? '#E5E7EB' : borderColor,
+                      backgroundColor: isVerifying || isVerified ? '#E5E7EB' : 'transparent',
                       whiteSpace: 'nowrap',
                       '&:hover': {
                         borderColor: primaryBlue,
-                        bgcolor: isVerifying ? '#E5E7EB' : '#EFF6FF',
+                        bgcolor: isVerifying || isVerified ? '#E5E7EB' : '#EFF6FF',
                       },
                     }}
                   >
-                    {isVerifying ? '확인 중…' : '확인'}
+                    {verifyButtonText}
                   </Button>
                 </Box>
 
@@ -328,69 +356,78 @@ export default function MemberJoin() {
               >
                 비밀번호
               </Typography>
-              <TextField
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                value={form.password}
-                onChange={handleChange}
-                fullWidth
-                placeholder="비밀번호를 입력해 주세요."
-                disabled={globalDisabled}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon fontSize="small" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                      >
-                        {showPassword ? (
-                          <VisibilityOff fontSize="small" />
-                        ) : (
-                          <Visibility fontSize="small" />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  sx: {
-                    borderRadius: radiusInput,
-                    backgroundColor: globalDisabled ? inputDisabledBg : inputBg,
-                    '& input::placeholder': {
-                      color: '#94A3B8',
-                      fontSize: 14,
-                    },
-                    '& fieldset': {
-                      borderColor: borderColor,
-                      borderWidth: '0.8px',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: primaryBlue,
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: primaryBlue,
-                      borderWidth: '1px',
-                    },
-                    '&.Mui-disabled fieldset': {
-                      backgroundColor: inputDisabledBg,
-                    },
-                  },
-                }}
-              />
-              {/* 비밀번호 에러 */}
-              {fieldErrors.password && (
-                <Typography sx={{ mt: 0.6, fontSize: 12, color: errorRed }}>
-                  {fieldErrors.password}
-                </Typography>
-              )}
 
-              {/* 비밀번호 힌트 텍스트 */}
-              <Typography sx={{ mt: 0.4, fontSize: 12, color: neutralGray }}>
-                공백 제외 영문/숫자/특수문자를 8~20자 사이로 입력해야 합니다.
-              </Typography>
+              {(() => {
+                const isPasswordError = form.password.length > 0 && Boolean(fieldErrors.password);
+
+                return (
+                  <>
+                    <TextField
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={form.password}
+                      onChange={handleChange}
+                      fullWidth
+                      placeholder="비밀번호를 입력해 주세요."
+                      disabled={globalDisabled}
+                      error={isPasswordError} // (선택) 테두리도 에러일 때 빨강 처리
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockIcon fontSize="small" />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              edge="end"
+                              onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                              {showPassword ? (
+                                <VisibilityOff fontSize="small" />
+                              ) : (
+                                <Visibility fontSize="small" />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                        sx: {
+                          borderRadius: radiusInput,
+                          backgroundColor: globalDisabled ? inputDisabledBg : inputBg,
+                          '& input::placeholder': {
+                            color: '#94A3B8',
+                            fontSize: 14,
+                          },
+                          '& fieldset': {
+                            borderColor: borderColor,
+                            borderWidth: '0.8px',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: primaryBlue,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: primaryBlue,
+                            borderWidth: '1px',
+                          },
+                          '&.Mui-disabled': { opacity: 1 },
+                        },
+                      }}
+                    />
+
+                    {/*  항상 1줄: 기본은 회색, 에러면 빨강 */}
+                    <Typography
+                      sx={{
+                        mt: 0.4,
+                        fontSize: 12,
+                        color: isPasswordError ? errorRed : neutralGray,
+                        fontWeight: isPasswordError ? 600 : 400,
+                      }}
+                    >
+                      공백 제외 영문/숫자/특수문자를 8~20자 사이로 입력해야 합니다.
+                    </Typography>
+                  </>
+                );
+              })()}
             </Box>
 
             {/* 비밀번호 확인 */}
@@ -402,6 +439,7 @@ export default function MemberJoin() {
               >
                 비밀번호 확인
               </Typography>
+
               <TextField
                 name="passwordConfirm"
                 type={showPasswordConfirm ? 'text' : 'password'}
@@ -411,9 +449,7 @@ export default function MemberJoin() {
                 placeholder="비밀번호를 다시 입력해 주세요."
                 disabled={globalDisabled}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSubmit(e);
-                  }
+                  if (e.key === 'Enter') handleSubmit(e);
                 }}
                 InputProps={{
                   startAdornment: (
@@ -425,9 +461,7 @@ export default function MemberJoin() {
                     <InputAdornment position="end">
                       <IconButton
                         edge="end"
-                        onClick={() =>
-                          setShowPasswordConfirm((prev) => !prev)
-                        }
+                        onClick={() => setShowPasswordConfirm((prev) => !prev)}
                       >
                         {showPasswordConfirm ? (
                           <VisibilityOff fontSize="small" />
@@ -455,14 +489,11 @@ export default function MemberJoin() {
                       borderColor: primaryBlue,
                       borderWidth: '1px',
                     },
-                    '&.Mui-disabled fieldset': {
-                      backgroundColor: inputDisabledBg,
-                    },
+                    '&.Mui-disabled': { opacity: 1 },
                   },
                 }}
               />
 
-              {/* 비밀번호 확인 에러 */}
               {fieldErrors.passwordConfirm && (
                 <Typography sx={{ mt: 0.6, fontSize: 12, color: errorRed }}>
                   {fieldErrors.passwordConfirm}
@@ -497,11 +528,7 @@ export default function MemberJoin() {
 
             {/* 로그인 링크 */}
             <Box sx={{ mt: 1 }}>
-              <Typography
-                variant="body2"
-                align="center"
-                color="text.secondary"
-              >
+              <Typography variant="body2" align="center" color="text.secondary">
                 이미 계정이 있으신가요?{' '}
                 <MuiLink
                   component={RouterLink}
