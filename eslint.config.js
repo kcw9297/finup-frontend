@@ -26,6 +26,7 @@ export default defineConfig([
       'no-unused-vars': 'off',
       'react-hooks/exhaustive-deps': 'off',
       'react-refresh/only-export-components': 'off',
+      'react-hooks/set-state-in-effect': "off",
     },
   },
 ])

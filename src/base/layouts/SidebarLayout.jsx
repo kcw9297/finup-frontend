@@ -22,18 +22,19 @@ export default function SidebarLayout({ sidebar, children }) {
         component="main"
         sx={{
           flex: 1,
-          maxWidth: 1200,
+          maxWidth: 1530,
           width: "100%",
           mx: "auto",
+          px: { xs: 2, sm: 3, md: 4 },
           display: "flex",
           alignItems: "flex-start",
-          gap: 4,
+          gap: 10,
           pt: 4,
           pb: 4,
         }}
       >
         {/* 왼쪽 사이드바 */}
-        <Box sx={{ width: 220, flexShrink: 0 }}>
+        <Box sx={{ width: 100, flexShrink: 0 }}>
           {sidebar}
         </Box>
 

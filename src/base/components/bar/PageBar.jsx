@@ -8,13 +8,13 @@ import { Box, Pagination } from '@mui/material';
 
 export default function PageBar({ pagination, onChange }) {
 
-  if (!pagination) return null;  // 초기 렌더링 보호막(로딩 스피너)
+  if (!pagination) return null;  // 초기 렌더링 보호막
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
       <Pagination
         count={pagination.totalPage || 1}
-        page={pagination.pageNum}
+        page={pagination.pageNum || 1}
         onChange={(event, value) => onChange(value)}
         shape="rounded"
         showFirstButton
@@ -23,7 +23,7 @@ export default function PageBar({ pagination, onChange }) {
         boundaryCount={1} // 처음/끝에 보이는 페이지 수
         sx={(theme) => ({
           '& .MuiPaginationItem-root.Mui-selected': {
-            color: theme.palette.base.contrastText, // base 테마의 대비 색상
+            color: theme.palette.text.contrastText, // base 테마의 대비 색상
             backgroundColor: theme.palette.base.main, // base 테마 메인 색상
             '&:hover': {
               backgroundColor: theme.palette.base.main, // palette 색상 유지

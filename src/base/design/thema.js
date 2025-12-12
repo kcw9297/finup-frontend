@@ -33,7 +33,7 @@ const theme = createTheme({
     line: {
       main: '#E5E8EB',
       light: '#F2F4F6',
-      dark: '#717783ff',
+      dark: '#CED4DA',
     },
 
     // 사이트 에러 색상
@@ -57,7 +57,7 @@ const theme = createTheme({
       hover: '#e1eafcff', // 대부분 호버 이벤트에 적용
       selected: '#003fbf', // 현재 페이지 버튼 등에 적용
       disabled: '#bdbdbd',
-      disabledBackground: '#e0e0e0',
+      disabledBackground: '#002f8f',
       active: '#003fbf',
     },
 
@@ -202,19 +202,25 @@ const theme = createTheme({
     },
 
     // Button
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
-
-        root : {
-          textTransform: 'none',  // 버튼 단어가 강제로 대문자로 변환되는걸 방지
-          borderRadius: 8,        // 버튼 모서리
-        }
+        root: ({ theme }) => ({
+          textTransform: 'none',
+          boxShadow: 'none',
+          '&:hover': { boxShadow: 'none' },
+          '&:active': { boxShadow: 'none' },
+          '&.Mui-focusVisible': { boxShadow: 'none' },
+        }),
       },
-
-      defaultProps: {
-        color: 'base',  // 버튼 색상
-      }
+      
     },
+
 
     // TextField
     MuiTextField: {
@@ -229,37 +235,47 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.base,
-          borderRadius: 8, // 모서리
+          borderRadius: 10,
 
           // 기본 테두리 색상 및 두께
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.main,  // 파란색 테두리
-            borderWidth: '3px',
+            borderColor: theme.palette.line.dark,
+            borderWidth: 1,
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.dark,  // 호버
+            borderColor: theme.palette.base.main,  // 호버
+            borderWidth: 1,
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.base.dark,  // 포커스 시 색상
+            borderColor: theme.palette.base.main,  // 포커스 시 색상
+            borderWidth: 1,
           },
         }),
       }
     },
 
+    // TextField - Label
+    MuiInputLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.text.light, // 기본 색
+
+          '&.Mui-focused': {
+            color: theme.palette.base.main, // 클릭 시 위로 올라가는 라벨의 색
+          },
+        }),
+      },
+    },
+
 
     // IconButton
     MuiIconButton: {
-      defaultProps: {
-        color: 'inherit',
-      },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          "&:hover": {
-            backgroundColor: `${theme.palette.background.light} !important`,
-          }
-        })
-      }
+    defaultProps: {
+      color: "inherit",
+      disableRipple: true,
+      disableFocusRipple: true,
     },
+  },
 
 
     // Snackbar

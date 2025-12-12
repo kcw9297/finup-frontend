@@ -19,16 +19,20 @@ import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
-import WordHomePage from './pages/word/WordHomePage'
-import WordSearchPage from './pages/word/WordSearchPage'
-import WordDetailPage from './pages/word/WordDetailPage'
+import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
+import AdminStudyListPage from './pages/study/AdminStudyListPage'
+import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
+import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
+import MemberJoinPage from './pages/member/MemberJoinPage';
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
-  { path: '/concept/list', element: <ConceptListPage /> }, //개념학습 페이지
-  
+  { path: '/join', element: <GuestRoute><MemberJoinPage /></GuestRoute> }, // 회원가입 페이지
+  { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
+
+
 ]
 
 // 자식이 있는 라우팅 리스트
@@ -51,21 +55,37 @@ const nastedRoutes = [
   },
 
   {
-    path: '/admin/notices/*', // url : 관리자 공지사항
+    path: '/admin/*', // url : 관리자 공지사항
     children: [
-      { path: '', element: <ProtectedRoute><NoticeListPage /></ProtectedRoute> },
-      { path: ':noticeId', element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute> },
-      { path: ':noticeId/edit', element: <ProtectedRoute><NoticeEditPage /></ProtectedRoute> },
-      { path: 'write', element: <ProtectedRoute><NoticeWritePage /></ProtectedRoute> },
+      // url : 관리자 공지사항
+      { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeListPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeDetailPage /></ProtectedRoute> },
+      { path: 'notices/:noticeId/edit', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeEditPage /></ProtectedRoute> },
+      { path: 'notices/write', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeWritePage /></ProtectedRoute> },
+
+      // url : 회원 목록
+      { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
+
+      // url : 개념 학습 관리
+      { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
+      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
+
+      // url : 개념 단어 관리
+      { path: "study-words", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyWordListPage /></ProtectedRoute> },
+
+      // url : 유튜브 영상
+      { path: "video-links", element: <ProtectedRoute allowedRoles="ADMIN"><AdminVideoLinkListPage /></ProtectedRoute> },
+
     ]
   },
 
   {
-    path: '/admin/members/*',
+    path: '/admin/*',
     children: [
-      { path: '', element: <ProtectedRoute><MemberListPage /></ProtectedRoute> },
+
     ]
   },
+
 
   {
     path: '/stocks/*', //url : 종목 +
@@ -85,15 +105,6 @@ const nastedRoutes = [
       }
     ]
   },
-
-  {
-    path: '/words/*',
-    children: [
-      { path: '', element: <WordHomePage /> },         // 모두공개
-      { path: 'search', element: <WordSearchPage /> }, // 무두공개
-      { path: ':wordId', element: <WordDetailPage /> } // 모두공개
-    ]
-  },
 ];
 
 
@@ -102,7 +113,7 @@ export default function App() {
 
   // 페이지 마운트 시, 최초 1회 로그인 검증
   const { authenticate } = useAuth()
-  const { isAuthenticated, loginMember } = useAuthStore()
+  const { isAuthenticated, loginMember, logout } = useAuthStore()
 
   // 페이지 마운트 시, 전역적으로 사용할 함수 로드
   const navigate = useNavigate()          // redirect 수행할 네비게이션
@@ -111,8 +122,8 @@ export default function App() {
   useEffect(() => {
     authenticate()
     console.log("현재 로그인 상태 : ", isAuthenticated);
-    initGlobalHook(navigate, showSnackbar)
-  }, [])
+    initGlobalHook(navigate, showSnackbar, logout)
+  }, [location.pathname])
 
   return (
     <>
@@ -135,7 +146,7 @@ export default function App() {
         }
 
 
-      </Routes >
+      </Routes>
     </>
   )
 }

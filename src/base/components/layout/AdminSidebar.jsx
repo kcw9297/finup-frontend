@@ -6,17 +6,18 @@ export default function AdminSidebar() {
   const location = useLocation()
   const navigate = useNavigate()
 
-
-  // [*] 메뉴 정의
+  // 메뉴 정의
   const menus = [
     { label: "회원 목록 조회", path: "/admin/members" },
     { label: "공지사항 관리", path: "/admin/notices" },
-    { label: "유튜브 영상 관리", path: "/admin/youtube" },
-    { label: "개념 학습 관리", path: "/admin/words" },
+    { label: "개념 학습 관리", path: "/admin/studies" },
+    { label: "단어 관리", path: "/admin/study-words" },
+    { label: "영상 관리", path: "/admin/video-links" },
   ];
 
 
   return (
+
     <Box
       sx={{
         textAlign: "left",
@@ -29,11 +30,11 @@ export default function AdminSidebar() {
       {/* 제목 */}
       <Typography
         sx={{
-          fontSize: "14px",
-          fontWeight: 600,
+          fontSize: "22px",
+          fontWeight: 800,
           color: "#555",
           paddingLeft: "8px",
-          marginBottom: "12px",
+          marginBottom: "30px",
         }}
       >
         관리자 페이지
@@ -51,7 +52,7 @@ export default function AdminSidebar() {
               onClick={() => navigate(menu.path)}
               sx={{
                 justifyContent: "flex-start",
-                fontSize: "14px",
+                fontSize: "15px",
                 padding: "6px 12px",
                 borderRadius: "4px",
                 fontWeight: isActive ? 600 : 400,

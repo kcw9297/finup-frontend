@@ -6,18 +6,34 @@ import Stack from "@mui/material/Stack";
 import { useNewsList } from "../hooks/useNewsList"
 import { useNewsModal } from "../hooks/useNewsModal";
 import NewsScrollToTop from "./NewsScrollToTop";
-
+import useGenericNews from "../hooks/useGenericNews";
+import { useState } from "react";
 /**
  * 뉴스 페이지 컴포넌트
  */
 export default function NewsList(){
-  //(1)커스텀 훅
+  const CATEGORY_LIST = [
+    { label: "최신뉴스", value: "date" },
+    { label: "주요뉴스", value: "sim" }
+  ];
+
+  const [category, setCategory] = useState("date");
+
   const { open, openModal, closeModal, article, loading: aiLoading } = useNewsModal();
-  const { category, setCategory : changeCategory,
+  const isModalOpen = open;
+
+  const { 
     news,
+    loading,
     visibleCount,
-    CATEGORY_LIST,
-    refreshNews, showTop } = useNewsList(open);
+    refreshNews,
+    showTop,
+    scrollToTop,
+  } = useGenericNews(
+    "/news/list",
+    { category },
+    isModalOpen
+  );
   
 
   //(2)반환활 컴포넌트
@@ -31,7 +47,7 @@ export default function NewsList(){
             key={item.value}
             label={item.label}
             clickable
-            onClick={() => changeCategory(item.value)}
+            onClick={() => setCategory(item.value)}
             sx={{
               borderRadius: "16px",
               px: 1.5,
@@ -50,7 +66,7 @@ export default function NewsList(){
           <NewsCard key={idx} {...item} onClick={() => openModal(item)}/>
         ))}
 
-        <NewsScrollToTop show={showTop}/>
+        <NewsScrollToTop show={showTop} onClick={scrollToTop}/>
       </Box>
       {/* 뉴스 상세 모달 */}
       <NewsModal 
@@ -59,6 +75,7 @@ export default function NewsList(){
         article={article}
         loading={aiLoading}
       />
+      <div id="bottom-observer" />
     </Box>
     
   )
