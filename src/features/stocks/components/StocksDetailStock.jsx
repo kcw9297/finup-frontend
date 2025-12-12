@@ -124,7 +124,7 @@ export default function StocksDetailStock(){
           {/* 제목 */}
           <Box sx={{display: "flex"}}>
             <Typography variant="h5" fontWeight={600}>
-              AI 정리
+              AI 분석
             </Typography>
           </Box>
           
@@ -168,13 +168,13 @@ export default function StocksDetailStock(){
           {/* 제목 */}
           <Box sx={{display: "flex"}}>
             <Typography variant="h5" fontWeight={600}>
-              추천 영상 {detailStockAi.youtubeKeywords}
+              추천 영상 
             </Typography>
           </Box>
 
-          <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-line" }}>              
+          {/* <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-line" }}>              
                 {detailStockAi.description}                
-              </Typography>
+              </Typography> */}
           
           {/* 내용 카드 */}
           <Box sx={{display: 'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'20px'}}>
