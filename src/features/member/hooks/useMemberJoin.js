@@ -116,7 +116,17 @@ export function useMemberJoin() {
     }
 
     setJoinStatus('requesting');
-    submitJoin({ email: form.email, password: form.password });
+
+    api.post(
+      '/members/join',
+      {
+        public: true,
+        onSuccess: onSignupSuccess,
+        onError: onSignupError,
+        onFinally: onSignupFinally,
+      },
+      { email, password }
+    );
   };
 
   const signupLoading = isRequesting || isNetworkError; // 회원가입 버튼 스피너용
