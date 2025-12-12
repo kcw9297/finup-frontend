@@ -18,7 +18,7 @@ export default function StocksDetailStock(){
   // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
   //const { nameCard, detailStock, loading, error } = useStockDetail(code);
   const { detailStock, loading } = useContext(StockDetailContext);
-  const { detailStockAi, loadingAi } = useStockDetailStockAi(code);
+  const { detailStockAi, detailStockYoutube, loadingAi } = useStockDetailStockAi(code);
   const { videoList } = useRecommendedVideo();
   const sparkle = keyframes`
     0% { opacity: 0.4; transform: scale(1); }
@@ -171,10 +171,14 @@ export default function StocksDetailStock(){
               추천 영상 {detailStockAi.youtubeKeywords}
             </Typography>
           </Box>
+
+          <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-line" }}>              
+                {detailStockAi.description}                
+              </Typography>
           
           {/* 내용 카드 */}
           <Box sx={{display: 'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'20px'}}>
-            {videoList.map((video) => (
+            {detailStockYoutube.map((video) => (
               <Card
                 key={video.id}
                 sx={{ cursor: "pointer", border:1, borderColor:'line.main' }}
