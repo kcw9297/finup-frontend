@@ -19,10 +19,6 @@ import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
-import WordHomePage from './pages/word/WordHomePage'
-import WordSearchPage from './pages/word/WordSearchPage'
-import WordDetailPage from './pages/word/WordDetailPage'
-import AuthSignupPage from './pages/auth/AuthSignupPage'
 import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
 import AdminStudyListPage from './pages/study/AdminStudyListPage'
 import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
@@ -107,15 +103,6 @@ const nastedRoutes = [
         path: 'member',
         element: <MypageMemberPage />
       }
-    ]
-  },
-
-  {
-    path: '/words/*',
-    children: [
-      { path: '', element: <WordHomePage /> },         // 모두공개
-      { path: 'search', element: <WordSearchPage /> }, // 무두공개
-      { path: ':wordId', element: <WordDetailPage /> } // 모두공개
     ]
   },
 ];
