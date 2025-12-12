@@ -1,3 +1,7 @@
+/** 
+* 이메일 인증코드 검증 요청과
+* 인증 완료 여부를 관리하는 훅
+ */
 import { useState } from 'react';
 import { api } from '../../../base/utils/fetchUtils';
 import { useSnackbar } from '../../../base/provider/SnackbarProvider';

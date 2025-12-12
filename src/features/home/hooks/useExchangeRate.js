@@ -11,15 +11,69 @@ export function makeData(title, today, yesterday) {
   };
 }
 
-// 환율 + 지수 데이터 훅
+const res = await api.get(
+  "/home/exchange-rates/latest",
+  { public: true }
+);
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import { api } from "../../../base/utils/fetchUtils";
+
 export function useExchangeRate() {
+  const [quotation, setQuotation] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const usd = makeData("USD/KRW", 1344.50, 1338.10);
-  const jpy = makeData("JPY/KRW", 884.20, 879.50);
-  const kospi = makeData("KOSPI", 2430.35, 2410.10);
-  const kosdaq = makeData("KOSDAQ", 825.13, 818.40);
+  const lastRequestRef = useRef(0);
 
-  const quotation = [usd, jpy, kospi, kosdaq];
+  const fetchExchangeRates = useCallback(async () => {
+    const requestId = Date.now();
+    lastRequestRef.current = requestId;
 
-  return { quotation };
+    setLoading(true);
+    try {
+      const res = await api.get(
+        "/home/exchange-rates/latest",
+        { public: true }
+      );
+
+
+      if (lastRequestRef.current !== requestId) return;
+
+      const payload = res.data ?? [];
+
+      console.log("환율 item 샘플:", payload[0]);
+
+
+      // API → 화면용 데이터 가공
+      const mapped = payload.map((item) => {
+      const today = Number(item.dealBasR);
+
+      return makeData(
+        `${item.curUnit}/KRW`,
+        today,
+        today
+      );
+    });
+
+
+      setQuotation(mapped);
+    } catch (err) {
+      console.error("환율 불러오기 오류:", err);
+    } finally {
+      if (lastRequestRef.current === requestId) {
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  // 최초 1회 호출
+  useEffect(() => {
+    fetchExchangeRates();
+  }, [fetchExchangeRates]);
+
+  return {
+    quotation,
+    loading,
+    refreshExchangeRates: fetchExchangeRates,
+  };
 }

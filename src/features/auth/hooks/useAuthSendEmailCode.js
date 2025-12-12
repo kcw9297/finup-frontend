@@ -1,4 +1,7 @@
-// src/features/auth/hooks/useAuthSendEmailCode.js
+/**
+ *  이메일 인증코드 발송 요청과
+ *  전송 상태 및 재전송 쿨다운을 관리하는 훅
+ */
 import { useEffect, useState } from 'react';
 import { api } from '../../../base/utils/fetchUtils';
 import { useSnackbar } from '../../../base/provider/SnackbarProvider';
