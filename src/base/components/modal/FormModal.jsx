@@ -34,7 +34,7 @@ export default function FormModal({ modalProps }) {
     endpoint: '', // REST API URL
     admin: false, // 관리자 API
     public: false, // 공용 API
-    handleSubmit: null, // 응답 성공 시, 처리할 기능 (상태 갱신 등) 
+    handleSubmit: null, // 제출 함수 (REST API 호출)
     ...submit
   }
 

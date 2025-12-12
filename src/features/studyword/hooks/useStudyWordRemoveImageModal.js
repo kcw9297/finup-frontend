@@ -45,7 +45,6 @@ export function useStudyWordRemoveImageModal({ handleAfterRemoveImageFile, admin
       content: "현재 단어 이미지를 삭제하시겠습니까?",
       submit: {
         endpoint: `/study-words/${studyWordId}`,
-        reload: false, // 리로드 비활성화
         admin,
         handleSubmit: handleRemove // 확인 클릭 시 처리 함수
       },
