@@ -264,8 +264,9 @@ export function useMemberJoin() {
     setJoinStatus('requesting');
 
     api.post(
-      '/members',
+      '/members/join',
       {
+        public: true,
         onSuccess: onSignupSuccess,
         onError: onSignupError,
         onFinally: onSignupFinally,
