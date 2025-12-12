@@ -54,7 +54,7 @@ export default function StocksListMarketCap() {
             </TableRow> 
           </TableHead> 
           <TableBody>
-            {data.map((row) => {                    
+            {stockList.map((row) => {                    
               return(
                 <TableRow
                   key={row.dataRank} 
