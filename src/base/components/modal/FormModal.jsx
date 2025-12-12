@@ -6,9 +6,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useRef, useState } from 'react';
-import { useSnackbar } from '../../provider/SnackbarProvider';
-import { api } from '../../utils/fetchUtils';
-import { useReloadStore } from '../../stores/useReloadStore';
 
 /**
  * 공용 폼 모달 컴포넌트

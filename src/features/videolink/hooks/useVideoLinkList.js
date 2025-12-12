@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useReloadStore } from "../../../base/stores/useReloadStore";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../../base/utils/fetchUtils";
-import { DEFAULT_SEARCH_RQ, FILTER_OPTIONS } from "../constants/studyWordConstant";
+import { DEFAULT_SEARCH_RQ, FILTER_OPTIONS } from "../constants/viedoLinkConstant";
 
 /**
- * 개념 학습 단어 목록 custom hook
- * @since 2025-12-08
+ * 학습 영상 목록 custom hook
+ * @since 2025-12-11
  * @author kcw
  */
 
-export function useStudyWordList({ admin = false }) {
+export function useVideoLinkList({ admin = false }) {
 
   // [1] 필요 데이터 선언
   const [ searchRp, setSearchRp ] = useState(null) // 검색 결과
@@ -37,12 +37,10 @@ export function useStudyWordList({ admin = false }) {
   // 파라미터 일치 여부 비교 함수
   const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(searchRq);
 
-
   // 키워드 변경 감지 함수
   const handleKeyword = keyword => {
     setCurKeyword(keyword)
   }
-
 
   // 검색 버튼 함수
   const handleSearch = e => {
@@ -108,14 +106,11 @@ export function useStudyWordList({ admin = false }) {
   }
 
   // 단어 업데이트 처리
-  const handleAfterEdit = (rq) => {
+  const handleAfterEdit = (newData) => {
+    // 서버에서 받아온 새로운 데이터로 대체
     setSearchRp(prev => ({
       ...prev, 
-      data: prev.data.map(word => 
-        word.studyWordId === rq.studyWordId 
-          ? { ...word, ...rq }
-          : word
-      )
+      data: prev.data.map(video => video.videoLinkId === newData.videoLinkId ? newData : video)
     }));
   };
 
@@ -133,37 +128,6 @@ const handleAfterRemove = () => {
   }
 };
 
-   // 단어 파일 업로드 처리
-  const handleAfterUploadImageFile = (studyWordId, imageUrl) => {
-
-    setSearchRp(prev => {
-      // 변경된 항목만 새 객체 생성
-      const editedData = prev.data.map(word => 
-        word.studyWordId === studyWordId 
-          ? { ...word, imageUrl }
-          : word // 변경 없는 항목은 동일 참조 유지
-      );
-      
-      return { ...prev, data: editedData };
-    });
-  };
-
-  // 단어 파일 삭제 처리
-  const handleAfterRemoveImageFile = (studyWordId) => {
-    
-    setSearchRp(prev => {
-      // 변경된 항목만 새 객체 생성
-      const editedData = prev.data.map(word => 
-        word.studyWordId === studyWordId 
-          ? { ...word, imageUrl: "" }
-          : word // 변경 없는 항목은 동일 참조 유지
-      );
-      
-      return { ...prev, data: editedData };
-    });
-  };
-
-
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
     setSearchRp(rp)
@@ -177,7 +141,6 @@ const handleAfterRemove = () => {
     setLoading(false) // 로딩 상태 해제
   }
 
-
   // [4] useEffect 및 REST API 요청 함수 선언
   // 리로드 발생 시, 기본 파라미터로 초기화
   useEffect(() => {
@@ -188,13 +151,13 @@ const handleAfterRemove = () => {
   // 파라미터 변동 시 검색
   useEffect(() => {
     setLoading(true)
-    api.get('/study-words/search', { params: searchRq, onSuccess, onError, onFinally, admin })
+    api.get('/video-links/search', { params: searchRq, onSuccess, onError, onFinally, admin })
   }, [searchParams, forceReload])
 
   // [5] 반환
   return {
     searchRq, searchRp, loading, searchProps, 
     handleKeyword, handleSearch, handleFilter, handlePage, handleOrder, 
-    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile, handleAfterRemoveImageFile
+    handleAfterEdit, handleAfterRemove
   }
 }

@@ -12,7 +12,7 @@ export default function AdminSidebar() {
     { label: "공지사항 관리", path: "/admin/notices" },
     { label: "개념 학습 관리", path: "/admin/studies" },
     { label: "단어 관리", path: "/admin/study-words" },
-    { label: "영상 관리", path: "/admin/youtube" },
+    { label: "영상 관리", path: "/admin/video-links" },
   ];
 
 

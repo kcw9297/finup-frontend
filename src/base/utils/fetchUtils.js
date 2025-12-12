@@ -120,7 +120,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     }
 
     // 스낵바 출력
-    if (options.handleError) showSnackbar(errorResponse.message)
+    showSnackbar(errorResponse.message)
 
     // 실패 콜백함수가 있다면 실행 후 오류 응답 반환
     if (options.onError) options.onError(errorResponse)
@@ -248,7 +248,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
     }
 
     // 스낵바 출력
-    if (options.handleError) showSnackbar(errorResponse.message)
+    showSnackbar(errorResponse.message)
 
     // 실패 콜백함수가 있다면 실행 후 오류 응답 반환
     if (options.onError) options.onError(errorResponse)
