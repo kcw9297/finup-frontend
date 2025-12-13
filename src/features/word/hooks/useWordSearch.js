@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { showSnackbar } from "../../../base/config/globalHookConfig"
 import { api } from "../../../base/utils/fetchUtils";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../base/stores/useAuthStore";
 
 /**
  * 단어장 검색 훅
@@ -24,6 +25,10 @@ export function useWordSearch() {
   const [wordList, setWordList] = useState([])
   const [pagination, setPagination] = useState(null)
   const [loading, setLoading] = useState(false)
+
+
+  const { isLogin } = useAuthStore()
+  const [recent, setRecent] = useState([])
 
   // [2] 필요 함수 선언
   // URL → 검색 조건 파싱
@@ -78,6 +83,15 @@ export function useWordSearch() {
     })
   }
 
+  // 최근 검색어(로그인 시)
+  const fetchRecent = () => {
+    if (!isLogin) return
+
+    api.get('/words/recent-searches', {
+      onSuccess: rp => setRecent(rp.data)
+    })
+  }
+
 
   // [6] 성공/실패/마지막 콜백 함수
   const onSuccess = rp => {
@@ -113,10 +127,14 @@ export function useWordSearch() {
     wordList,
     pagination,
     loading,
+
     handleChangeRq,
     handleSearch,
     handlePage,
     handleSearchEnter,
     handleOrderChange,
+
+    recent,
+    fetchRecent,
   }
 }
