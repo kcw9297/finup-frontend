@@ -11,6 +11,7 @@ export default function WordBookContent() {
       </Typography>
 
       {/* 검색바 */}
+      {/*
       <Box
         sx={{
           display: "flex",
@@ -42,6 +43,7 @@ export default function WordBookContent() {
           <SearchIcon sx={{ color: "#fff" }} />
         </IconButton>
       </Box>
+      */}
 
       {/* 단어 리스트 */}
       <Stack spacing={2}>

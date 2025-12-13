@@ -21,8 +21,10 @@ export default function Header() {
     { label: "개념+", path: "/login" },
     { label: "뉴스+", path: "/news/list" },
     { label: "종목+", path: "/stocks" },
-    { label: "단어장+", action: "WORD_BOOK" }, // 팝업으로 띄우기로 했음. action으로 팝업 구분
+    { label: "단어장+", path: "/words" },
   ]
+
+  {/*action: "WORD_BOOK" */ }
   const { isAuthenticated, loading, loginMember } = useAuthStore()
   const navigate = useNavigate()
   const { handleLogout } = useLogout()
@@ -84,46 +86,46 @@ export default function Header() {
 
             {/* 메뉴 */}
             <Box sx={{ display: 'flex', gap: '30px' }}>
-              {manuItems.map((item) => {
+              {
+                manuItems.map((item) => {
 
-                if (item.action === "WORD_BOOK") {
+                  if (item.action === "WORD_BOOK") {
+                    return (
+                      <Typography
+                        key={item.label}
+                        sx={{
+                          cursor: "pointer",
+                          fontSize: 16,
+                          fontWeight: "bold",
+                          color: "text.light",
+                          "&:hover": { color: "text.main" },
+                        }}
+                        onClick={openWordbookPopup}
+                      >
+                        {item.label}
+                      </Typography>
+                    )
+                  }
+
+                  const isActive = pathname.startsWith(item.path)
                   return (
                     <Typography
                       key={item.label}
+                      component={Link}
+                      to={item.path}
                       sx={{
-                        cursor: "pointer",
+                        cursor: 'pointer',
                         fontSize: 16,
-                        fontWeight: "bold",
-                        color: "text.light",
-                        "&:hover": { color: "text.main" },
-                      }}
-                      onClick={openWordbookPopup}
-                    >
+                        fontWeight: 'bold',
+                        color: isActive ? 'text.main' : 'text.light',
+                        transition: '0.2s',
+                        "&:hover": { color: 'text.main' }
+                      }}>
                       {item.label}
                     </Typography>
                   )
-                }
-
-
-
-                const isActive = pathname.startsWith(item.path)
-                return (
-                  <Typography
-                    key={item.label}
-                    component={Link}
-                    to={item.path}
-                    sx={{
-                      cursor: 'pointer',
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: isActive ? 'text.main' : 'text.light',
-                      transition: '0.2s',
-                      "&:hover": { color: 'text.main' }
-                    }}>
-                    {item.label}
-                  </Typography>
-                )
-              })}
+                })
+              }
             </Box>
           </Box>
           <WordbookPopup
@@ -181,8 +183,8 @@ export default function Header() {
               </IconButton>
             )}
           </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </Box >
+      </Toolbar >
+    </AppBar >
   );
 }

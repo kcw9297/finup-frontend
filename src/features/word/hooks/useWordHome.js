@@ -18,6 +18,8 @@ export function useWordHome() {
 
   const { showSnackbar } = useSnackbar()
 
+  
+
   // [2] 필요 함수 선언
   const clearHomeData = () => setHomeData(null)
 
@@ -38,7 +40,7 @@ export function useWordHome() {
   // [4] REST API 요청
   const loadWordHome = () => {
     setLoading(true)
-    api.get("",
+    api.get("/words/search",
       { onSuccess, onError, onFinally }
     )
   }
