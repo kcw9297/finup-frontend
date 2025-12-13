@@ -13,102 +13,36 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import WordbookPopup from './WordbookPopup';
+import { useNavigate } from 'react-router-dom';
+import SearchBar from '../../../base/components/bar/SearchBar';
+import { useWordHome } from '../hooks/useWordHome';
 
 export default function WordHome() {
   const [openWordbook, setOpenWordbook] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
 
-  const todayWords = [
-    {
-      wordId: 1,
-      keyword: '재무제표',
-      description:
-        '기업의 경영활동을 일반적으로 인정된 회계원칙에 따라 간결하게 요약한 재무보고서로, 기업의 상품을 정확히 파악하기 어려운 사람들에게 기업과 관련된 재무 정보를 제공해 주는 데 목적이 있다.',
-    },
-    {
-      wordId: 2,
-      keyword: '자기자본',
-      description:
-        '기업의 총자산에서 타인자본을 제외한 부분으로 기업 소유주의 지분을 의미하며, 기업의 재무 건전성과 안정성을 판단하는 핵심 지표로 활용된다.',
-    },
-    {
-      wordId: 3,
-      keyword: '영업이익',
-      description:
-        '기업의 본업에서 벌어들인 이익을 나타내는 지표로 매출총이익에서 판매비와 관리비를 차감한 금액이며, 회사의 실제 영업 성과를 나타내는 대표적인 지표이다.',
-    },
-  ];
+  const { homeData, loading } = useWordHome();
 
-  const todayQuizzes = [
-    {
-      quizId: 1,
-      category: '금융',
-      question: '다음 설명으로 알맞은 단어는?',
-      description:
-        '장래 일정 시점에 미리 정한 가격으로 매매할 것을 현재 시점에서 약정하는 거래로, 미래의 가치를 사고 파는 것.',
-      options: ['선물거래', '합성선물'],
-    },
-    {
-      quizId: 2,
-      category: '금융',
-      question: '다음 설명으로 알맞은 단어는?',
-      description:
-        '위험회피를 목적으로 시작했으나, 고도의 레버리지를 활용해 투기적 거래에 사용되기도 하는 파생상품으로, 기초자산의 가격 변동에 연동해 가치가 변화한다.',
-      options: ['선물거래', '합성선물'],
-    },
-  ];
+  const todayWords = homeData ?? [];
 
-  const recentKeywords = ['적자', '흑자', '영업이익', '포괄손익계산서', '재무제표', '매출총이익'];
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
       {/* ================== SearchBar ================== */}
-      <Box
-        sx={{
-          maxWidth: 1120,
-          mx: 'auto',
-          mt: 1,
-          mb: 4,
+      <SearchBar
+        searchProps={{
+          keyword,
+          filter: "nameDescription",
+          onKeywordChange: setKeyword,
+          onFilterChange: null,
+          onSubmit: (e) => {
+            e.preventDefault()
+            if (!keyword.trim()) return;
+            navigate(`/words/search?keyword=${encodeURIComponent(keyword)}&pageNum=0`)
+          }
         }}
-      >
-        <Box
-          sx={{
-            maxWidth: 780,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <TextField
-            fullWidth
-            placeholder="검색어를 입력하세요."
-            size="small"
-            variant="outlined"
-            InputProps={{
-              sx: {
-                height: 44,
-                borderRadius: 2,
-              },
-            }}
-          />
-
-
-          <IconButton
-            sx={{
-              bgcolor: '#003FBF',
-              borderRadius: '8px',
-              width: '40px',
-              height: '40px',
-              ml: '20px',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            }}
-          >
-            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-          </IconButton>
-
-        </Box>
-      </Box>
-
+      />
       {/* ================== Main Grid ================== */}
       <Box
         sx={{
@@ -158,9 +92,9 @@ export default function WordHome() {
               spacing={3}
 
             >
-              {todayWords.map((word) => (
+              {todayWords.map((words) => (
                 <Paper
-                  key={word.wordId}
+                  key={words.termId}
                   variant="outlined"
                   sx={{
                     //flex: 1,
@@ -181,14 +115,21 @@ export default function WordHome() {
                     variant="subtitle1"
                     sx={{ fontWeight: 700 }}
                   >
-                    {word.keyword}
+                    {words.name}
                   </Typography>
 
                   <Typography
                     variant="body2"
-                    sx={{ lineHeight: 1.5 }}
+                    sx={{
+                      lineHeight: 1.5,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 4,        // ← 보여줄 줄 수
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
                   >
-                    {word.description}
+                    {words.description}
                   </Typography>
                 </Paper>
               ))}
@@ -365,3 +306,47 @@ export default function WordHome() {
     </Box>
   );
 }
+
+
+
+const todayWords_temp = [
+  {
+    wordId: 1,
+    keyword: '재무제표',
+    description:
+      '기업의 경영활동을 일반적으로 인정된 회계원칙에 따라 간결하게 요약한 재무보고서로, 기업의 상품을 정확히 파악하기 어려운 사람들에게 기업과 관련된 재무 정보를 제공해 주는 데 목적이 있다.',
+  },
+  {
+    wordId: 2,
+    keyword: '자기자본',
+    description:
+      '기업의 총자산에서 타인자본을 제외한 부분으로 기업 소유주의 지분을 의미하며, 기업의 재무 건전성과 안정성을 판단하는 핵심 지표로 활용된다.',
+  },
+  {
+    wordId: 3,
+    keyword: '영업이익',
+    description:
+      '기업의 본업에서 벌어들인 이익을 나타내는 지표로 매출총이익에서 판매비와 관리비를 차감한 금액이며, 회사의 실제 영업 성과를 나타내는 대표적인 지표이다.',
+  },
+];
+
+const todayQuizzes = [
+  {
+    quizId: 1,
+    category: '금융',
+    question: '다음 설명으로 알맞은 단어는?',
+    description:
+      '장래 일정 시점에 미리 정한 가격으로 매매할 것을 현재 시점에서 약정하는 거래로, 미래의 가치를 사고 파는 것.',
+    options: ['선물거래', '합성선물'],
+  },
+  {
+    quizId: 2,
+    category: '금융',
+    question: '다음 설명으로 알맞은 단어는?',
+    description:
+      '위험회피를 목적으로 시작했으나, 고도의 레버리지를 활용해 투기적 거래에 사용되기도 하는 파생상품으로, 기초자산의 가격 변동에 연동해 가치가 변화한다.',
+    options: ['선물거래', '합성선물'],
+  },
+];
+
+const recentKeywords = ['적자', '흑자', '영업이익', '포괄손익계산서', '재무제표', '매출총이익'];

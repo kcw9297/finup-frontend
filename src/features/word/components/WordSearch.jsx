@@ -7,6 +7,246 @@ import {
   Pagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useWordSearch } from '../hooks/useWordSearch';
+import theme from '../../../base/design/thema';
+import SearchBar from '../../../base/components/bar/SearchBar';
+import OrderBar from '../../../base/components/bar/OrderBar';
+import { useState } from 'react';
+import PageBar from '../../../base/components/bar/PageBar';
+
+
+const ORDER_OPTIONS = [
+  { value: 'name_asc', label: '가나다순' },
+  { value: 'name_desc', label: '가나다 역순' },
+];
+
+
+/**
+ * 단어장 검색 컴포넌트
+ * @author kcw
+ * @since 2025-12-11
+ */
+
+export default function WordSearch() {
+
+
+  const { searchRq,
+    wordList,
+    pagination,
+    loading,
+    handleChangeRq,
+    handleSearch,
+    handlePage,
+    handleSearchEnter,
+    handleOrderChange,
+  } = useWordSearch()
+
+
+  return (
+    <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
+      {/* ================== SearchBar ================== */}
+      <Box
+        sx={{
+          maxWidth: 1120,
+          mx: 'auto',
+          mt: 4,
+          mb: 4,
+        }}
+      >
+        <Box
+          sx={{
+            maxWidth: 780,
+            mx: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          onKeyUp={(e) => handleSearchEnter(e)}
+        >
+          <TextField
+            value={searchRq.keyword}
+            fullWidth
+            size="small"
+            onChange={e => handleChangeRq({ keyword: e.target.value })
+            }
+
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                height: 44,
+                borderRadius: '10px',
+                '& fieldset': {
+                  borderWidth: 2,
+                  borderColor: '#003FBF',
+                },
+              },
+            }}
+          />
+
+          <IconButton
+            onClick={handleSearch}
+            sx={{
+              ml: 4,
+              width: 40,
+              height: 40,
+              borderRadius: '10px',
+              bgcolor: '#003FBF',
+              '&:hover': {
+                bgcolor: '#0035A5',
+              },
+            }}
+          >
+            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
+          </IconButton>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          maxWidth: 1000,
+          mx: 'auto',
+          mb: 1.5,
+          display: 'flex',
+          justifyContent: 'flex-start',
+        }}
+      >
+        <OrderBar
+          options={ORDER_OPTIONS}
+          selected={searchRq.order}
+          onChange={handleOrderChange}
+        />
+      </Box>
+
+
+      {/* =================== 메인 테이블 =================== */}
+      <Paper
+        elevation={0}
+        sx={{
+          maxWidth: 1000,
+          mx: 'auto',
+          borderRadius: '10px',
+          overflow: 'hidden',
+          border: '1px solid #CED4E4', // 전체 윤곽선
+        }}
+      >
+        {/* 헤더 */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: '80px 300px 1fr',
+            alignItems: 'center',
+            px: 3,
+            py: 1.4,
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            align="center"
+            sx={{ fontWeight: 600, fontSize: 14 }}
+          >
+            No
+          </Typography>
+
+          <Typography
+            variant="subtitle2"
+            align="center"
+            sx={{ fontWeight: 600, fontSize: 14 }}
+          >
+            용어
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            align="center"
+            sx={{ fontWeight: 600, fontSize: 14 }}
+          >
+            설명
+          </Typography>
+
+        </Box>
+
+        {/* 행들 */}
+
+        {!loading && wordList.length === 0 && (
+          <Box sx={{ py: 8, textAlign: 'center', gridColumn: '1 / -1', }}>
+            <Typography variant="body2" color="text.secondary">
+              검색 결과가 없습니다.
+            </Typography>
+          </Box>
+        )}
+
+        {wordList.map((row, idx) => (
+          <Box
+            key={(pagination?.pageNum - 1) * pagination?.pageSize + idx + 1}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: '80px 300px 1fr',
+              alignItems: 'center',
+              px: 3,
+              py: 1.5,
+              minHeight: 72,
+              borderTop: idx === 0 ? '1px solid #CED4E4' : '1px solid #E3E7F2',
+              bgcolor: '#FFFFFF',
+            }}
+          >
+
+            {/* No */}
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{ fontSize: 13 }}
+            >
+              {(pagination?.pageNum ?? 0) * pagination?.pageSize + idx + 1}
+            </Typography>
+            {/* 
+              주제 
+              <Typography
+                variant="body2"
+                align="center"
+                sx={{ fontSize: 13 }}
+              >
+                {row.category}
+              </Typography>
+              */}
+            {/* 용어 */}
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{
+                fontSize: 13,
+                fontWeight: 500,
+                px: 1,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {row.name}
+            </Typography>
+
+            {/* 설명 */}
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: 13,
+                lineHeight: 1.6,
+                px: 1.5,
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {row.description}
+            </Typography>
+
+          </Box>
+        ))}
+      </Paper>
+
+      {/* =================== 페이지네이션 =================== */}
+      <PageBar pagination={pagination} onChange={handlePage} />
+    </Box>
+
+  );
+}
+
 
 // TODO: 훅 연결 전까지 임시 데이터
 const MOCK_ROWS = [
@@ -46,207 +286,3 @@ const MOCK_ROWS = [
       '선도환은 선물환이라고도 하며 미래의 일정기간 내에 일정금액, 일정종류의 외화를 일정 환율로 매매할 것을 약속한 외화환율 뜻한다. 이와 거래를 하는 이유는 기업이 장래의 환율 변동을 피하기 위해 환율을 고정하거나, 환율의 변동을 이용해 이익을 얻기 위함이다. 이렇게 선물환계약이 이루어지는 것을 선물환거래라고 한다.',
   },
 ];
-
-export default function WordSearch() {
-  return (
-    <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
-      {/* ================== SearchBar ================== */}
-      <Box
-        sx={{
-          maxWidth: 1120,
-          mx: 'auto',
-          mt: 4,
-          mb: 4,
-        }}
-      >
-        <Box
-          sx={{
-            maxWidth: 780,
-            mx: 'auto',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <TextField
-            value="선물"
-            fullWidth
-            size="small"
-            InputProps={{
-              readOnly: true,        //  입력 불가
-              style: { cursor: "default" }
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                height: 44,
-                borderRadius: '10px',
-                '& fieldset': {
-                  borderWidth: 2,
-                  borderColor: '#003FBF',
-                },
-              },
-            }}
-          />
-
-          <IconButton
-            sx={{
-              ml: 4,
-              width: 40,
-              height: 40,
-              borderRadius: '10px',
-              bgcolor: '#003FBF',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            }}
-          >
-            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-          </IconButton>
-        </Box>
-      </Box>
-
-
-      {/* =================== 메인 테이블 =================== */}
-      <Paper
-        elevation={0}
-        sx={{
-          width: '100%',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          border: '1px solid #CED4E4', // 전체 윤곽선
-        }}
-      >
-        {/* 헤더 */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: '80px 120px 260px 1fr',
-            alignItems: 'center',
-            bgcolor: '#606A80',
-            color: '#FFFFFF',
-            px: 3,
-            py: 1.4,
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            align="center"
-            sx={{ fontWeight: 600, fontSize: 14 }}
-          >
-            No
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            sx={{ fontWeight: 600, fontSize: 14 }}
-          >
-            주제
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            sx={{ fontWeight: 600, fontSize: 14 }}
-          >
-            용어
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            sx={{ fontWeight: 600, fontSize: 14 }}
-          >
-            설명
-          </Typography>
-        </Box>
-
-        {/* 행들 */}
-        {MOCK_ROWS.map((row, idx) => (
-          <Box
-            key={row.no}
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: '80px 120px 260px 1fr',
-              alignItems: 'center',
-              px: 3,
-              py: 0,
-              minHeight: 72,
-              borderTop: idx === 0 ? '1px solid #CED4E4' : '1px solid #E3E7F2',
-              bgcolor: '#FFFFFF',
-            }}
-          >
-
-            {/* No */}
-            <Typography
-              variant="body2"
-              align="center"
-              sx={{ fontSize: 13 }}
-            >
-              {row.no}
-            </Typography>
-
-            {/* 주제 */}
-            <Typography
-              variant="body2"
-              align="center"
-              sx={{ fontSize: 13 }}
-            >
-              {row.category}
-            </Typography>
-
-            {/* 용어 */}
-            <Typography
-              variant="body2"
-              align="center"
-              sx={{
-                fontSize: 13,
-                fontWeight: 500,
-                px: 1,
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {row.word}
-            </Typography>
-
-            {/* 설명 */}
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: 13,
-                lineHeight: 1.6,
-                px: 1.5,
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-              }}
-            >
-              {row.description}
-            </Typography>
-
-          </Box>
-        ))}
-      </Paper>
-
-      {/* =================== 페이지네이션 =================== */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        <Pagination
-          page={1}
-          count={5}
-          shape="rounded"
-          sx={{
-            '& .MuiPaginationItem-root': {
-              fontSize: 13,
-            },
-            '& .Mui-selected': {
-              bgcolor: '#003FBF',
-              color: '#FFFFFF',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            },
-          }}
-        />
-      </Box>
-    </Box>
-  );
-}

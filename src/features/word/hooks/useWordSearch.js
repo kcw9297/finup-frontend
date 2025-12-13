@@ -3,11 +3,18 @@ import { showSnackbar } from "../../../base/config/globalHookConfig"
 import { api } from "../../../base/utils/fetchUtils";
 import { useEffect, useState } from "react";
 
+/**
+ * 단어장 검색 훅
+ * @author khj
+ * @since 2025-12-13
+ */
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
-  pageNum: 1,
+  pageNum: 0,
   pageSize: 10,
+  filter: "",
+  order: "name_asc",
 };
 
 export function useWordSearch() {
@@ -22,8 +29,10 @@ export function useWordSearch() {
   // URL → 검색 조건 파싱
   const getSearchParams = () => ({
     keyword: searchParams.get("keyword") || "",
-    pageNum: Number(searchParams.get("pageNum")) || 1,
-    pageSize: Number(searchParams.get("pageSize")) || 10,
+    pageNum: Number(searchParams.get("pageNum") ?? 0),
+    pageSize: Number(searchParams.get("pageSize") ?? 10),
+    filter: searchParams.get("filter") || "name",
+    order: searchParams.get("order") || "name_asc",
   })
 
   // 검색 조건 변경
@@ -31,25 +40,49 @@ export function useWordSearch() {
     setSearchRq(prev => ({ ...prev, ...rq }))
   }
 
+  // 엔터키 입력
+  const handleSearchEnter = (e) => {
+    if (e.key === "Enter") {
+      handleSearch()
+      console.log(e)
+    }
+  }
+
+  // 정렬 변경 (즉시 검색)
+  const handleOrderChange = (order) => {
+    setSearchParams({
+      ...getSearchParams(),
+      order,
+      pageNum: 0, // 정렬 변경 시 페이지 초기화
+    })
+  }
 
   // 검색 실행
   const handleSearch = e => {
-    e?.preventDefault();
-    setLoading(true);
-    setSearchParams({ ...searchRq, pageNum: 1 });
-  };
+    e?.preventDefault()
+    setSearchParams({
+      keyword: searchRq.keyword,
+      pageNum: 0,
+      pageSize: searchRq.pageSize,
+      filter: searchRq.filter || "name",
+      order: searchRq.order,
+    })
+  }
 
   // 페이지 이동
-  const handlePage = pageNum => {
+  const handlePage = page => {
     setLoading(true);
-    setSearchParams({ ...getSearchParams(), pageNum });
-  };
+    setSearchParams({
+      ...getSearchParams(),
+      pageNum: page - 1
+    })
+  }
 
 
   // [6] 성공/실패/마지막 콜백 함수
   const onSuccess = rp => {
     setWordList(rp.data)
-    setPagination(rp.Pagination)
+    setPagination(rp.pagination)
   }
 
   const onError = rp => {
@@ -72,7 +105,7 @@ export function useWordSearch() {
       onError,
       onFinally,
     });
-  }, [searchParams]);
+  }, [searchParams])
 
   // [5] 반환
   return {
@@ -83,5 +116,7 @@ export function useWordSearch() {
     handleChangeRq,
     handleSearch,
     handlePage,
+    handleSearchEnter,
+    handleOrderChange,
   }
 }
