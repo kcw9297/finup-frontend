@@ -6,6 +6,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useMemberMypage } from "../hooks/useMemberMypage";
+
+
+
 
 const COLORS = {
   pageBg: "#F5F7FF",        // 오른쪽 전체 영역 연한 파랑 배경
@@ -42,6 +46,17 @@ const textFieldSx = {
 };
 
 export default function MypageMember() {
+  const {
+    member,
+    changeMember,
+    submitEdit,
+    submitNicknameEdit,
+    profilePreview,
+    changeProfileFile,
+    submitProfileImageEdit,
+    cancelEdit,
+  } = useMemberMypage();
+
   return (
     <Box
       sx={{
@@ -84,7 +99,18 @@ export default function MypageMember() {
             mt: 1.5,
           }}
         >
+          {/* 숨은 파일 input은 프로필 영역 안에 둔다 */}
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            id="profile-file-input"
+            onChange={(e) => changeProfileFile(e.target.files?.[0])}
+          />
+
+          {/* 프로필 이미지 박스를 클릭하면 파일 선택 */}
           <Box
+            onClick={() => document.getElementById("profile-file-input").click()}
             sx={{
               width: 220,
               height: 220,
@@ -95,32 +121,32 @@ export default function MypageMember() {
               alignItems: "center",
               justifyContent: "center",
               bgcolor: "#E5E7EB",
+              cursor: "pointer",
             }}
           >
             <Avatar
-              src="/assets/profile-sample.png"
-              sx={{
-                width: "100%",
-                height: "100%",
-              }}
+              src={profilePreview || "/assets/profile-sample.png"}
+              sx={{ width: "100%", height: "100%" }}
             />
           </Box>
 
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 600, mb: 0.5 }}
-          >
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
             프로필 이미지
           </Typography>
-          <Typography
-            variant="body2"
-            align="center"
-            sx={{ color: COLORS.desc }}
-          >
+          <Typography variant="body2" align="center" sx={{ color: COLORS.desc }}>
             클릭 또는 이미지 드래그
             <br />
             (1:1 비율)
           </Typography>
+
+          {/* 이미지 업로드 요청 버튼 (선택사항이지만 지금은 테스트용으로 있는게 좋음) */}
+          <Button
+            variant="outlined"
+            onClick={submitProfileImageEdit}
+            sx={{ mt: 2, borderColor: COLORS.secondaryBtnBorder, color: COLORS.secondaryBtnText }}
+          >
+            이미지 변경 저장
+          </Button>
         </Box>
 
         {/* 오른쪽 : 회원 정보 폼 */}
@@ -142,10 +168,12 @@ export default function MypageMember() {
               <TextField
                 fullWidth
                 size="small"
-                variant="outlined"
-                defaultValue="금영리"
+                value={member.name}
+                onChange={(e) => changeMember({ name: e.target.value })}
                 sx={textFieldSx}
               />
+
+
             </Box>
 
             {/* 이메일 */}
@@ -163,13 +191,14 @@ export default function MypageMember() {
               <TextField
                 fullWidth
                 size="small"
-                variant="outlined"
-                defaultValue="godguemyeong@naver.com"
+                value={member.email}
+                onChange={(e) => changeMember({ email: e.target.value })}
                 sx={textFieldSx}
               />
+
             </Box>
 
-            {/* 아이디 (읽기 전용) */}
+            {/* 닉네임 */}
             <Box>
               <Typography
                 variant="caption"
@@ -179,16 +208,34 @@ export default function MypageMember() {
                   color: COLORS.label,
                 }}
               >
-                아이디
+                닉네임
               </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                variant="outlined"
-                defaultValue="geumyeonglee"
-                InputProps={{ readOnly: true }}
-                sx={textFieldSx}
-              />
+
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={member.nickname}
+                  onChange={(e) => changeMember({ nickname: e.target.value })}
+                  sx={textFieldSx}
+                />
+
+                <Button
+                  variant="outlined"
+                  onClick={submitNicknameEdit}
+                  sx={{
+                    minWidth: 96,
+                    borderColor: COLORS.secondaryBtnBorder,
+                    color: COLORS.secondaryBtnText,
+                    "&:hover": {
+                      borderColor: COLORS.secondaryBtnBorder,
+                      backgroundColor: "rgba(37, 99, 235, 0.04)",
+                    },
+                  }}
+                >
+                  저장
+                </Button>
+              </Box>
             </Box>
 
             {/* 새 비밀번호 */}
@@ -206,11 +253,12 @@ export default function MypageMember() {
               <TextField
                 fullWidth
                 size="small"
-                variant="outlined"
                 type="password"
-                placeholder="새 비밀번호를 입력해주세요"
+                value={member.password}
+                onChange={(e) => changeMember({ password: e.target.value })}
                 sx={textFieldSx}
               />
+
               <Typography
                 variant="caption"
                 sx={{
@@ -238,11 +286,13 @@ export default function MypageMember() {
               <TextField
                 fullWidth
                 size="small"
-                variant="outlined"
                 type="password"
-                placeholder="비밀번호를 다시 입력해주세요"
+                value={member.passwordConfirm}
+                onChange={(e) => changeMember({ passwordConfirm: e.target.value })}
                 sx={textFieldSx}
               />
+
+
             </Box>
 
             {/* 하단 버튼 */}
@@ -256,6 +306,7 @@ export default function MypageMember() {
             >
               <Button
                 variant="outlined"
+                onClick={cancelEdit}
                 sx={{
                   minWidth: 88,
                   fontSize: 14,
@@ -272,6 +323,7 @@ export default function MypageMember() {
 
               <Button
                 variant="contained"
+                onClick={submitEdit}
                 sx={{
                   minWidth: 88,
                   fontSize: 14,
