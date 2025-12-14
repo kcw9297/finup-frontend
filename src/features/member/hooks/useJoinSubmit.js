@@ -62,8 +62,11 @@ export function useJoinSubmit({
 
   const submitJoin = ({ email, password }) => {
     api.post(
-      '/members',
-      { onSuccess: onSignupSuccess, onError: onSignupError },
+      '/members/join',
+      {
+        public: true,
+        onSuccess: onSignupSuccess, onError: onSignupError
+      },
       { email, password }
     );
   };

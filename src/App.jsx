@@ -24,6 +24,10 @@ import AdminStudyListPage from './pages/study/AdminStudyListPage'
 import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
 import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
 import MemberJoinPage from './pages/member/MemberJoinPage';
+import { elements } from 'chart.js'
+import WordVocaPage from './pages/wordVoca/WordVocaPage'
+import WordSearchPage from './pages/wordVoca/WordSearchPage'
+import WordDetailPage from './pages/wordVoca/WordDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -80,14 +84,6 @@ const nastedRoutes = [
   },
 
   {
-    path: '/admin/*',
-    children: [
-
-    ]
-  },
-
-
-  {
     path: '/stocks/*', //url : 종목 +
     children: [
       { path: '', element: <StocksListPage /> }, // 모두 공개
@@ -95,6 +91,14 @@ const nastedRoutes = [
     ]
   },
 
+  {
+    path: "/words/*", // url : 단어장 +
+    children: [
+      { path: '', element: <WordVocaPage /> },
+      { path: 'search', element: <WordSearchPage /> },
+      { path: 'detail/:termId', element: <WordDetailPage /> }
+    ]
+  },
 
   {
     path: '/mypage/*',

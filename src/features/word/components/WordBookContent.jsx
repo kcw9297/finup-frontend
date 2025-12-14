@@ -1,7 +1,11 @@
 import { Box, Typography, TextField, IconButton, Stack, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useWordbook } from "../../wordbook/hooks/useWordbook";
 
 export default function WordBookContent() {
+
+  const { list, loading, removeWord } = useWordbook(open);
+
   return (
     <Box sx={{ width: "100%" }}>
 
@@ -10,68 +14,69 @@ export default function WordBookContent() {
         내 단어장
       </Typography>
 
-      {/* 검색바 */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <TextField
-          placeholder="단어 검색하기"
-          size="small"
-          fullWidth
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              height: 40,
-              borderRadius: "10px",
-            },
-          }}
-        />
-        <IconButton
-          sx={{
-            ml: 1,
-            width: 40,
-            height: 40,
-            bgcolor: "#003FBF",
-            borderRadius: "10px",
-            "&:hover": { bgcolor: "#0033A3" },
-          }}
-        >
-          <SearchIcon sx={{ color: "#fff" }} />
-        </IconButton>
-      </Box>
+      {/* 로딩 */}
+      {loading && (
+        <Typography variant="body2" color="text.secondary">
+          불러오는 중...
+        </Typography>
+      )}
+
+      {/* 빈 상태 */}
+      {!loading && list.length === 0 && (
+        <Typography variant="body2" color="text.secondary">
+          아직 담은 단어가 없습니다.
+        </Typography>
+      )}
 
       {/* 단어 리스트 */}
       <Stack spacing={2}>
-        {[1, 2, 3].map((v) => (
+        {list.map((word) => (
           <Paper
-            key={v}
+            key={word.termId}
             sx={{
               p: 2,
               borderRadius: 2,
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: "flex-start",
+              gap: 2,
             }}
           >
-            <Box>
-              <Typography fontWeight={600}>선물거래</Typography>
-              <Typography variant="body2" color="text.secondary">
-                미래 일정 시점에 미리 정한 가격 ~
+            {/* 왼쪽: 단어 정보 */}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography fontWeight={600} noWrap>
+                {word.name}
+              </Typography>
+
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  mt: 0.5,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {word.description}
               </Typography>
             </Box>
 
-            <Typography
-              sx={{
-                color: "#888",
-                cursor: "pointer",
-                "&:hover": { color: "#555" },
-              }}
-            >
-              삭제
-            </Typography>
+            {/* 오른쪽: 액션 */}
+            <Box sx={{ flexShrink: 0 }}>
+              <Typography
+                sx={{
+                  fontSize: 13,
+                  color: "text.secondary",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  "&:hover": { color: "error.main" },
+                }}
+                onClick={() => removeWord(word.termId)}
+              >
+                삭제
+              </Typography>
+            </Box>
           </Paper>
         ))}
       </Stack>
