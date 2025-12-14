@@ -19,7 +19,6 @@ export default function ExchangeRate ({data}) {
     }).format(num);
   }
 
-
   return (
     <Paper
       elevation={0}
