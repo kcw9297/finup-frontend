@@ -27,6 +27,10 @@ import MemberJoinPage from './pages/member/MemberJoinPage';
 import StudyListPage from './pages/study/StudyListPage';
 import { useBookmark } from './base/hooks/useBookmark'
 import { useStudyProgress } from './base/hooks/useStudyProgress'
+import { elements } from 'chart.js'
+import WordVocaPage from './pages/wordVoca/WordVocaPage'
+import WordSearchPage from './pages/wordVoca/WordSearchPage'
+import WordDetailPage from './pages/wordVoca/WordDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -87,8 +91,7 @@ const nastedRoutes = [
       { path: ":studyId", element: <ProtectedRoute><StudyDetailPage /></ProtectedRoute> },
     ]
   },
-
-
+      
   {
     path: '/stocks/*', //url : 종목 +
     children: [
@@ -97,6 +100,14 @@ const nastedRoutes = [
     ]
   },
 
+  {
+    path: "/words/*", // url : 단어장 +
+    children: [
+      { path: '', element: <WordVocaPage /> },
+      { path: 'search', element: <WordSearchPage /> },
+      { path: 'detail/:termId', element: <WordDetailPage /> }
+    ]
+  },
 
   {
     path: '/mypage/*',
