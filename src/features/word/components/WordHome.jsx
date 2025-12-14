@@ -16,6 +16,7 @@ import WordbookPopup from './WordbookPopup';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../../../base/components/bar/SearchBar';
 import { useWordHome } from '../hooks/useWordHome';
+import { useRecentSearch } from '../hooks/useRecentSearch';
 
 export default function WordHome() {
   const [openWordbook, setOpenWordbook] = useState(false);
@@ -23,6 +24,8 @@ export default function WordHome() {
   const navigate = useNavigate();
 
   const { homeData, loading } = useWordHome();
+
+  const { recentKeywords } = useRecentSearch()
 
   const todayWords = homeData ?? [];
 
@@ -349,4 +352,4 @@ const todayQuizzes = [
   },
 ];
 
-const recentKeywords = ['적자', '흑자', '영업이익', '포괄손익계산서', '재무제표', '매출총이익'];
+const recentKeywords_temp = ['적자', '흑자', '영업이익', '포괄손익계산서', '재무제표', '매출총이익'];

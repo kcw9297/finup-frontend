@@ -85,7 +85,7 @@ export function useWordSearch() {
 
   // 최근 검색어(로그인 시)
   const fetchRecent = () => {
-    if (!isLogin) return
+    console.log('fetchRecent called, isLogin=', isLogin)
 
     api.get('/words/recent-searches', {
       onSuccess: rp => setRecent(rp.data)

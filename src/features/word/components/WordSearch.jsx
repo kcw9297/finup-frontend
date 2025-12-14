@@ -45,6 +45,10 @@ export default function WordSearch() {
 
   } = useWordSearch()
 
+  /// 최근 검색어 - 컴포넌트 표현 로직
+
+  const [openRecent, setOpenRecent] = useState(false)
+
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
@@ -61,47 +65,93 @@ export default function WordSearch() {
           sx={{
             maxWidth: 780,
             mx: 'auto',
-            display: 'flex',
-            alignItems: 'center',
+            position: 'relative',
           }}
           onKeyUp={(e) => handleSearchEnter(e)}
         >
-          <TextField
-            value={searchRq.keyword}
-            fullWidth
-            size="small"
-            onChange={e => handleChangeRq({ keyword: e.target.value })
-            }
-            onFocus={fetchRecent}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+              value={searchRq.keyword}
+              fullWidth
+              size="small"
+              onChange={e => handleChangeRq({ keyword: e.target.value })}
+              onFocus={() => {
+                fetchRecent()
+                setOpenRecent(true)
+              }}
+              onBlur={() => {
+                // 바로 닫지 말고 약간 지연
+                setTimeout(() => setOpenRecent(false), 150)
+              }}
 
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                height: 44,
-                borderRadius: '10px',
-                '& fieldset': {
-                  borderWidth: 2,
-                  borderColor: '#003FBF',
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  height: 44,
+                  borderRadius: '10px',
+                  '& fieldset': {
+                    borderWidth: 2,
+                    borderColor: '#003FBF',
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
 
-          <IconButton
-            onClick={handleSearch}
-            sx={{
-              ml: 4,
-              width: 40,
-              height: 40,
-              borderRadius: '10px',
-              bgcolor: '#003FBF',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            }}
-          >
-            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-          </IconButton>
+            {/* 최근 검색어 드롭다운 */}
+            {recent.length > 0 && (
+              <Paper
+                elevation={0}
+                sx={{
+                  position: 'absolute',
+                  top: 48,        // TextField 바로 아래
+                  left: 0,
+                  right: 0,
+                  zIndex: 10,
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: '1px solid'
+                }}
+              >
+                {recent.map((word) => (
+                  <Box
+                    key={word}
+                    onMouseDown={() => {   // 🔑 onClick 말고!
+                      handleChangeRq({ keyword: word })
+                      handleSearch()
+                    }}
+                    sx={{
+                      px: 2,
+                      py: 1.2,
+                      cursor: 'pointer',
+                      fontSize: 13,
+                      '&:hover': {
+                        bgcolor: '#F2F5FF',
+                      },
+                    }}
+                  >
+                    {word}
+                  </Box>
+                ))}
+              </Paper>
+            )}
+
+            <IconButton
+              onClick={handleSearch}
+              sx={{
+                ml: 4,
+                width: 40,
+                height: 40,
+                borderRadius: '10px',
+                bgcolor: '#003FBF',
+                '&:hover': {
+                  bgcolor: '#0035A5',
+                },
+              }}
+            >
+              <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
+            </IconButton>
+          </Box>
         </Box>
+
       </Box>
       <Box
         sx={{

@@ -18,7 +18,6 @@ export function useWordHome() {
   const { showSnackbar } = useSnackbar()
 
 
-
   // [2] 필요 함수 선언
   const clearHomeData = () => setHomeData(null)
 
