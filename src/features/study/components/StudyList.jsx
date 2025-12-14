@@ -1,165 +1,194 @@
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Box, Paper, Table, TableHead,
-  TableBody, TableRow, TableCell, Typography, IconButton, Tooltip, Grid,
+  Box,
+  Typography,
+  List,
+  Button,
+  LinearProgress,
   CircularProgress,
-  TableContainer,
-  Button
-} from "@mui/material";
-
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete'
-import OrderBar from "../../../base/components/bar/OrderBar";
-import PageBar from "../../../base/components/bar/PageBar";
-import { useStudyList } from "../hooks/useStudyList";
-import { useWriteModal } from "../hooks/useWriteModal";
-import FormModal from "../../../base/components/modal/FormModal";
-
+} from '@mui/material';
+import StduyListBox from './StduyListBox';
+import OrderBar from '../../../base/components/bar/OrderBar'
+import { SORT_OPTIONS, SORT_OPTIONS_ADMIN } from '../constants/studyConstant';
+import { useStudyList } from '../hooks/useStudyList';
+import { useStudyProgress } from '../../../base/hooks/useStudyProgress';
+import { useStudyProgressStartModal } from '../../studyprogress/hooks/useStudyProgressStartModal';
+import ConfirmModal from '../../../base/components/modal/ConfirmModal';
 
 /**
- * 학습 개념 목록
- * @since 2025-12-08
+ * 학습 리스트 컴포넌트
+ * @since 2025-12-13
  * @author kcw
  */
 
 export default function StudyList({ admin = false }) {
 
-  // [1] 검색 요청 상태
-  const {
-    searchRq, searchRp, loading, // 상태
-    handlePage, handleOrder // 상태관리 함수
-  } = useStudyList({admin})
+  // [1] 사용 Hook
+  const {     
+    searchRq, searchRp, loading,
+    handleScroll, handleOrder,
+  } = useStudyList()
 
-  const navigate = useNavigate()
-  const { openWriteModal, writeProps } = useWriteModal({admin}) // 사용 모달 프롭스
+  // 학습진도 전역상태
+  const { studyProgresses } = useStudyProgress()
+  
+  // 완료된 진도 개수
+  const completedCount = studyProgresses.filter((progress) => progress.studyStatus === 'COMPLETED').length
+  
+  // 무한 스크롤을 위한 바닥 참조 값
+  const bottomRef = useRef(null); 
 
-  // [2] 필요 데이터 정의
-  const rows = searchRp ? searchRp.data : []
-  const pagination = searchRp ? searchRp.pagination : {}
+  // 사용 데이터
+  const rows = searchRp?.data ?? []
+  const pagination = searchRp?.pagination ?? {}
+  const percentage = Math.round((completedCount / pagination.dataCount) * 100)
 
-  // 필터 옵션
-  const sortOptions = [
-    { value: "latest", label: "등록순" },
-    { value: "levelAsc", label: "쉬운순" },
-    { value: "levelDesc", label: "어려운순" },
-  ]
+  // 학습 메세지
+  const getProcessMessage = () => {
+    if (percentage === 100) return '🎉 모든 학습을 완료했습니다 🎉'
+    if (percentage >= 61) return '조금만 더 힘내세요! 거의 다 왔어요!'
+    if (percentage >= 21) return '좋은 페이스로 진행 중이에요!'
+    if (percentage >= 1) return '좋은 시작이에요! 계속 진행해 볼까요?'
+    return '아직 완료한 학습이 없습니다'
+  }
 
-  // [5] 반환 UI
+  // 스크롤이 하단에 도달했는지 감지하는 Observer
+  useEffect(() => {
+    
+    if (!bottomRef.current) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {if (entry.isIntersecting && !loading) handleScroll() },
+        {threshold: 0.7,}
+      );
+
+      observer.observe(bottomRef.current);
+
+      return () => observer.disconnect()
+  }, [loading, handleScroll]);
+  
+
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
+    <Box sx={{ p: 3 }}>
 
-      <Box sx={{ flexGrow: 1, padding: 4 }}>
-
-        {/* 상단 타이틀 */}
-        <Box sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          mb: 3,
-          maxWidth: "750px",
-          mx: "auto"
-        }}>
-          <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            개념 학습 관리
-          </Typography>
-        </Box>
-
-        {/* 정렬 바와 버튼 */}
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', // 양 끝 정렬
-          alignItems: 'center', // 수직 중앙 정렬
-          mb: 2,
-          maxWidth: '980px',
-          mx: 'auto'
-        }}>
-
-          {/* 좌측 버튼 (관리자용) */}
-          <Box sx={{ width: "140px", height: "40px" }}>
-            {admin && (
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={openWriteModal}
-                sx={{ 
-                  bgcolor: 'base.main',
-                  '&:hover': { bgcolor: 'base.dark' }
-                }}
-              >
-                학습 등록
-              </Button>
-            )}
-          </Box>
-
-          
-          {/* 우측 정렬 바 */}
-          <OrderBar options={sortOptions} selected={searchRq.order} onChange={handleOrder} />
-        </Box>
-
-
-        {/* 리스트 */}
-        <TableContainer component={Paper} sx={{width: "100%", overflow: "auto", maxWidth: "1000px", mx: "auto", overflowY: "scroll"}}>
-          <Table sx={{ tableLayout: "fixed" }}>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" sx={{ width: '10%' }}>No.</TableCell>
-                <TableCell sx={{ width: '20%' }}>제목</TableCell>
-                <TableCell sx={{ width: '40%', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>내용</TableCell>
-                <TableCell align="center" sx={{ width: '10%' }}>레벨</TableCell>
-                <TableCell align="center" sx={{ width: '20%' }}>비고</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 15 }}>
-                    <CircularProgress />
-                  </TableCell>
-                </TableRow>
-              ) : rows.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 15 }}>
-                    등록한 단계 학습이 없습니다.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                rows.map((row, index) => (
-                  <TableRow
-                    key={row.studyId}
-                    hover
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => navigate(`/admin/studies/${row.studyId}`)}
-                  >
-                    <TableCell align="center">{row.studyId}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.summary}</TableCell>
-                    <TableCell align="center">{row.level}</TableCell>
-                    <TableCell align="center">
-                      <IconButton onClick={(e) => {
-                        e.stopPropagation()
-                        alert("ok")
-                      }}
-                      >
-                        <EditIcon sx={{mr: 1}} />
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-              ))
-            )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {/* 하단 페이징 */}
-        <PageBar pagination={pagination} onChange={handlePage}/>
+      {/* 제목 섹션 */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+          개념 정리
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          처음부터 차차 기초부터 탄탄히
+        </Typography>
       </Box>
 
-        {/* 모달 영역 */}
-        <FormModal modalProps={writeProps} />
+      {/* 메인 콘텐츠 */}
+      <Box sx={{
+          display: 'flex', 
+          alignItems: 'center',
+          mb: 2   // 하단 마진
+      }}>
+        <OrderBar options={SORT_OPTIONS} selected={searchRq.order} onChange={handleOrder} />  
+      </Box>
+
+      {/* 메인 콘텐츠 */}
+      <Box sx={{ display: 'flex', gap: 4 }}>
+        
+      {/* 좌측 목록 영역 */}
+      <Box sx={{ flex: 1 }}>
+        <List sx={{ p: 0 }}>
+          {loading ? (
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              minHeight: '200px'  // 또는 원하는 높이
+            }}>
+              <CircularProgress size={24} sx={{ color: 'white' }} />
+            </Box>) : 
+            (rows.map(row => (<StduyListBox key={row.studyId} admin={admin} row={row} />)))
+          }
+
+          {/* 무한스크롤 트리거 */}
+          <Box ref={bottomRef} sx={{ height: 1 }} />
+        </List>
+      </Box>
+
+      {/* 우측 진척도 영역 */}
+      <Box sx={{ width: 300 }}>
+        <Box sx={{ 
+          p: 3,
+          border: '1px solid',
+          borderColor: 'line.dark',
+          borderRadius: 2,
+          backgroundColor: 'background.base'
+        }}>
+          <Typography variant="h6" color='text.main' sx={{ fontWeight: 'bold', mb: 3 }}>
+            진척도
+          </Typography>
+
+          {/* 진행률 바 */}
+          <Box sx={{ mb: 3 }}>
+            <LinearProgress 
+              variant="determinate" 
+              value={percentage || 0} 
+              sx={{ 
+                height: 8, 
+                borderRadius: 1,
+                mb: 1,
+                backgroundColor: 'grey.200', 
+                '& .MuiLinearProgress-bar': {
+                  backgroundColor: 'base.main'  // 진행된 부분 색상
+                }
+              }} 
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Typography variant="caption" color="text.main">
+                {percentage}%
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* 총 개수 */}
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              fontWeight: 'bold', 
+              color: 'base.main',
+              textAlign: 'center',
+              mb: 1 
+            }}
+          >
+            {completedCount} / {pagination.dataCount}
+          </Typography>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'base.main',
+              textAlign: 'center',
+              mb: 3 
+            }}
+          >
+            {getProcessMessage()}
+          </Typography>
+
+          {/* 북마크 목록 이동 버튼 */}
+          <Button 
+            variant="contained" 
+            fullWidth
+            sx={{ 
+              borderRadius: 2, 
+              backgroundColor: "base.main",
+              '&:hover': {
+                backgroundColor: 'base.dark'
+              }
+            }}
+
+          >
+            북마크로 이동
+          </Button>
+        </Box>
+      </Box>
+      </Box>
     </Box>
-  )
-}
+  );
+};

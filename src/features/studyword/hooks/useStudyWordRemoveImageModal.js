@@ -6,8 +6,8 @@ import { flushSync } from "react-dom";
 export function useStudyWordRemoveImageModal({ handleAfterRemoveImageFile, admin = false }) {
 
   // [1] 사용 상태 선언
-  const [open, setOpen] = useState(false)
-  const [studyWordId, setStudyWordId] = useState(false)
+  const [ open, setOpen ] = useState(false)
+  const [ studyWordId, setStudyWordId ] = useState(false)
   const { showSnackbar } = useSnackbar()
 
   // [2] 모달 열기/닫기 함수

@@ -1,28 +1,27 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { MODAL_FIELDS } from "../constants/studyWordConstant";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 import { api } from "../../../base/utils/fetchUtils";
+import { MODAL_FIELDS } from "../constants/studyConstant";
+
 
 /**
- * 개념 단어 수정 모달 custom Hook
+ * 단계 학습 수정 모달 상태관리 custom hook
+ * @since 2025-12-09
  * @author kcw
- * @since 2025-12-10
  */
-export function useStudyWordEditModal({ handleAfterEdit, admin = false }) {
+
+export function useStudyEditModal({ handleAfterEdit, admin = false }) {
 
   // [1] 모달 상태
-  const [open, setOpen] = useState(false)
-  const [initialValues, setInitialValues] = useState(null)
-  const [studyWordId, setStudyWordId] = useState(null)
+  const [ open, setOpen ] = useState(false)
+  const [ initialValues, setInitialValues ] = useState(null)
+  const [ studyId, setStudyId ] = useState(null)
   const { showSnackbar } = useSnackbar()
-
+  
   // [2] 모달 열기/닫기 함수
   const openEditModal = (initialValues) => {
-
-    const { imageUrl, ...initValues } = initialValues;
-    setInitialValues(initValues);
-    setStudyWordId(initValues.studyWordId)
+    setInitialValues(initialValues);
+    setStudyId(initialValues.studyId)
     setOpen(true);
   }
 
@@ -36,24 +35,23 @@ export function useStudyWordEditModal({ handleAfterEdit, admin = false }) {
       setOpen(false);
     }
 
-    return await api.put(`/study-words/${studyWordId}`, { onSuccess, admin }, rq);
+    return await api.put(`/studies/${studyId}`, { onSuccess, admin }, rq);
   }
 
-  // [5] 사용 프롭스 선언
+  // [4] 모달 프롭스 설정
   const editProps = {
     open,
     setOpen,
-    title: "단어 수정",
+    title: "단계 학습 수정",
     fields: MODAL_FIELDS,
     submitText: "수정",
     submit: {
       admin,
       handleSubmit: handleEdit
     },
-    initialValues,
-  } 
+    initialValues
+  }
 
-  // [6] 반환
+  // [5] 반환
   return { openEditModal, editProps }
-
 }

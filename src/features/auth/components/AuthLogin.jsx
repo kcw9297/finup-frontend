@@ -15,8 +15,8 @@ export default function AuthLogin() {
 
   // [1] 로그인 custom hook
   const {
-    authloginRq, changeAuthLoginRq, loading,// 상태 (1번째 줄)
-    handleLogin // 함수 (2번째 줄)
+    loginRq, loading,// 상태 (1번째 줄)
+    handleChangeLoginRq, handleLogin // 함수 (2번째 줄)
   } = useAuthLogin()
 
   // [2] 반환할 컴포넌트
@@ -58,8 +58,8 @@ export default function AuthLogin() {
           label="이메일"
           type="email"
           name="email"
-          value={authloginRq.email}
-          onChange={(e) => changeAuthLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
+          value={loginRq.email}
+          onChange={(e) => handleChangeLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
           onKeyDown={(e) => e.key === 'Enter' && handleLogin()}  // 엔터 입력 시 로그인 시도
           disabled={loading} // 로딩 중에는 비활성화
           autoComplete="off" // 자동완성 기능 제거
@@ -69,8 +69,8 @@ export default function AuthLogin() {
           label="비밀번호"
           type="password"
           name="password"
-          value={authloginRq.password}
-          onChange={(e) => changeAuthLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
+          value={loginRq.password}
+          onChange={(e) => handleChangeLoginRq({ [e.target.name]: e.target.value })} // 상태 변경 처리 (필수)
           onKeyDown={(e) => e.key === 'Enter' && handleLogin()}  // 엔터 입력 시 로그인 시도
           disabled={loading} // 로딩 중에는 비활성화
           autoComplete="off" // 자동완성 기능 제거

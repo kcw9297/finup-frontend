@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { MODAL_FIELDS } from "../constants/studyWordConstant";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 import { api } from "../../../base/utils/fetchUtils";
 
@@ -9,7 +7,7 @@ import { api } from "../../../base/utils/fetchUtils";
  * @author kcw
  * @since 2025-12-11
  */
-export function useVideoLinkEditModal({ handleAfterEdit, admin = false }) {
+export function useVideoLinkEditModal({ handleVerify, handleAfterEdit, admin = false }) {
 
   // [1] 모달 상태
   const [ open, setOpen ] = useState(false)
@@ -27,11 +25,11 @@ export function useVideoLinkEditModal({ handleAfterEdit, admin = false }) {
 
     const onSuccess = (rp) => {
       showSnackbar(rp.message, 'success');
-      handleAfterEdit(rp); // 새롭게 등록한 응답 정보 전달
+      handleAfterEdit(rp.data); // 새롭게 등록한 응답 정보 전달
       setOpen(false);
     }
-
-    return await api.put(`/video-links/${videoLinkId}`, { onSuccess, admin }, rq);
+    
+    return await api.put(`/video-links/${videoLinkId}`, { onSuccess, admin, printMessage: false }, rq);
   }
 
   // [4] 사용 프롭스 선언
@@ -42,6 +40,7 @@ export function useVideoLinkEditModal({ handleAfterEdit, admin = false }) {
     submitText: "등록",
     submit: {
       admin,
+      handleVerify,
       handleSubmit: handleEdit
     },
   } 
