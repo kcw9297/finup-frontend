@@ -27,8 +27,6 @@ export default function Header() {
   const navigate = useNavigate()
   const { handleLogout, loading, isAuthenticated, loginMember } = useAuth()
   const { pathname } = useLocation()
-  const navigate = useNavigate()
-  
   const [openWordbook, setOpenWordBook] = useState(false)
 
   // [2] 프로필 클릭 처리 함수

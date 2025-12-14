@@ -86,7 +86,7 @@ const nastedRoutes = [
   {
     path: '/studies/*',
     children: [
-      // url : 학습 목록 (전체 공개)
+      // url : 학습 목록
       { path: "search", element: <ProtectedRoute><StudyListPage /></ProtectedRoute> },
       { path: ":studyId", element: <ProtectedRoute><StudyDetailPage /></ProtectedRoute> },
     ]
