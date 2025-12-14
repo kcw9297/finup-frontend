@@ -17,20 +17,20 @@ export function useVideoLinkRemoveModal({ handleAfterRemove, admin = false }) {
 
   // [2] 모달 열기/닫기 함수
   const openRemoveModal = (videoLinkId) => {
-    setVideoLinkId(videoLinkId);
-    setOpen(true);
+    setVideoLinkId(videoLinkId)
+    setOpen(true)
   }
 
   // [3] 성공/실패/최종 처리 함수 선언
   const onSuccess = (rp) => {
-    showSnackbar(rp.message, 'success');
-    handleAfterRemove(videoLinkId);
-    setOpen(false);
+    showSnackbar(rp.message, 'success')
+    handleAfterRemove(videoLinkId)
+    setOpen(false)
   }
 
   // [4] REST API 요청 함수 생성
   const handleRemove = async () => {
-    await api.delete(`/study-words/${videoLinkId}`, { onSuccess, admin });
+    await api.delete(`/video-links/${videoLinkId}`, { onSuccess, admin })
   }
 
   // [5] REST API 요청 함수 생성
@@ -40,7 +40,6 @@ export function useVideoLinkRemoveModal({ handleAfterRemove, admin = false }) {
       title: "영상 삭제",
       content: "현재 영상을 삭제하시겠습니까?",
       submit: {
-        endpoint: `/study-words/${videoLinkId}`,
         admin,
         handleSubmit: handleRemove // 확인 클릭 시 처리 함수
       },

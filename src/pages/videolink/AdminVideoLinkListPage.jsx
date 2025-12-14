@@ -11,7 +11,7 @@ import VideoLinkList from "../../features/videolink/components/VideoLinkList";
 export default function AdminVideoLinkListPage() {
   return (
     <SidebarLayout sidebar={<AdminSidebar />}>
-      <VideoLinkList />
+      <VideoLinkList admin={true} />
     </SidebarLayout>
   )
 }
