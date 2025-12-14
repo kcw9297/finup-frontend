@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { StockDetailContext } from "../context/StockDetailContext";
 import { useParams } from "react-router-dom";
 import thema from "../../../base/design/thema.js"
-import { Box, Grid, Typography, Stack, Divider, Card, CardContent, CardMedia, keyframes } from "@mui/material";
+import { Box, Grid, Typography, Stack, Divider, Card, CardContent, CardMedia, keyframes, Chip } from "@mui/material";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
@@ -149,15 +149,55 @@ export default function StocksDetailStock(){
                   </Typography>
                 </Box>
               )}
-              <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-line" }}>
-                [요약]<br />
-                {detailStockAi.summary}<br /><br />
-                [투자 포인트]<br /> {detailStockAi.investmentPoint}<br /><br />
-                [가격]<br /> {detailStockAi.price}<br /><br />
-                [가치평가]<br /> {detailStockAi.valuation}<br /><br />
-                [수급·거래]<br /> {detailStockAi.flow}<br /><br />
-                [리스크·상태]<br /> {detailStockAi.risk}
-              </Typography>
+              <Box>
+              {/* 종합 요약 */}
+              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                <Chip label="종합 요약" color="secondary" variant="outlined" />
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                  {detailStockAi.summary}
+                </Typography>
+              </Stack>
+
+              {/* 투자 포인트 */}
+              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                <Chip label="투자 포인트" color="primary" variant="outlined" />
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                  {detailStockAi.investmentPoint}
+                </Typography>
+              </Stack>
+
+              {/* 가격 */}
+              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                <Chip label="가격" color="success" variant="outlined" />
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                  {detailStockAi.price}
+                </Typography>
+              </Stack>
+
+              {/* 가치평가 */}
+              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                <Chip label="가치평가" color="info" variant="outlined" />
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                  {detailStockAi.valuation}
+                </Typography>
+              </Stack>
+
+              {/* 수급·거래 */}
+              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                <Chip label="수급·거래" color="warning" variant="outlined" />
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                  {detailStockAi.flow}
+                </Typography>
+              </Stack>
+
+              {/* 리스크·상태 */}
+              <Stack spacing={1} alignItems="flex-start" >
+                <Chip label="리스크·상태" color="error" variant="outlined" />
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                  {detailStockAi.risk}
+                </Typography>
+              </Stack>                
+              </Box>
             </CardContent>
           </Card>
         </Box>
