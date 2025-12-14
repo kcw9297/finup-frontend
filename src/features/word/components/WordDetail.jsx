@@ -1,6 +1,7 @@
 import { Box, Typography, Divider, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useWordDetail } from '../hooks/useWordDetail';
+import { useMemberWordbook } from './../../wordbook/hooks/useMemberWordbook';
 
 
 
@@ -8,7 +9,12 @@ export default function WordDetail() {
   const navigate = useNavigate();
 
 
+
   const { detail, loading } = useWordDetail()
+
+  const termId = detail?.termId
+
+  const { added, add, remove } = useMemberWordbook(termId)
 
 
   if (loading) {
@@ -22,10 +28,10 @@ export default function WordDetail() {
   const data = {
     title: detail.name,
     category: '금융',
-    pathLabel: '스크랩하기',
     content: detail.description,
     aiSummary: '' // 추후 AI 연동
   }
+
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 4 }}>
@@ -57,8 +63,9 @@ export default function WordDetail() {
               color: 'text.secondary',
               textAlign: 'left'      // ★ 왼쪽 정렬
             }}
+            onClick={added ? remove : add}
           >
-            {data.category} | {data.pathLabel}
+            {data.category} | {added ? '단어장에 저장됨' : '스크랩하기'}
           </Typography>
         </Box>
 
@@ -111,7 +118,7 @@ export default function WordDetail() {
               px: 4,
               borderRadius: '10px',
             }}
-            onClick={() => navigate('/words/search')}
+            onClick={() => navigate(-1)}
           >
             목록
           </Button>

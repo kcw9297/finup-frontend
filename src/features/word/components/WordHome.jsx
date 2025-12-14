@@ -221,7 +221,11 @@ export default function WordHome() {
                     display: 'flex',          // 내용 압축
                     flexDirection: 'column',
                     gap: 1,
+                    '&:hover': {
+                      bgcolor: '#F6F8FF',
+                    },
                   }}
+                  onClick={() => navigate(`/words/detail/${words.termId}`)}
                 >
                   <Typography variant="caption">키워드</Typography>
 

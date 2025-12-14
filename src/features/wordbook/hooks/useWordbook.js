@@ -33,17 +33,17 @@ export function useWordbook(open) {
   };
 
   // [3] 단어장 삭제 (Optimistic Update)
-  const removeWord = wordId => {
+  const removeWord = termId => {
     // [3-1] UI 즉시 반영
-    setList(prev => prev.filter(w => w.wordId !== wordId));
+    setList(prev => prev.filter(w => w.termId !== termId));
 
-    api.delete("/members/wordbook", {
+    api.delete(`/members/wordbook/${termId}`, {
       onError: () => {
         showSnackbar("삭제에 실패했습니다.", "error");
         // 실패 시 복구
         fetchWordbook();
       }
-    }, { wordId });
+    }, { termId });
   };
 
   // [4] 모달 열릴 때 자동 조회

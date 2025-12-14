@@ -13,7 +13,7 @@ import SearchBar from '../../../base/components/bar/SearchBar';
 import OrderBar from '../../../base/components/bar/OrderBar';
 import { useState } from 'react';
 import PageBar from '../../../base/components/bar/PageBar';
-
+import { useNavigate } from 'react-router-dom';
 
 const ORDER_OPTIONS = [
   { value: 'name_asc', label: '가나다순' },
@@ -49,6 +49,7 @@ export default function WordSearch() {
 
   const [openRecent, setOpenRecent] = useState(false)
 
+  const navigate = useNavigate()
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
@@ -246,7 +247,11 @@ export default function WordSearch() {
               minHeight: 72,
               borderTop: idx === 0 ? '1px solid #CED4E4' : '1px solid #E3E7F2',
               bgcolor: '#FFFFFF',
+              '&:hover': {
+                bgcolor: '#F6F8FF',
+              },
             }}
+            onClick={() => navigate(`/words/detail/${row.termId}`)}
           >
 
             {/* No */}
@@ -255,7 +260,7 @@ export default function WordSearch() {
               align="center"
               sx={{ fontSize: 13 }}
             >
-              {(pagination?.pageNum ?? 0) * pagination?.pageSize + idx + 1}
+              {idx + 1}
             </Typography>
             {/* 
               주제 
@@ -307,5 +312,5 @@ export default function WordSearch() {
       <PageBar pagination={pagination} onChange={handlePage} />
     </Box>
 
-  );
+  )
 }

@@ -37,27 +37,46 @@ export default function WordBookContent() {
               p: 2,
               borderRadius: 2,
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: "flex-start",
+              gap: 2,
             }}
           >
-            <Box>
-              <Typography fontWeight={600}>{word.name}</Typography>
-              <Typography variant="body2" color="text.secondary">
+            {/* 왼쪽: 단어 정보 */}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography fontWeight={600} noWrap>
+                {word.name}
+              </Typography>
+
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  mt: 0.5,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
                 {word.description}
               </Typography>
             </Box>
 
-            <Typography
-              sx={{
-                color: "#888",
-                cursor: "pointer",
-                "&:hover": { color: "#555" },
-              }}
-              onClick={() => removeWord(word.termId)}
-            >
-              삭제
-            </Typography>
+            {/* 오른쪽: 액션 */}
+            <Box sx={{ flexShrink: 0 }}>
+              <Typography
+                sx={{
+                  fontSize: 13,
+                  color: "text.secondary",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  "&:hover": { color: "error.main" },
+                }}
+                onClick={() => removeWord(word.termId)}
+              >
+                삭제
+              </Typography>
+            </Box>
           </Paper>
         ))}
       </Stack>

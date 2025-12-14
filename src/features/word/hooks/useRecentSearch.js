@@ -13,19 +13,19 @@ export function useRecentSearch() {
 
   // [1] 필요 함수/변수 선언
 
-  const [recentKeywords, setRecentKeywords] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [recentKeywords, setRecentKeywords] = useState([])
+  const [loading, setLoading] = useState(false)
 
   // [2] REST API 호출
   const fetchRecent = () => {
     setLoading(true);
     api.get("/words/recent-searches", {
       onSuccess: (rp) => {
-        setRecentKeywords(rp.data || []);
+        setRecentKeywords(rp.data || [])
       },
       onFinally: () => setLoading(false),
-    });
-  };
+    })
+  }
 
   const removeRecentWord = (keyword) => {
     api.delete(`/words/recent-searches/${encodeURIComponent(keyword)}`, {
@@ -40,8 +40,8 @@ export function useRecentSearch() {
 
   // [3] 홈 진입 시 1회 호출
   useEffect(() => {
-    fetchRecent();
-  }, []);
+    fetchRecent()
+  }, [])
 
   // [4] 반환
   return {
@@ -49,5 +49,5 @@ export function useRecentSearch() {
     loading,
     refresh: fetchRecent,
     removeRecentWord,
-  };
+  }
 }
