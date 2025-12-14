@@ -7,11 +7,10 @@ import { useContext } from "react";
 import { StockDetailContext } from "../context/StockDetailContext.js";
 import { useStocksNews } from "../hooks/useStocksNews.js";
 import { useStocksNewsModal } from "../hooks/useStocksNewsModal.js";
-import { OpenInBrowser } from "@mui/icons-material";
 
 export default function StocksDetailNews() {
   const { nameCard } = useContext(StockDetailContext);
-  const stockName = "삼성전자"; //nameCard.stockName;
+  const stockName = nameCard.stockName;
 
   const {
     open,
