@@ -17,8 +17,12 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
     typeof article?.ai?.summary === "string" && article.ai.summary.length > 0;
 
   const hasLightAi =
+    !!article?.summary &&
     typeof article?.summary?.summary === "string" &&
     article.summary.summary.length > 0;
+
+  const showLightSection = loading || hasLightAi;
+
   const formattedDate = moment(article.publishedAt).format("YYYY-MM-DD HH:mm");
   const sparkle = keyframes`
     0% { opacity: 0.4; transform: scale(1); }
@@ -105,7 +109,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
             </Box>
           )}
           {/* 요약 */}
-          {hasDeepAi || hasLightAi ? (
+          {(hasDeepAi || showLightSection) && (
             <Box sx={{ mb: 10 }}>
               <Box
                 sx={{
@@ -141,7 +145,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                 </p>
               )}
             </Box>
-          ) : null}
+          )}
 
           {/* AI 해설 */}
           {hasDeepAi && (
@@ -162,7 +166,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
           )}
 
           {/* 필수 개념 */}
-          {(hasDeepAi || hasLightAi) && (
+          {(hasDeepAi || showLightSection) && (
             <Box sx={{ mb: 10 }}>
               <h3>필수 개념</h3>
               {loading ? (
