@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MODAL_FIELDS } from "../constants/studyWordConstant"
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 import { api } from "../../../base/utils/fetchUtils";
 import { useReloadStore } from "../../../base/stores/useReloadStore";
@@ -10,7 +9,7 @@ import { useReloadStore } from "../../../base/stores/useReloadStore";
  * @author kcw
  */
 
-export function useVideoLinkWriteModal({ admin = false }) {
+export function useVideoLinkWriteModal({ handleVerify, admin = false }) {
 
   // [1] 모달 상태
   const [open, setOpen] = useState(false)
@@ -32,7 +31,7 @@ export function useVideoLinkWriteModal({ admin = false }) {
   
   // [4] REST API 요청 함수 생성
   const handleWrite = async (rq) => {
-    return await api.post(`/video-links`, { onSuccess, admin }, rq)
+    return await api.post(`/video-links`, { onSuccess, admin, printMessage: false }, rq)
   }
 
   // [5] 모달 프롭스 설정
@@ -43,6 +42,7 @@ export function useVideoLinkWriteModal({ admin = false }) {
     submitText: "등록",
     submit: {
       admin,
+      handleVerify,
       handleSubmit: handleWrite
     }
   };

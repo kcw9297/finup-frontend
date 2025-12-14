@@ -15,7 +15,7 @@ export default function OrderBar({ options, selected, onChange }) {
         gap: 2,
       }}
     >
-      {options.map((option, index) => (
+      {options.map((option) => (
         <Typography
           key={option.value}
           onClick={() => onChange(option.value)}

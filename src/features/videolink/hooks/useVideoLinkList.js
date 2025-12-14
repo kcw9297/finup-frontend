@@ -108,10 +108,11 @@ export function useVideoLinkList({ admin = false }) {
   // 단어 업데이트 처리
   const handleAfterEdit = (newData) => {
     // 서버에서 받아온 새로운 데이터로 대체
+
     setSearchRp(prev => ({
       ...prev, 
       data: prev.data.map(video => video.videoLinkId === newData.videoLinkId ? newData : video)
-    }));
+    }))
   };
 
   // 단어 삭제 처리
@@ -124,7 +125,7 @@ const handleAfterRemove = () => {
   if (data.length - 1 === 0 && pagination.pageNum > 1) {
     setSearchParams({ ...searchRq, pageNum: searchRq.pageNum - 1});
   } else {
-    setSearchParams(searchRq)
+    setForceReload(prev => prev + 1)
   }
 };
 
@@ -144,8 +145,17 @@ const handleAfterRemove = () => {
   // [4] useEffect 및 REST API 요청 함수 선언
   // 리로드 발생 시, 기본 파라미터로 초기화
   useEffect(() => {
-    setSearchParams(DEFAULT_SEARCH_RQ)
-    setForceReload(prev => prev + 1)
+
+    // 최초 접근이면 수행하지 않음
+    if (reloading == 0) return
+
+    // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
+    const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ);
+  
+    // 이미 같은 파라미터이면, 강제 리로드 번호만 올림
+    if (isDefaultParams) setForceReload(prev => prev + 1)
+    else setSearchParams(DEFAULT_SEARCH_RQ)
+  
   }, [reloading]);
 
   // 파라미터 변동 시 검색

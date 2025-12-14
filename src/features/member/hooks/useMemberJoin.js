@@ -13,6 +13,8 @@ import { useJoinStatusMachine } from './useJoinStatusMachine';
 import { useJoinSubmit } from './useJoinSubmit';
 import { validateJoinForm } from '../utils/joinValidation';
 
+import { api } from '../../../base/utils/fetchUtils';
+
 export function useMemberJoin() {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -56,7 +58,7 @@ export function useMemberJoin() {
   } = useAuthVerifyEmailCode();
 
   // ===== 회원가입 submit =====
-  const { submitJoin } = useJoinSubmit({
+  const { submitJoin, onSignupSuccess, onSignupError, onSignupFinally } = useJoinSubmit({
     showSnackbar,
     navigate,
     setJoinStatus,
@@ -117,16 +119,10 @@ export function useMemberJoin() {
 
     setJoinStatus('requesting');
 
-    api.post(
-      '/members/join',
-      {
-        public: true,
-        onSuccess: onSignupSuccess,
-        onError: onSignupError,
-        onFinally: onSignupFinally,
-      },
-      { email, password }
-    );
+    submitJoin({
+      email: form.email,
+      password: form.password,
+    })
   };
 
   const signupLoading = isRequesting || isNetworkError; // 회원가입 버튼 스피너용

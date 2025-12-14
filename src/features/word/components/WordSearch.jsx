@@ -7,47 +7,50 @@ import {
   Pagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useWordSearch } from '../hooks/useWordSearch';
+import theme from '../../../base/design/thema';
+import SearchBar from '../../../base/components/bar/SearchBar';
+import OrderBar from '../../../base/components/bar/OrderBar';
+import { useState } from 'react';
+import PageBar from '../../../base/components/bar/PageBar';
+import { useNavigate } from 'react-router-dom';
 
-// TODO: 훅 연결 전까지 임시 데이터
-const MOCK_ROWS = [
-  {
-    no: 1,
-    category: '금융',
-    word: '주가지수선물거래',
-    description:
-      '금융선물거래의 한 종류로, 증권시장이나 해외지수에 매매되는 전체 또는 일부 주식의 가격수준인 주가지수를 매매대상으로 한다. 주가지수는 해당 상장주식의 가격수준을 나타내는 추상 수치로 인도 및 인수가 불가능하기 때문에 실제로 존재하는 농산물·금속·통화·채권·주식 등 현물을 대상으로 하는 선물계약과는 다르게 주가지수선물계는 최종 ...',
-  },
-  {
-    no: 2,
-    category: '금융',
-    word: 'NDF(Non-Deliverable Forward; 역외선물환)',
-    description:
-      '본국의 세제나 운용상의 규제를 피해 금융·조세·외환관리 면에서 특정 요인을 누릴 수 있도록 타국(역외)에서 운용하는 선물환으로, 파생금융상품의 일종이다. 보통 역외선물환, 차액결제선물환이라 부르며, 영문 약자표를 따 NDF라고도 한다. 역외선물환 시장에서는 만기 현물을 인도하거나 계약 물금을 상호 교환하지 않고 계약한 선물환율과 ...',
-  },
-  {
-    no: 3,
-    category: '금융',
-    word: '미국 상품 선물 거래 위원회(CFTC: U.S. Commodity Futures Trading Commission)',
-    description:
-      '미국의 Commodity Futures Trading Commission Act에 따라 1974년에 설립된 독립 조직이다. 원자재에 대한 선물 거래, 옵션 시장을 규제한다. 규제의 목표는 경쟁적인 선물 시장을 유지하는 동시에 투자자를 여러 부정적인 경제적 조작, 사기 등으로부터 보호하는 것이다.',
-  },
-  {
-    no: 4,
-    category: '금융',
-    word: '선물거래',
-    description:
-      '선물(futures)거래란 장래 일정 시점에 미리 정한 가격으로 매매할 것을 현재 시점에서 약정하는 거래로, 미래의 가치를 사고 파는 것이다. 선물의 가가 현물시장에 운용되는 기초자산(채권, 외환, 주식 등의 가격 변동)에 의해 파생적으로 결정되는 파생상품(derivatives) 거래의 일종이다. 미리 정한 가격으로 매매를 약속한 것이기 때문에 가...',
-  },
-  {
-    no: 5,
-    category: '금융',
-    word: '선도환(선물환)/선물환거래',
-    description:
-      '선도환은 선물환이라고도 하며 미래의 일정기간 내에 일정금액, 일정종류의 외화를 일정 환율로 매매할 것을 약속한 외화환율 뜻한다. 이와 거래를 하는 이유는 기업이 장래의 환율 변동을 피하기 위해 환율을 고정하거나, 환율의 변동을 이용해 이익을 얻기 위함이다. 이렇게 선물환계약이 이루어지는 것을 선물환거래라고 한다.',
-  },
+const ORDER_OPTIONS = [
+  { value: 'name_asc', label: '가나다순' },
+  { value: 'name_desc', label: '가나다 역순' },
 ];
 
+
+/**
+ * 단어장 검색 컴포넌트
+ * @author kcw
+ * @since 2025-12-11
+ */
+
 export default function WordSearch() {
+
+
+  const { searchRq,
+    wordList,
+    pagination,
+    loading,
+    handleChangeRq,
+    handleSearch,
+    handlePage,
+    handleSearchEnter,
+    handleOrderChange,
+
+    recent,
+    fetchRecent,
+
+  } = useWordSearch()
+
+  /// 최근 검색어 - 컴포넌트 표현 로직
+
+  const [openRecent, setOpenRecent] = useState(false)
+
+  const navigate = useNavigate()
+
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
       {/* ================== SearchBar ================== */}
@@ -63,45 +66,116 @@ export default function WordSearch() {
           sx={{
             maxWidth: 780,
             mx: 'auto',
-            display: 'flex',
-            alignItems: 'center',
+            position: 'relative',
           }}
+          onKeyUp={(e) => handleSearchEnter(e)}
         >
-          <TextField
-            value="선물"
-            fullWidth
-            size="small"
-            InputProps={{
-              readOnly: true,        //  입력 불가
-              style: { cursor: "default" }
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                height: 44,
-                borderRadius: '10px',
-                '& fieldset': {
-                  borderWidth: 2,
-                  borderColor: '#003FBF',
-                },
-              },
-            }}
-          />
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: '1fr auto',
+            columnGap: 2,
+            alignItems: 'center',
+          }}>
+            <Box sx={{ position: 'relative' }}>
+              <TextField
+                value={searchRq.keyword}
+                fullWidth
+                size="small"
+                onChange={e => handleChangeRq({ keyword: e.target.value })}
+                onFocus={() => {
+                  fetchRecent()
+                  setOpenRecent(true)
+                }}
+                onBlur={() => {
+                  // 바로 닫지 말고 약간 지연
+                  setTimeout(() => setOpenRecent(false), 150)
+                }}
 
-          <IconButton
-            sx={{
-              ml: 4,
-              width: 40,
-              height: 40,
-              borderRadius: '10px',
-              bgcolor: '#003FBF',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            }}
-          >
-            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-          </IconButton>
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    height: 44,
+                    borderRadius: '10px',
+                    '& fieldset': {
+                      borderWidth: 2,
+                      borderColor: '#003FBF',
+                    },
+                  },
+                }}
+              />
+
+              {/* 최근 검색어 드롭다운 */}
+              {openRecent && recent.length > 0 && (
+                <Paper
+                  elevation={0}
+                  sx={{
+                    position: 'absolute',
+                    top: 48,        // TextField 바로 아래
+                    left: 0,
+                    right: 0,
+                    zIndex: 10,
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    border: '1px solid'
+                  }}
+                >
+                  {recent.map((word) => (
+                    <Box
+                      key={word}
+                      onMouseDown={() => {
+                        handleChangeRq({ keyword: word })
+                        handleSearch()
+                      }}
+                      sx={{
+                        px: 2,
+                        py: 1.2,
+                        cursor: 'pointer',
+                        fontSize: 13,
+                        '&:hover': {
+                          bgcolor: '#F2F5FF',
+                        },
+                      }}
+                    >
+                      {word}
+                    </Box>
+                  ))}
+                </Paper>
+              )}
+            </Box>
+
+            <IconButton
+              onClick={handleSearch}
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '10px',
+                bgcolor: '#003FBF',
+                '&:hover': {
+                  bgcolor: '#0035A5',
+                },
+              }}
+            >
+              <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
+            </IconButton>
+
+          </Box>
         </Box>
+      </Box>
+
+      {/* 정렬 바 */}
+      <Box
+        sx={{
+          maxWidth: 1000,
+          mx: 'auto',
+          mb: 1.5,
+          display: 'flex',
+          justifyContent: 'flex-start',
+        }}
+      >
+        <OrderBar
+          options={ORDER_OPTIONS}
+          selected={searchRq.order}
+          onChange={handleOrderChange}
+        />
       </Box>
 
 
@@ -109,7 +183,8 @@ export default function WordSearch() {
       <Paper
         elevation={0}
         sx={{
-          width: '100%',
+          maxWidth: 1000,
+          mx: 'auto',
           borderRadius: '10px',
           overflow: 'hidden',
           border: '1px solid #CED4E4', // 전체 윤곽선
@@ -119,10 +194,8 @@ export default function WordSearch() {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: '80px 120px 260px 1fr',
+            gridTemplateColumns: '80px 300px 1fr',
             alignItems: 'center',
-            bgcolor: '#606A80',
-            color: '#FFFFFF',
             px: 3,
             py: 1.4,
           }}
@@ -134,13 +207,7 @@ export default function WordSearch() {
           >
             No
           </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            sx={{ fontWeight: 600, fontSize: 14 }}
-          >
-            주제
-          </Typography>
+
           <Typography
             variant="subtitle2"
             align="center"
@@ -155,22 +222,36 @@ export default function WordSearch() {
           >
             설명
           </Typography>
+
         </Box>
 
         {/* 행들 */}
-        {MOCK_ROWS.map((row, idx) => (
+
+        {!loading && wordList.length === 0 && (
+          <Box sx={{ py: 8, textAlign: 'center', gridColumn: '1 / -1', }}>
+            <Typography variant="body2" color="text.secondary">
+              검색 결과가 없습니다.
+            </Typography>
+          </Box>
+        )}
+
+        {wordList.map((row, idx) => (
           <Box
-            key={row.no}
+            key={(pagination?.pageNum - 1) * pagination?.pageSize + idx + 1}
             sx={{
               display: 'grid',
-              gridTemplateColumns: '80px 120px 260px 1fr',
+              gridTemplateColumns: '80px 300px 1fr',
               alignItems: 'center',
               px: 3,
-              py: 0,
+              py: 1.5,
               minHeight: 72,
               borderTop: idx === 0 ? '1px solid #CED4E4' : '1px solid #E3E7F2',
               bgcolor: '#FFFFFF',
+              '&:hover': {
+                bgcolor: '#F6F8FF',
+              },
             }}
+            onClick={() => navigate(`/words/detail/${row.termId}`)}
           >
 
             {/* No */}
@@ -179,18 +260,18 @@ export default function WordSearch() {
               align="center"
               sx={{ fontSize: 13 }}
             >
-              {row.no}
+              {idx + 1}
             </Typography>
-
-            {/* 주제 */}
-            <Typography
-              variant="body2"
-              align="center"
-              sx={{ fontSize: 13 }}
-            >
-              {row.category}
-            </Typography>
-
+            {/* 
+              주제 
+              <Typography
+                variant="body2"
+                align="center"
+                sx={{ fontSize: 13 }}
+              >
+                {row.category}
+              </Typography>
+              */}
             {/* 용어 */}
             <Typography
               variant="body2"
@@ -204,7 +285,7 @@ export default function WordSearch() {
                 textOverflow: 'ellipsis',
               }}
             >
-              {row.word}
+              {row.name}
             </Typography>
 
             {/* 설명 */}
@@ -228,25 +309,8 @@ export default function WordSearch() {
       </Paper>
 
       {/* =================== 페이지네이션 =================== */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        <Pagination
-          page={1}
-          count={5}
-          shape="rounded"
-          sx={{
-            '& .MuiPaginationItem-root': {
-              fontSize: 13,
-            },
-            '& .Mui-selected': {
-              bgcolor: '#003FBF',
-              color: '#FFFFFF',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            },
-          }}
-        />
-      </Box>
+      <PageBar pagination={pagination} onChange={handlePage} />
     </Box>
-  );
+
+  )
 }
