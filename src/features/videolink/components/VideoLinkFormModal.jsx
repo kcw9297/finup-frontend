@@ -7,7 +7,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useRef, useState } from 'react';
 import VideoCard from '../../../base/components/card/VideoCard';
-import { showSnackbar } from '../../../base/config/globalHookConfig';
 
 /**
  * 공용 폼 모달 컴포넌트
@@ -39,7 +38,7 @@ export default function VideoLinkFormModal({ modalProps }) {
   // [1] 내부 상태 관리
   const [videoUrl, setVideoUrl] = useState('') // 입력 url
   const [error, setError] = useState('') // url 입력 오류
-  const [preview, setPreview] = useState('') // 영상 정보 미리보기
+  const [preview, setPreview] = useState(null) // 영상 정보 미리보기
   const [verifying, setVerifying] = useState(false) // 검증 중
   const [verified, setVerified] = useState(false) // 검증 완료
   const [loading, setLoading] = useState(false) // 로딩 상태
@@ -64,7 +63,7 @@ export default function VideoLinkFormModal({ modalProps }) {
 
   // 모달 초기화 함수
   const init = () => {
-    videoUrl('')
+    setVideoUrl('')
     setError('')
     setLoading(false)
     setVerified(false)
@@ -88,19 +87,19 @@ export default function VideoLinkFormModal({ modalProps }) {
   const handleVerify = async () => {
 
     try {
-
       // 검증 중 활성화
       setVerifying(true)
 
       // 검증 로직호출
       const json = await modalSubmit.handleVerify(videoUrl)
       if (!json.success) {
-        setError(json.inputErrors?.videoUrl ?? {}) // 유효성 검사 오류 시 (필드 하나만 검증)
+        setError(json.inputErrors?.videoUrl|| '올바른 URL을 입력해 주세요.') // 유효성 검사 오류 시 (필드 하나만 검증)
+        setPreview(null)
         return
       }
 
       // 조회 성공 시 미리보기 데이터 표시
-      setPreview(json.data || {})
+      setPreview(json.data || null)
 
       // 검증 성공 처리
       setVerified(true)
@@ -129,8 +128,9 @@ export default function VideoLinkFormModal({ modalProps }) {
 
       // 제출 수행 (url만 제출)
       const json = await modalSubmit.handleSubmit({videoUrl})
-      if (!json.success && json.inputErrors) {
-        setError(json.inputErrors.videoUrl) // 유효성 검사 오류 시 (필드 하나만 검증)
+      if (!json.success) {
+        setError(json.inputErrors?.videoUrl || json.message || '오류가 발생했습니다.')
+        setPreview(null)
         return
       }
 
@@ -179,28 +179,49 @@ export default function VideoLinkFormModal({ modalProps }) {
         }}
       >
         
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2, pb: 5 }}>
 
-          {/* URL 등록 */}
-          <TextField
-            type="text"
-            name="videoUrl"
-            value={videoUrl}
-            onChange={(e) => handleChangeRq({'videoUrl' : e.target.value})}
-            error={error} // 오류 여부 (true - 활성화)
-            helperText={getHelperText()} // 안내 메세지 (오류 발생 시엔 오류 메세지로 대체)
-            disabled={loading} // 로딩 중에는 비활성화
-            fullWidth
-            autoComplete="off"
-            sx={{
-              // helperText 왼쪽 마진 조정
-              '& .MuiFormHelperText-root': {
-                marginLeft: 1,
-                marginTop: '4px'
-              }
-            }}
-          >
-          </TextField>
+          {/* URL 입력 + 확인 버튼 */}
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+            <TextField
+              type="text"
+              label="YouTube 영상 URL"
+              name="videoUrl"
+              value={videoUrl}
+              onChange={(e) => handleChangeRq(e.target.value)}
+              error={!!error}
+              helperText={getHelperText()}
+              disabled={loading || verifying}
+              fullWidth
+              autoComplete="off"
+              sx={{
+                flex: 1,
+                '& .MuiFormHelperText-root': {
+                  marginLeft: 1,
+                  marginTop: '4px',
+                  whiteSpace: 'pre-line'
+                }
+              }}
+            />
+            
+            <Button
+              variant="contained"
+              onClick={handleVerify}
+              disabled={!videoUrl || loading || verifying || verified}
+              sx={{
+                minWidth: 100,
+                height: 56,
+                bgcolor: 'base.main',
+                '&:hover': { bgcolor: 'base.dark' }
+              }}
+            >
+              {verifying ? (
+                <CircularProgress size={24} sx={{ color: 'white' }} />
+              ) : (
+                '확인'
+              )}
+            </Button>
+          </Box>
 
           {/* 미리보기 */}
           {/* 미리보기 영역 */}
@@ -217,8 +238,8 @@ export default function VideoLinkFormModal({ modalProps }) {
               <VideoCard 
                 video={preview} 
                 admin={false}
-                customWidth={400}
-                customHeight={420}
+                cardWidth={450}
+                cardHeight={430}
               />
             </Box>
           )}

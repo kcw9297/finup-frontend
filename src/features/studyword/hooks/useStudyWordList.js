@@ -120,18 +120,18 @@ export function useStudyWordList({ admin = false }) {
   };
 
   // 단어 삭제 처리
-const handleAfterRemove = () => {
+  const handleAfterRemove = () => {
 
-  // 삭제 후 현재 페이지에 데이터가 없고, 1페이지이면, 전 페이지로 리로드
-  const pagination = searchRp.pagination
-  const data = searchRp.data
+    // 삭제 후 현재 페이지에 데이터가 없고, 1페이지이면, 전 페이지로 리로드
+    const pagination = searchRp.pagination
+    const data = searchRp.data
 
-  if (data.length - 1 === 0 && pagination.pageNum > 1) {
-    setSearchParams({ ...searchRq, pageNum: searchRq.pageNum - 1});
-  } else {
-    setSearchParams(searchRq)
-  }
-};
+    if (data.length - 1 === 0 && pagination.pageNum > 1) {
+      setSearchParams({ ...searchRq, pageNum: searchRq.pageNum - 1});
+    } else {
+      setForceReload(prev => prev + 1) // 페이지 조정이 없다면, 강제 리로드만 수행
+    }
+  };
 
    // 단어 파일 업로드 처리
   const handleAfterUploadImageFile = (studyWordId, imageUrl) => {
@@ -181,8 +181,17 @@ const handleAfterRemove = () => {
   // [4] useEffect 및 REST API 요청 함수 선언
   // 리로드 발생 시, 기본 파라미터로 초기화
   useEffect(() => {
-    setSearchParams(DEFAULT_SEARCH_RQ)
-    setForceReload(prev => prev + 1)
+
+    // 최초 접근이면 수행하지 않음
+    if (reloading == 0) return
+
+    // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
+    const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ);
+  
+    // 이미 같은 파라미터이면, 강제 리로드 번호만 올림
+    if (isDefaultParams) setForceReload(prev => prev + 1)
+    else setSearchParams(DEFAULT_SEARCH_RQ)
+  
   }, [reloading]);
 
   // 파라미터 변동 시 검색

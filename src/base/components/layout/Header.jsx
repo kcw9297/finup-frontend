@@ -6,7 +6,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from '../../../assets/logo.png'
 import { useAuthStore } from '../../stores/useAuthStore';
-import { useLogout } from '../../hooks/useLogout';
+import { useAuth } from '../../hooks/useAuth';
 
 /**
  * 홈페이지 Header
@@ -14,24 +14,28 @@ import { useLogout } from '../../hooks/useLogout';
 
 export default function Header() {
 
-  // 메뉴 목록
+  // [1] 메뉴 목록 및 사용 Hooks
   const manuItems = [
-    { label: "개념+", path: "/login" },
+    { label: "개념+", path: "/studies/search" },
     { label: "뉴스+", path: "/news/list" },
     { label: "종목+", path: "/stocks" },
     { label: "단어장+", path: "/words" },
   ]
-  const { isAuthenticated, loading, loginMember } = useAuthStore()
-  const navigate = useNavigate()
-  const { handleLogout } = useLogout()
-  const {pathname} = useLocation()
 
+  const navigate = useNavigate()
+  const { handleLogout, loading, isAuthenticated, loginMember } = useAuth()
+  const { pathname } = useLocation()
+
+  // [2] 프로필 클릭 처리 함수
   const onProfileCilck = () => {
-    if (!isAuthenticated || !loginMember) navigate('/login');
+
+    // 인증 상태에 따라 처리 수행
+    if (!isAuthenticated) navigate('/login');
     else if (loginMember.role === 'ADMIN') navigate('/admin/members');
     else navigate('/mypage');
   }
 
+  // [3] 헤더 렌더링
   return (
     <AppBar 
       position='sticky'

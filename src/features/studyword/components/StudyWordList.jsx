@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import OrderBar from "../../../base/components/bar/OrderBar";
 import PageBar from "../../../base/components/bar/PageBar";
 import FormModal from "../../../base/components/modal/FormModal";
-import DeleteConfirmModal from "../../../base/components/modal/DeleteConfirmModal";
+import ConfirmModal from "../../../base/components/modal/ConfirmModal";
 import { useStudyWordList } from "../hooks/useStudyWordList";
 import { useStudyWordWriteModal } from "../hooks/useStudyWordWriteModal";
 import WordCard from "../../../base/components/card/WordCard";
@@ -157,8 +157,8 @@ export default function StudyWordList({ admin = false }) {
         {/* 모달 영역 */}
         <FormModal modalProps={wordWriteProps} />
         <FormModal modalProps={wordEditProps} />
-        <DeleteConfirmModal modalProps={wordRemoveProps} />
-        <DeleteConfirmModal modalProps={wordRemoveFileProps} />
+        <ConfirmModal modalProps={wordRemoveProps} />
+        <ConfirmModal modalProps={wordRemoveFileProps} />
     </Box>
   )
 }

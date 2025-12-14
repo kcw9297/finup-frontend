@@ -1,32 +1,32 @@
 import { 
-  Box, Typography, Paper, Button, IconButton,
-  Tooltip, 
+  Box, Typography, Paper, Button, IconButton, 
+  Card, CardMedia, CardContent, Chip
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { useState } from "react";
-import WordCard from '../../../base/components/card/WordCard';
+import VideoCard from '../../../base/components/card/VideoCard';
+import { useVideoLists } from '../hooks/useVideoLists';
 
 
 /**
- * 단계 학습 단어 카드 묶음 컴포넌트
+ * 단계 학습 영상 카드 묶음 컴포넌트
  * @author kcw
- * @since 2025-12-09
+ * @since 2025-12-14
  */
 
-export default function StudyWords({ words = [], admin = false }) {
+export default function VideoLinks({ videos = [], admin = false }) {
 
-  // 페이지 상태 (words 여기서 가져올 것)
+  // 페이지 상태
   const [currentPage, setCurrentPage] = useState(0);
-  const pageCount = Math.max(1, Math.ceil(words.length / 4));
+  const { ListRp, loading, refresh } = useVideoLists()
+  const pageCount = Math.max(1, Math.ceil(videos.length / 4));
 
   // 렌더링
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-
-        {/* 말머리 + 재추천(refresh) 버튼 */}
+        {/* 말머리 + 우측 버튼 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 
           {/* 말머리 */}
@@ -71,7 +71,6 @@ export default function StudyWords({ words = [], admin = false }) {
               <RefreshIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-
         </Box>
 
         {/* 페이지 네비게이션 버튼 */}
@@ -95,10 +94,10 @@ export default function StudyWords({ words = [], admin = false }) {
 
       {/* 단어 그리드 (4개씩) */}
       {/* 관리자가 아니고, 단어가 없으면 빈 메세지 */}
-      {!admin && words.length === 0 ? (
+      {!admin && videos.length === 0 ? (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 350, maxHeight: 350 }}>
           <Typography variant="body2" color="text.secondary">
-            추천된 단어가 없습니다.
+            추천된 영상이 없습니다.
           </Typography>
         </Box>
       ) : (
@@ -106,8 +105,8 @@ export default function StudyWords({ words = [], admin = false }) {
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
 
           {/* 단어 카드들 */}
-          {words.slice(currentPage * 3, currentPage * 3 + 3).map((word) => (
-            <WordCard key={word.id} word={word} />
+          {videos.slice(currentPage * 3, currentPage * 3 + 3).map((video) => (
+            <VideoCard key={video.id} word={video} />
           ))}
 
         </Box>
