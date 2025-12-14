@@ -1,15 +1,16 @@
 //import './StocksListTable.css';
 import data from "./test/StocksTestData.js";
 import { useState } from 'react';
-import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar } from '@mui/material';
+import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Avatar } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";
 import theme from "../../../base/design/thema.js";
-import { useStockList } from "../hooks/useStocksMarketCapList.js";
+import { useStockList } from "../hooks/useStocksTradingValueList.js";
 import { useNavigate } from "react-router-dom";
 
+
 /* Table */
-/* 시가총액 */
-export default function StocksListMarketCap() { 
+/* 거래량 */
+export default function StocksListTradingValue() { 
 
   const { stockList, loading }  = useStockList();
   const navigate = useNavigate();
@@ -21,18 +22,18 @@ export default function StocksListMarketCap() {
   const formatted = `${year}.${month}.${day}.`;
 
   //~조 ~억원 형식
-  const formatMarketCap = (num) => {
-    const trillion = 10000; 
-    if (num > trillion) {
-      return (
-        Math.floor(num / trillion) +
-        '조 ' +
-        (num % trillion).toLocaleString() +
-        '억원'
-      );
-    }
-    return Number(num).toLocaleString() + '억원';
-  };
+  const formatTradingValue = (num) => {
+  const EOK = 100_000_000;           // 1억
+  const JO  = 1_000_000_000_000;     // 1조
+
+  if (num >= JO) {
+    const jo = Math.floor(num / JO);
+    const eok = Math.floor((num % JO) / EOK);
+    return `${jo}조 ${eok.toLocaleString()}억원`;
+  }
+
+  return `${Math.floor(num / EOK).toLocaleString()}억원`;
+};
 
   //상승 하락 색
   const getChangeColor = (sign) => {
@@ -49,8 +50,8 @@ export default function StocksListMarketCap() {
               <TableCell>순위·오늘({formatted}) 기준</TableCell>               
               <TableCell align="right">현재가</TableCell> 
               <TableCell align="right">등락률</TableCell> 
-              <TableCell align="right">시가총액</TableCell> 
-              <TableCell align="right">시가총액 비중</TableCell> 
+              <TableCell align="right">누적 거래 대금</TableCell> 
+              <TableCell align="right">평균 거래량</TableCell> 
             </TableRow> 
           </TableHead> 
           <TableBody>
@@ -83,8 +84,8 @@ export default function StocksListMarketCap() {
                     >
                     {row.prdyCtrt}%
                   </TableCell> 
-                  <TableCell align="right">{formatMarketCap(row.stckAvls)}</TableCell> 
-                  <TableCell align="right">{row.mrktWholAvlsRlim}%</TableCell> 
+                  <TableCell align="right">{formatTradingValue(row.acmlTrPbmn)}</TableCell> 
+                  <TableCell align="right">{row.avrgVol}%</TableCell> 
                 </TableRow>
               );
             })} 
