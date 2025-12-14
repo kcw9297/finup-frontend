@@ -25,4 +25,3 @@ dist-ssr
 
 # 설정 파일
 .env
-package-lock.json 
