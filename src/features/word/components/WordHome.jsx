@@ -413,7 +413,19 @@ export default function WordHome() {
               기획재정부 시사·경제 용어 사전
             </Typography>
             <Divider sx={{ mb: 1.5 }} />
-            <Typography variant="body2" align="center">
+            <Typography
+              variant="body2"
+              align="center"
+              component="a"
+              href="https://www.moef.go.kr/sisa/main/main"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                cursor: 'pointer',
+                fontWeight: 600,
+                color: 'primary.main',
+              }}
+            >
               바로가기
             </Typography>
           </Paper>
