@@ -1,24 +1,31 @@
 import { Box, Typography, Divider, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useWordDetail } from '../hooks/useWordDetail';
 
-const MOCK_WORD_DETAIL = {
-  title: '선물거래',
-  category: '금융',
-  pathLabel: '스크랩하기',
-  content: `
-선물(futures)거래란 장래 일정 시점에 미리 정한 가격으로 매매할 것을 현재 시점에서 약정하는 거래로, 미래의 가치를 사고 파는 것이다. 선물의 가치가 현물시장에 운용되는 기초자산(채권, 외환, 주식 등)의 가격 변동에 의해 파생적으로 결정되는 파생상품(derivatives) 거래의 일종이다. 미리 정한 가격으로 매매를 약속한 것이기 때문에 가격변동 위험의 회피가 가능하다는 특징이 있다.
 
-위험회피를 목적으로 출발했으나, 고도의 첨단금융기법을 이용, 위험을 능동적으로 받아들임으로써 오히려 고수익·고위험 투자상품으로 발전했다. 우리나라로는 1996년 5월 주가지수 선물시장을 개설한 데 이어 1999년 4월 23일 선물거래소가 부산에서 개장되었다. 1848년에 미국의 시카고에서 82명의 회원으로 시작된 세계 최초의 선물거래소인 시카고상품거래소(CBOT; Chicago Board of Trade)가 설립되어, 곡물, 콩, 옥수수 등의 주요 농산물에 대해 선물계약을 거래하기 시작했다.
 
-이때 거래되는 농산물은 당시 세계 농산물 거래량의 80%를 차지할 정도였다. 60년대 이후 세계경제환경이 급변하면서 금융분야들에 대한 효율적인 관리수단의 필요성이 제기되어 70년대 금융선물이 등장했다. 72년 미국의 시카고상업거래소(CME; Chicago Mercantile Exchange)에서 밀턴 프리드먼 등 경제학자들의 자문을 통해 통화선물이 도입되었다. 그 후 73년에 개별주식옵션, 76년에 채권선물 등 각종 선물관련 금융상품이 개발되기 시작했다.
-  `,
-  aiSummary:
-    '선물거래는 미래 가격을 미리 정해 약속하는 거래로, 원래는 위험을 줄이는 목적이었지만 지금은 고위험·고수익 투자 방식으로도 사용된다.',
-};
-
-export default function WordDetailPage() {
+export default function WordDetail() {
   const navigate = useNavigate();
-  const data = MOCK_WORD_DETAIL;
+
+
+  const { detail, loading } = useWordDetail()
+
+
+  if (loading) {
+    return <Box sx={{ p: 4 }}>로딩 중...</Box>;
+  }
+
+  if (!detail) {
+    return <Box sx={{ p: 4 }}>데이터가 없습니다.</Box>;
+  }
+
+  const data = {
+    title: detail.name,
+    category: '금융',
+    pathLabel: '스크랩하기',
+    content: detail.description,
+    aiSummary: '' // 추후 AI 연동
+  }
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 4 }}>

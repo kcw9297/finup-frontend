@@ -27,6 +27,7 @@ import MemberJoinPage from './pages/member/MemberJoinPage';
 import { elements } from 'chart.js'
 import WordVocaPage from './pages/wordVoca/WordVocaPage'
 import WordSearchPage from './pages/wordVoca/WordSearchPage'
+import WordDetailPage from './pages/wordVoca/WordDetailPage'
 
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
@@ -95,6 +96,7 @@ const nastedRoutes = [
     children: [
       { path: '', element: <WordVocaPage /> },
       { path: 'search', element: <WordSearchPage /> },
+      { path: 'detail/:termId', element: <WordDetailPage /> }
     ]
   },
 
