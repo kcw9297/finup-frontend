@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { StockDetailContext } from "../context/StockDetailContext.js";
 import { useStocksNews } from "../hooks/useStocksNews.js";
 import { useStocksNewsModal } from "../hooks/useStocksNewsModal.js";
+import { OpenInBrowser } from "@mui/icons-material";
 
 export default function StocksDetailNews() {
   const { nameCard } = useContext(StockDetailContext);
@@ -60,7 +61,7 @@ export default function StocksDetailNews() {
             <NewsCard key={idx} {...item} onClick={() => openWithAi(item)} />
           ))}
 
-          <NewsScrollToTop show={showTop} onClick={MoveToTop} />
+          <NewsScrollToTop show={showTop && !open} onClick={MoveToTop} />
         </Box>
         {/* 뉴스 상세 모달 */}
         <NewsModal
