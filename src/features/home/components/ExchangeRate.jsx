@@ -9,7 +9,7 @@ export default function ExchangeRate ({data}) {
 
   const Icon = isUp ? ArrowUpwardIcon : ArrowDownwardIcon;
   const color = isUp ? "stock.rise" : "stock.fall";
-  const sign = isUp ? "+" : "-";
+  const sign = isUp ? "+" : "";
 
   // 소숫점2 + 천자리 콤마
   const formatNumber = (num) => {
@@ -42,7 +42,7 @@ export default function ExchangeRate ({data}) {
         {/* 시세, 증가폭 */}
         <Paper sx={{display: "flex", flexDirection: "row", gap:1, alignItems: 'center'}}>
           <Typography sx={{fontSize:20, fontWeight:600}}>{formatNumber(today)}</Typography>
-          <Typography sx={{fontSize:16, color}}>{sign}{formatNumber(diff)} ({formatNumber(rate)}%)</Typography>
+          <Typography sx={{fontSize:16, color}}>{sign}{formatNumber(diff)} ({sign}{formatNumber(rate)}%)</Typography>
         </Paper>
       </Paper>
 

@@ -22,7 +22,6 @@ import { api } from "../../../base/utils/fetchUtils";
 export function useExchangeRate() {
   const [quotation, setQuotation] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const lastRequestRef = useRef(0);
 
   const fetchExchangeRates = useCallback(async () => {
@@ -36,25 +35,21 @@ export function useExchangeRate() {
         { public: true }
       );
 
-
       if (lastRequestRef.current !== requestId) return;
 
       const payload = res.data ?? [];
 
-      console.log("환율 item 샘플:", payload[0]);
-
-
-      // API → 화면용 데이터 가공
+      // ✅ 백엔드 응답 구조에 맞게 변환
       const mapped = payload.map((item) => {
-      const today = Number(item.dealBasR);
+        const today = Number(item.today);
+        const yesterday = Number(item.yesterday);
 
-      return makeData(
-        `${item.curUnit}/KRW`,
-        today,
-        today
-      );
-    });
-
+        return makeData(
+          item.curUnit === "JPY(100)" ? "JPY/KRW" : `${item.curUnit}/KRW`,
+          today,
+          yesterday
+        );
+      });
 
       setQuotation(mapped);
     } catch (err) {
