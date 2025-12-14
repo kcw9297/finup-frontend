@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { showSnackbar } from "../../../base/config/globalHookConfig"
+import { navigate, showSnackbar } from "../../../base/config/globalHookConfig"
 import { api } from "../../../base/utils/fetchUtils";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../../base/stores/useAuthStore";
@@ -47,9 +47,8 @@ export function useWordSearch() {
 
   // 엔터키 입력
   const handleSearchEnter = (e) => {
-    if (e.key === "Enter") {
-      handleSearch()
-      console.log(e)
+    if (e.key === 'Enter') {
+      executeSearch()
     }
   }
 
@@ -65,14 +64,29 @@ export function useWordSearch() {
   // 검색 실행
   const handleSearch = e => {
     e?.preventDefault()
-    setSearchParams({
-      keyword: searchRq.keyword,
+    executeSearch()
+  }
+
+
+  // 실제 검색 실행
+  const executeSearch = () => {
+    const keyword = searchRq.keyword?.trim()
+    if (!keyword) return
+
+    const params = new URLSearchParams({
+      keyword,
       pageNum: 0,
       pageSize: searchRq.pageSize,
       filter: searchRq.filter || "name",
       order: searchRq.order,
     })
+
+    navigate({
+      pathname: "/words/search",
+      search: `?${params.toString()}`
+    })
   }
+
 
   // 페이지 이동
   const handlePage = page => {

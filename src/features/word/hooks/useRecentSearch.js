@@ -27,6 +27,17 @@ export function useRecentSearch() {
     });
   };
 
+  const removeRecentWord = (keyword) => {
+    api.delete(`/words/recent-searches/${encodeURIComponent(keyword)}`, {
+      onSuccess: () => {
+        console.log("delete success")
+        setRecentKeywords(prev =>
+          prev.filter(item => item !== keyword)
+        )
+      },
+    })
+  }
+
   // [3] 홈 진입 시 1회 호출
   useEffect(() => {
     fetchRecent();
@@ -37,5 +48,6 @@ export function useRecentSearch() {
     recentKeywords,
     loading,
     refresh: fetchRecent,
+    removeRecentWord,
   };
 }
