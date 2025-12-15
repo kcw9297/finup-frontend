@@ -1,6 +1,5 @@
 import { Box, Typography, Avatar } from "@mui/material";
-
-// 뉴스 원문
+import moment from "moment";
 
 export default function KeywordContent({ list }) {
   return (
@@ -9,19 +8,22 @@ export default function KeywordContent({ list }) {
         <Box
           key={idx}
           sx={{
-            display: 'flex',
+            display: "flex",
             alignItems: "center",
             gap: 2,
             padding: 2,
             borderBottom: 1,
-            borderColor: 'line.light',
-            cursor: 'pointer',
-            "&:hover": { backgroundColor: 'background.light' },
+            borderColor: "line.light",
+            cursor: "default",
           }}
         >
-          <Avatar src={item.logo} sx={{ width: 40, height: 40 }} />
+          <Avatar
+            src={item.thumbnail}
+            variant="square"
+            sx={{ width: 40, height: 40, borderRadius: 1 }}
+          />
 
-          <Box sx={{ display: 'flex', flexDirection:'column' }}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography
               sx={{
                 fontWeight: 500,
@@ -33,11 +35,11 @@ export default function KeywordContent({ list }) {
               {item.title}
             </Typography>
             <Typography sx={{ fontSize: 14, color: "text.light" }}>
-              {item.date}
+              {item.publisher} · {moment(item.publishedAt).format("YYYY.MM.DD")}
             </Typography>
           </Box>
         </Box>
       ))}
     </Box>
-  )
+  );
 }

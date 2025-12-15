@@ -104,7 +104,7 @@ export function useMarketIndex() {
     setLoading(true);
     try {
       const res = await api.get(
-        "/home/market-index/latest",
+        "/home/index-market/latest",
         { public: true }
       );
 

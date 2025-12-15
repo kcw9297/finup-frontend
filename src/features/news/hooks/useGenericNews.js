@@ -71,7 +71,7 @@ export default function useGenericNews(fetchUrl, params = {}, isModalOpen = fals
     if (target) observer.observe(target);
 
     return () => observer.disconnect();
-  }, [visibleCount, news.length]);
+  }, [visibleCount, news]);
 
   useEffect(() => {
     const handleScroll = () => {
