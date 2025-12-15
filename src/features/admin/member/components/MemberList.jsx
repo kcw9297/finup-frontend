@@ -5,14 +5,15 @@ import {
   Box, IconButton, Paper, Table, TableHead, Button,
   TableBody, TableRow, TableCell, Tooltip, Typography
 } from "@mui/material";
-import SearchBar from './../../../../base/components/bar/SearchBar';
-import { useState } from "react";
 import PageBar from './../../../../base/components/bar/PageBar';
 import { PDFDownloadLink, Page, Text, Document } from '@react-pdf/renderer';
 import MemberPdfDocument from "./MemberPdfDocument";
 import { pdf } from "@react-pdf/renderer";
 import { api } from "../../../../base/utils/fetchUtils";
 import SearchBar2 from "../../../../base/components/bar/SearchBar2";
+import { TableContainer } from "@mui/material";
+import { maskEmail, maskName } from "../../../../base/utils/mask";
+
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -101,15 +102,24 @@ export default function MemberList() {
 
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
-        <Box sx={{ maxWidth: "980px", mx: "auto" }}>
+        <Box sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          mb: 3,
+          maxWidth: "950px",
+          mx: "auto"
+        }}>
           {/* 상단 타이틀 + 등록 버튼 */}
           <Box sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
             mb: 3,
-          }}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            maxWidth: 750,
+            mx: "auto",
+          }}
+          >
+            <Typography Typography variant="h4" sx={{ fontWeight: 600 }}>
               회원 목록 조회
             </Typography>
           </Box>
@@ -130,45 +140,57 @@ export default function MemberList() {
 
 
           {/* 회원 목록 테이블 */}
-          <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "1000px", mx: "auto" }}>
-            <Table sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>이름</TableCell>
-                  <TableCell sx={{ width: "25%" }}>이메일</TableCell>
-                  <TableCell>활성여부</TableCell>
-                  <TableCell>권한</TableCell>
-                  <TableCell>소셜</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {rows.length === 0 && (
+          <TableContainer component={Paper} sx={{ width: "100%", maxWidth: "950px", mx: "auto", overflowX: "auto" }}>
+            <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "950px", mx: "auto" }}>
+              <Table sx={{ tableLayout: "fixed" }}>
+                <TableHead>
                   <TableRow>
-                    <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
-                      회원 목록이 없습니다.
-                    </TableCell>
+                    <TableCell sx={{ width: 60 }}>ID</TableCell>
+                    <TableCell sx={{ width: 140 }}>이름</TableCell>
+                    <TableCell sx={{ width: 300 }}>이메일</TableCell>
+                    <TableCell sx={{ width: 120 }}>활성여부</TableCell>
+                    <TableCell sx={{ width: 120 }}>권한</TableCell>
+                    <TableCell sx={{ width: 120 }}>소셜</TableCell>
                   </TableRow>
-                )}
+                </TableHead>
 
-                {rows?.map((m, index) =>
-                  <TableRow
-                    key={m.memberId}
-                    hover
-                    sx={{ cursor: "pointer" }}
-                  /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
-                  >
-                    <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
-                    <TableCell>{m.nickname}</TableCell>
-                    <TableCell>{m.email}</TableCell>
-                    <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
-                    <TableCell>{m.memberRoleValue}</TableCell>
-                    <TableCell>{m.socialTypeValue}</TableCell>
-                  </TableRow>)}
-              </TableBody>
-            </Table>
-          </Paper>
+                <TableBody>
+                  {rows.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                        회원 목록이 없습니다.
+                      </TableCell>
+                    </TableRow>
+                  )}
+
+                  {rows?.map((m, index) =>
+                    <TableRow
+                      key={m.memberId}
+                      hover
+                      sx={{ cursor: "pointer" }}
+                    /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
+                    >
+                      <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
+                      <Tooltip
+                        title={m.nickname}
+                        followCursor
+                      >
+                        <TableCell>{maskName(m.nickname)}</TableCell>
+                      </Tooltip>
+                      <Tooltip
+                        followCursor
+                        title={m.email}
+                      >
+                        <TableCell>{maskEmail(m.email)}</TableCell>
+                      </Tooltip>
+                      <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
+                      <TableCell>{m.memberRoleValue}</TableCell>
+                      <TableCell>{m.socialTypeValue}</TableCell>
+                    </TableRow>)}
+                </TableBody>
+              </Table>
+            </Paper>
+          </TableContainer>
           {/* 페이지네이션 */}
           {/* 하단 페이징 */}
           {pagination && pagination.totalPage > 0 && (
