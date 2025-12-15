@@ -1,21 +1,44 @@
-import { useState, useMemo } from "react";
-import useGenericNews from "../../news/hooks/useGenericNews";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { api } from "../../../base/utils/fetchUtils";
 
-export function useKeywordNews () {
-  const params = useMemo(() => ({ category: "date" }), []);
+// 개념 키워드 + 뉴스 미리보기
 
-  const { news = [], loading } = useGenericNews("/news/list", params,false);
+export function useKeywordNews() {
+  // 최신 뉴스 10개 조회
+  const [newsList, setNewsList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const fetchedRef = useRef(false);
 
-  const newsList = useMemo(() => news.slice(0, 10), [news]);
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
 
-  const [showPositive, setShowPositive] = useState(true);
-  const [showNegative, setShowNegative] = useState(true);
+    const fetchLatestNews = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(
+          "/news/latest",
+          { public: true, params: { category: "date", limit: 10 } }
+        );
+        if (res?.success) {
+          setNewsList(res.data ?? []);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchLatestNews();
+  }, []);
+
+  // 뉴스에 포함된 키워드 집계
   const originalKeywords = useMemo(() => {
+    if (!newsList || newsList.length === 0) return [];
+
     const counter = new Map();
 
-    newsList.forEach(article => {
-      article?.ai?.keywords?.forEach(k => {
+    newsList.forEach((article) => {
+      article?.ai?.keywords?.forEach((k) => {
         counter.set(k.term, (counter.get(k.term) || 0) + 1);
       });
     });
@@ -23,27 +46,12 @@ export function useKeywordNews () {
     return Array.from(counter.entries()).map(([text, value]) => ({
       text,
       value,
-      sentiment: "positive",
-      color: "#3182F6",
     }));
   }, [newsList]);
-
-  const filteredKeywords = useMemo(() => {
-    return originalKeywords.filter(k => {
-      if (k.sentiment === "positive" && !showPositive) return false;
-      if (k.sentiment === "negative" && !showNegative) return false;
-      return true;
-    });
-  }, [originalKeywords, showPositive, showNegative]);
 
   return {
     newsList,
     loading,
     originalKeywords,
-    filteredKeywords,
-    showPositive,
-    showNegative,
-    setShowPositive,
-    setShowNegative,
   };
 }
