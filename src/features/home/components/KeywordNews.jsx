@@ -3,8 +3,7 @@ import WordCloud from "./WordCloud";
 import KeywordContent from "./KeywordContent";
 
 // 워드 클라우드 + 뉴스 리스트
-
-export default function KeywordNews({ newsList, originalKeywords, filteredKeywords, }) {
+export default function KeywordNews({ newsList, originalKeywords }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {/* 제목 */}
@@ -32,12 +31,18 @@ export default function KeywordNews({ newsList, originalKeywords, filteredKeywor
       </Box>
 
       {/* 본문 */}
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px", }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "20px",
+        }}
+      >
         {/* 워드클라우드 */}
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <WordCloud
             originalWords={originalKeywords}
-            displayWords={filteredKeywords}
+            displayWords={originalKeywords}
           />
         </Box>
 
