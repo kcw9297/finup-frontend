@@ -10,7 +10,7 @@ import { DEFAULT_SEARCH_RQ, FILTER_OPTIONS } from "../constants/noticeConstant";
  * @author khj
  * @since 2025-12-01
  */
-export function useNoticeList() {
+export function useNoticeList({ admin = false }) {
 
  // [1] 필요 데이터 선언
   const [ searchRp, setSearchRp ] = useState(null) // 검색 결과
@@ -25,17 +25,18 @@ export function useNoticeList() {
   // [2] 필요 함수 선언 
   // Object 생성 함수 (파라미터로부터 직접 뽑아옴)
   const getSearchParams = () => ({
-    filter: searchParams.get('filter') || '',
-    keyword: searchParams.get('keyword') || '',
+    keyword: searchParams.get('keyword') || DEFAULT_SEARCH_RQ.keyword,
+    filter: searchParams.get('filter') || DEFAULT_SEARCH_RQ.filter,
     order: searchParams.get('order') || DEFAULT_SEARCH_RQ.order,
     pageNum: Number(searchParams.get('pageNum')) || DEFAULT_SEARCH_RQ.pageNum,
+    pageSize: Number(searchParams.get('pageSize')) || DEFAULT_SEARCH_RQ.pageSize,
   })
 
   // 검색 요청 (현재 URL 기반 초기화 필수)
   const searchRq = getSearchParams()
 
   // 파라미터 일치 여부 비교 함수
-  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(getSearchParams());
+  const isSameRq = (rq) => JSON.stringify(rq) === JSON.stringify(searchRq);
 
   // 키워드 변경 감지 함수
   const handleKeyword = keyword => {
@@ -97,7 +98,7 @@ export function useNoticeList() {
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
-  // 학습 업데이트 처리
+  // 업데이트 처리
   const handleAfterEdit = (rq) => {
     setSearchRp(prev => ({
       ...prev, 
@@ -109,7 +110,7 @@ export function useNoticeList() {
     }))
   }
 
-  // 학습 삭제 처리
+  // 삭제 처리
   const handleAfterRemove = () => {
 
     // 삭제 후 현재 페이지에 데이터가 없고, 1페이지이면, 전 페이지로 리로드
@@ -168,7 +169,7 @@ export function useNoticeList() {
   // 검색의 경우, 페이지 입장 시 초기 값이 필요하므로, useEffect 사용
   useEffect(() => {
     setLoading(true)
-    api.get('/notices/search', { params: searchRq, onSuccess, onError, onFinally })
+    api.get('/notices/search', { params: searchRq, onSuccess, onError, onFinally, admin })
   }, [searchParams, forceReload])
   
 

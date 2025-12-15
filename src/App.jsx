@@ -6,13 +6,8 @@ import HomePage from './pages/home/HomePage'
 import { useSnackbar } from './base/provider/SnackbarProvider'
 import { useAuth } from './base/hooks/useAuth'
 import { useEffect, useLayoutEffect } from 'react'
-import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
-import NoticeListPage from './pages/admin/notices/NoticeListPage'
-import NoticeDetailPage from './pages/admin/notices/NoticeDetailPage'
-import NoticeEditPage from './pages/admin/notices/NoticeEditPage'
-import NoticeWritePage from './pages/admin/notices/NoticeWritePage'
 import MemberListPage from './pages/admin/member/MemberListPage'
 import NewsPage from './pages/news/NewsPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
@@ -31,6 +26,9 @@ import { elements } from 'chart.js'
 import WordVocaPage from './pages/wordVoca/WordVocaPage'
 import WordSearchPage from './pages/wordVoca/WordSearchPage'
 import WordDetailPage from './pages/wordVoca/WordDetailPage'
+import AdminNoticeListPage from './pages/notice/AdminNoticeListPage'
+import NoticeListPage from './pages/notice/NoticeListPage'
+import NoticeDetailPage from './pages/notice/NoticeDetailPage'
 
 
 
@@ -65,11 +63,8 @@ const nastedRoutes = [
     path: '/admin/*', // url : 관리자 공지사항
     children: [
       // url : 관리자 공지사항
-      { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeListPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeDetailPage /></ProtectedRoute> },
-      { path: 'notices/:noticeId/edit', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeEditPage /></ProtectedRoute> },
-      { path: 'notices/write', element: <ProtectedRoute allowedRoles="ADMIN"><NoticeWritePage /></ProtectedRoute> },
-
+      { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><AdminNoticeListPage /></ProtectedRoute> },
+      
       // url : 회원 목록
       { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
 
@@ -82,6 +77,15 @@ const nastedRoutes = [
       // url : 유튜브 영상
       { path: "video-links", element: <ProtectedRoute allowedRoles="ADMIN"><AdminVideoLinkListPage /></ProtectedRoute> },
 
+    ]
+  },
+
+    {
+    path: '/notices/*',
+    children: [
+      // url : 공지사항 (모두 공개)
+      { path: '', element: <NoticeListPage /> },
+      { path: 'detail/:noticeId', element: <NoticeDetailPage /> },
     ]
   },
 
@@ -124,7 +128,7 @@ export default function App() {
 
   // [1] 전역 상태를 관리하는 Hooks
   const { // 인증 훅    
-    authenticate, isAuthenticated
+    authenticate, logout, isAuthenticated
   } = useAuth()
 
   const { // 북마크 전역 상태를 관리하는 훅
@@ -142,7 +146,7 @@ export default function App() {
 
   // 렌더링 전에 동기적 실행 보장
   useLayoutEffect(() => {
-    initGlobalHook(navigate, showSnackbar)
+    initGlobalHook(navigate, showSnackbar, logout)
   }, [navigate, showSnackbar])
 
   // 페이지 로드 시, 반드시 수행
