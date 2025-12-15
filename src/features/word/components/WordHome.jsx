@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { useWordHome } from '../hooks/useWordHome';
 import { useRecentSearch } from '../hooks/useRecentSearch';
 import { useWordSearch } from '../hooks/useWordSearch';
+import { useWordQuiz } from '../hooks/useWordQuiz';
 
 export default function WordHome() {
   const [openWordbook, setOpenWordbook] = useState(false);
@@ -29,6 +30,7 @@ export default function WordHome() {
   const { recentKeywords, removeRecentWord } = useRecentSearch()
   const [openRecent, setOpenRecent] = useState(false)
   const todayWords = homeData ?? [];
+
 
 
   const {
@@ -45,6 +47,15 @@ export default function WordHome() {
     recent,
     fetchRecent,
   } = useWordSearch()
+
+  const {
+    quiz,
+    locked,
+    loading: quizLoading,
+    selected,
+    result,
+    submitAnswer,
+  } = useWordQuiz()
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
@@ -261,61 +272,89 @@ export default function WordHome() {
               sx={{
                 fontWeight: 700,
                 mb: 2,
-                textAlign: 'left',  // 왼쪽 정렬
+                textAlign: 'left',
                 pl: 0.5,
               }}
             >
               오늘의 퀴즈
             </Typography>
 
-            <Stack direction="row" spacing={3}>
-              {todayQuizzes.map((quiz) => (
-                <Paper
-                  key={quiz.quizId}
-                  variant="outlined"
-                  sx={{
-                    flex: 1,
-                    px: 3,
-                    py: 2,
-                    borderRadius: 2,
-                    minWidth: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 1.2,
-                  }}
-                >
-                  <Typography variant="caption">{quiz.category}</Typography>
+            {quizLoading && (
+              <Typography variant="body2" color="text.secondary">
+                퀴즈를 불러오는 중...
+              </Typography>
+            )}
 
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: 700 }}
-                  >
-                    {quiz.question}
-                  </Typography>
+            {!quizLoading && quiz && (
+              <Paper
+                variant="outlined"
+                sx={{
+                  px: 3,
+                  py: 2,
+                  borderRadius: 2,
+                  minWidth: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1.5,
+                }}
+              >
+                <Typography variant="caption">금융</Typography>
 
-                  <Typography
-                    variant="body2"
-                    sx={{ lineHeight: 1.5 }}
-                  >
-                    {quiz.description}
-                  </Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  다음 설명으로 알맞은 단어는?
+                </Typography>
 
-                  <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-                    {quiz.options.map((opt) => (
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                  {quiz.question}
+                </Typography>
+
+                <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                  {quiz.choices.map((opt) => {
+                    const isSelected = selected === opt;
+
+                    return (
                       <Button
                         key={opt}
                         variant="outlined"
                         size="small"
-                        sx={{ borderRadius: 1.5 }}
+                        disabled={locked}
+                        onClick={() => submitAnswer(opt)}
+                        sx={{
+                          flex: 1,
+                          maxWidth: 260,
+                          justifyContent: 'center',
+                          minHeight: 36,
+                          whiteSpace: 'normal',
+                          borderRadius: 1.5,
+                          borderColor: isSelected
+                            ? result
+                              ? 'success.main'
+                              : 'error.main'
+                            : 'divider',
+                          textAlign: 'center',
+                        }}
                       >
                         {opt}
                       </Button>
-                    ))}
-                  </Stack>
-                </Paper>
-              ))}
-            </Stack>
+                    );
+                  })}
+                </Stack>
+
+                {result === false && !locked && (
+                  <Typography color="error.main" sx={{ mt: 1 }}>
+                    틀렸어요! 다시 한 번 골라보세요 🙂
+                  </Typography>
+                )}
+
+                {result === true && locked && (
+                  <Typography color="success.main" sx={{ mt: 1 }}>
+                    정답입니다 🎉
+                  </Typography>
+                )}
+              </Paper>
+            )}
           </Box>
+
         </Box>
 
 
@@ -442,44 +481,5 @@ export default function WordHome() {
 
 
 
-const todayWords_temp = [
-  {
-    wordId: 1,
-    keyword: '재무제표',
-    description:
-      '기업의 경영활동을 일반적으로 인정된 회계원칙에 따라 간결하게 요약한 재무보고서로, 기업의 상품을 정확히 파악하기 어려운 사람들에게 기업과 관련된 재무 정보를 제공해 주는 데 목적이 있다.',
-  },
-  {
-    wordId: 2,
-    keyword: '자기자본',
-    description:
-      '기업의 총자산에서 타인자본을 제외한 부분으로 기업 소유주의 지분을 의미하며, 기업의 재무 건전성과 안정성을 판단하는 핵심 지표로 활용된다.',
-  },
-  {
-    wordId: 3,
-    keyword: '영업이익',
-    description:
-      '기업의 본업에서 벌어들인 이익을 나타내는 지표로 매출총이익에서 판매비와 관리비를 차감한 금액이며, 회사의 실제 영업 성과를 나타내는 대표적인 지표이다.',
-  },
-];
 
-const todayQuizzes = [
-  {
-    quizId: 1,
-    category: '금융',
-    question: '다음 설명으로 알맞은 단어는?',
-    description:
-      '장래 일정 시점에 미리 정한 가격으로 매매할 것을 현재 시점에서 약정하는 거래로, 미래의 가치를 사고 파는 것.',
-    options: ['선물거래', '합성선물'],
-  },
-  {
-    quizId: 2,
-    category: '금융',
-    question: '다음 설명으로 알맞은 단어는?',
-    description:
-      '위험회피를 목적으로 시작했으나, 고도의 레버리지를 활용해 투기적 거래에 사용되기도 하는 파생상품으로, 기초자산의 가격 변동에 연동해 가치가 변화한다.',
-    options: ['선물거래', '합성선물'],
-  },
-];
 
-const recentKeywords_temp = ['적자', '흑자', '영업이익', '포괄손익계산서', '재무제표', '매출총이익'];
