@@ -1,3 +1,8 @@
+
+/**
+ * 회원 목록 이메일, 이름 정보 마스킹 처리 함수
+ */
+
 export function maskEmail(email) {
   if (!email) return "";
 

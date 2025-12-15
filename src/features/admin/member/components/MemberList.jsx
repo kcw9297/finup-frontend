@@ -6,14 +6,13 @@ import {
   TableBody, TableRow, TableCell, Tooltip, Typography
 } from "@mui/material";
 import PageBar from './../../../../base/components/bar/PageBar';
-import { PDFDownloadLink, Page, Text, Document } from '@react-pdf/renderer';
-import MemberPdfDocument from "./MemberPdfDocument";
-import { pdf } from "@react-pdf/renderer";
-import { api } from "../../../../base/utils/fetchUtils";
 import SearchBar2 from "../../../../base/components/bar/SearchBar2";
 import { TableContainer } from "@mui/material";
 import { maskEmail, maskName } from "../../../../base/utils/mask";
 import theme from "../../../../base/design/thema";
+import { downloadXlsx } from "../../../../base/utils/downloadXlsx";
+import { useMemberPdfExport } from "../hooks/useMemberPdfExport";
+import { useMemberExport } from "../hooks/useMemberExport";
 
 
 const INITIAL_SEARCH_RQ = {
@@ -52,32 +51,9 @@ export default function MemberList() {
     { value: "nickname", label: "닉네임" },
   ]
 
-  // PDF 렌더링
-  const handleDownload = async () => {
-    // [1] 회원 전체 목록 조회 요청 (PDF Export 전용 엔드포인트 사용)
-    const allMembers = await api.get("/members/list/all", {
-      params: {
-        size: 9999  // 전체 불러오기
-      },
-    })
-    // [2] 응답 데이터에서 실제 회원 배열만 추출
-    const list = allMembers.data
+  const { exportMemberPdf } = useMemberPdfExport();
+  const { fetchAllMembers } = useMemberExport();
 
-    // [3] React-PDF Document를 Blob(binary 데이터)으로 변환
-    const blob = await pdf(<MemberPdfDocument list={list} />).toBlob()
-
-    // [4] Blob을 브라우저 임시 URL로 변환하여 다운로드 링크 생성
-    const url = URL.createObjectURL(blob)
-
-    // [5] 가상의 <a> 태그를 만들어 자동으로 다운로드 트리거
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "회원목록.pdf"
-    a.click()
-
-    // [6] 메모리 누수 방지를 위해 URL 해제
-    URL.revokeObjectURL(url)
-  }
 
   // [2] 필요 데이터 정의
 
@@ -92,12 +68,37 @@ export default function MemberList() {
     loading
   } = useMemberList()
 
+
   const rows = memberList
+
+  // [3] 엑셀 다운로드용 함수
+  const handleXlsxDownload = async () => {
+    const members = await fetchAllMembers(searchRq);
+
+    const xlsxData = members.map(m => ({
+      "회원 ID": m.memberId,
+      "이메일": m.email,
+      "닉네임": m.nickname,
+      "권한": m.memberRoleValue,
+      "활성여부": m.isActive ? "활성" : "비활성",
+      "소셜": m.socialTypeValue,
+    }));
+
+    downloadXlsx({
+      data: xlsxData,
+      fileName: "회원 목록",
+      sheetName: "Members",
+    });
+  };
+
+
 
   // console.log("pagination >>>", pagination)
   const navigate = useNavigate()
 
-  // [3] 반환 컴포넌트 구성
+
+
+  // [4] 반환 컴포넌트 구성
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
 
@@ -203,7 +204,7 @@ export default function MemberList() {
             }}
           >
             <Button
-              onClick={handleDownload}
+              onClick={exportMemberPdf}
               variant="outlined"
               size="small"
               sx={{
@@ -238,10 +239,11 @@ export default function MemberList() {
                   borderColor: '#15803D',
                 },
               }}
+              onClick={handleXlsxDownload}
             >엑셀(xlsx) 다운로드</Button>
           </Box>
         </Box>
       </Box>
-    </Box >
+    </Box>
   )
 }
