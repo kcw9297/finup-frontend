@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { api } from "@/base/utils/fetchUtils";
-
-
-import { useAuthStore } from "@/base/stores/useAuthStore";
-import { useSnackbar } from "@/base/provider/context/SnackbarProvider";
+import { api } from "../../../base/utils/fetchUtils";
+import { useAuth } from "../../../base/hooks/useAuth";
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 
 const INITIAL_MEMBER = {
   email: "",
@@ -15,7 +13,7 @@ const INITIAL_MEMBER = {
 export function useMemberMypage() {
   // [1] 상태
   const [member, setMember] = useState(INITIAL_MEMBER);
-  const { loginUser } = useAuthStore();
+  const { loginMember } = useAuth();
   const { showSnackbar } = useSnackbar();
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreview, setProfilePreview] = useState(""); // 미리보기 URL
@@ -37,9 +35,9 @@ export function useMemberMypage() {
 
   // [3] 마이페이지 조회
   useEffect(() => {
-    if (!loginUser?.memberId) return;
+    if (!loginMember?.memberId) return;
 
-    api.get(`/members/${loginUser.memberId}`, {
+    api.get(`/members/${loginMember.memberId}`, {
       onSuccess: (rp) => {
         const next = {
           email: rp.data.email,
@@ -53,7 +51,7 @@ export function useMemberMypage() {
       },
 
     });
-  }, [loginUser]);
+  }, [loginMember]);
 
   // [4] 비밀번호 수정
   const submitEdit = () => {
@@ -68,7 +66,7 @@ export function useMemberMypage() {
     }
 
     api.patch(
-      `/members/${loginUser.memberId}/password`,
+      `/members/${loginMember.memberId}/password`,
       {
         onSuccess: () => {
           showSnackbar("비밀번호가 변경되었습니다.", "success");
@@ -92,7 +90,7 @@ export function useMemberMypage() {
     }
 
     api.patch(
-      `/members/${loginUser.memberId}/nickname`,
+      `/members/${loginMember.memberId}/nickname`,
       {
         onSuccess: () => {
           showSnackbar("닉네임이 변경되었습니다.", "success");
@@ -114,7 +112,7 @@ export function useMemberMypage() {
     formData.append("file", profileFile);
 
     api.patch(
-      `/members/${loginUser.memberId}/profile-image`,
+      `/members/${loginMember.memberId}/profile-image`,
       {
         onSuccess: () => {
           showSnackbar("프로필 이미지가 변경되었습니다.", "success");
