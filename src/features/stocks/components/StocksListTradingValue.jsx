@@ -21,19 +21,28 @@ export default function StocksListTradingValue() {
   const day = String(today.getDate()).padStart(2, "0");
   const formatted = `${year}.${month}.${day}.`;
 
-  //~조 ~억원 형식
+  //~조 ~억 ~만원 형식
   const formatTradingValue = (num) => {
-  const EOK = 100_000_000;           // 1억
-  const JO  = 1_000_000_000_000;     // 1조
+    if (!num || num === 0) return '0원';
 
-  if (num >= JO) {
+    const JO = 1_000_000_000_000; // 1조
+    const EOK = 100_000_000;      // 1억
+    const MAN = 10_000;           // 1만
+
     const jo = Math.floor(num / JO);
     const eok = Math.floor((num % JO) / EOK);
-    return `${jo}조 ${eok.toLocaleString()}억원`;
-  }
+    const man = Math.floor((num % EOK) / MAN);
+    const won = Math.floor((num % MAN));
 
-  return `${Math.floor(num / EOK).toLocaleString()}억원`;
-};
+    let result = [];
+
+    if (jo > 0) result.push(`${jo}조`);
+    if (eok > 0) result.push(`${eok.toLocaleString()}억`);
+    if (man > 0) result.push(`${man.toLocaleString()}만`);
+    if (won > 0) result.push(`${won.toLocaleString()}원`);
+
+    return result.join(' ');
+  };
 
   //상승 하락 색
   const getChangeColor = (sign) => {
@@ -85,7 +94,7 @@ export default function StocksListTradingValue() {
                     {row.prdyCtrt}%
                   </TableCell> 
                   <TableCell align="right">{formatTradingValue(row.acmlTrPbmn)}</TableCell> 
-                  <TableCell align="right">{row.avrgVol}%</TableCell> 
+                  <TableCell align="right">{Number(row.avrgVol).toLocaleString()}주</TableCell> 
                 </TableRow>
               );
             })} 
