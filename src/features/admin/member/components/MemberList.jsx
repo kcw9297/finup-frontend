@@ -190,57 +190,75 @@ export default function MemberList() {
               </Table>
             </Paper>
           </TableContainer>
-          {/* 페이지네이션 */}
-          {/* 하단 페이징 */}
-          {pagination && pagination.totalPage > 0 && (
-            <PageBar pagination={pagination} onChange={handlePage} />
-          )}
+
+          {/* 하단 */}
+          {/* 중앙: 페이징 바 */}
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'flex-end',
               gap: 1,
               mt: 3,
+              position: "relative",
             }}
           >
-            <Button
-              onClick={exportMemberPdf}
-              variant="outlined"
-              size="small"
+            <Box
               sx={{
-                mt: 3,
-                fontWeight: 600,
-                borderRadius: '10px',
-                px: 2,
-                height: 36,
-                color: theme.palette.base.main,
-                borderColor: 'primary.main',
-                '&:hover': {
-                  bgcolor: theme.palette.background.light,
-                  borderColor: 'primary.main',
-                },
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}>
+              {pagination && pagination.totalPage > 0 && (
+                <PageBar pagination={pagination} onChange={handlePage} />
+              )}
+            </Box>
+            {/* 오른쪽: 다운로드 버튼들 */}
+            <Box
+              sx={{
+                marginLeft: 'auto',
+                display: 'flex',
+                gap: 1,
               }}
             >
-              PDF 다운로드
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{
-                mt: 3,
-                fontWeight: 600,
-                borderRadius: '10px',
-                px: 2,
-                height: 36,
-                color: '#15803D',
-                borderColor: '#15803D',
-                '&:hover': {
-                  bgcolor: 'rgba(21, 128, 61, 0.08)',
+              <Button
+                onClick={exportMemberPdf}
+                variant="outlined"
+                size="small"
+                sx={{
+                  mt: 3,
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  px: 2,
+                  height: 36,
+                  color: theme.palette.base.main,
+                  borderColor: 'primary.main',
+                  '&:hover': {
+                    bgcolor: theme.palette.background.light,
+                    borderColor: 'primary.main',
+                  },
+                }}
+              >
+                PDF 다운로드
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{
+                  mt: 3,
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  px: 2,
+                  height: 36,
+                  color: '#15803D',
                   borderColor: '#15803D',
-                },
-              }}
-              onClick={handleXlsxDownload}
-            >엑셀(xlsx) 다운로드</Button>
+                  '&:hover': {
+                    bgcolor: 'rgba(21, 128, 61, 0.08)',
+                    borderColor: '#15803D',
+                  },
+                }}
+                onClick={handleXlsxDownload}
+              >엑셀(xlsx) 다운로드</Button>
+            </Box>
           </Box>
         </Box>
       </Box>
