@@ -10,7 +10,7 @@ import ImageIcon from '@mui/icons-material/Image';
  * @since 2025-12-11
  * @author kcw
  */
-export default function VideoCard({ video, functions, cardWidth = 300, cardHeight = 400, admin = false }) {
+export default function VideoCard({ video, functions, cardWidth = 300, cardHeight = 370, admin = false }) {
 
   // 카드에 담을 정보
   const { 
@@ -30,7 +30,7 @@ export default function VideoCard({ video, functions, cardWidth = 300, cardHeigh
   } = functions || {}
 
   // 크기 설정
-  const imageHeight = 200;
+  const imageHeight = 180;
 
   // 이미지 클릭 시 새 탭에서 영상 열기
   const handleImageClick = () => {

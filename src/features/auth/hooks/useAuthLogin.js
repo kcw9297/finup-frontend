@@ -36,6 +36,11 @@ export function useAuthLogin() {
       }, 100)
     }
 
+    // 성공/실패 콜백 함수 정의
+    const onError = rp => { // 성공
+      showSnackbar(rp.message)
+    }
+
     const onFinally = () => setLoading(false)
     
     // 로딩 상태
@@ -43,7 +48,7 @@ export function useAuthLogin() {
 
     // 로딩 요청 수행
     setLoading(true)
-    api.post('/login', { onSuccess, onFinally }, loginRq)
+    api.post('/login', { onSuccess, onError, onFinally }, loginRq)
   }
 
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useReloadStore } from "../../../base/stores/useReloadStore";
 
 
@@ -17,6 +17,7 @@ export function useStudyDetail({ admin = false }) {
   const [ loading, setLoading ] = useState(true) // 로딩 상태
   const { reloading } = useReloadStore() // 리로딩 감지
   const { studyId } = useParams(); //  경로 변수
+  const navigate = useNavigate()
 
   // [2] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
@@ -24,6 +25,7 @@ export function useStudyDetail({ admin = false }) {
   }
 
   const onError = rp => {
+    if (rp.status === 'STUDY_NOT_FOUND') navigate(-1, { replace: true }) // 없는 정보면 목록으로
     setDetailRp(null) // 검색 결과 제거
   }
 

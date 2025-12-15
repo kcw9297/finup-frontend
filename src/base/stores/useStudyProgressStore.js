@@ -18,19 +18,48 @@ export const useStudyProgressStore = create(set => ({
   start: (studyId) => set((state) => ({
     studyProgresses: [ ...state.studyProgresses, { studyId, studyStatus : 'IN_PROGRESS'} ]
   })),
-  
-  // 진도 완료 처리
-  complete: (studyId) =>
+
+
+  // 진도 진행 처리 (상태만 변경)
+  progress: (studyId) =>
     set((state) => ({
       studyProgresses: state.studyProgresses.map((prev) =>
-        prev.studyId === studyId ? { ...prev, studyStatus : 'COMPLETED' } : prev
+        Number(prev.studyId) === Number(studyId)  ? { ...prev, studyStatus : 'IN_PROGRESS' } : prev
       )
     })
   ),
+  
+  // 진도 완료 처리
+  complete: (studyId) =>
+    set((state) => {
+
+      // 해당 studyId의 진도가 존재하는지 확인 (없는 경우는 새롭게 생성)
+      const exists = state.studyProgresses.some(
+        prev => Number(prev.studyId) === Number(studyId)
+      );
+
+       // 존재하면 상태 변경, 없으면 새로 추가
+    if (exists) {
+      return {
+        studyProgresses: state.studyProgresses.map((prev) =>
+          Number(prev.studyId) === Number(studyId)
+            ? { ...prev, studyStatus: 'COMPLETED' }
+            : prev
+        )
+      };
+    } else {
+      return {
+        studyProgresses: [
+          ...state.studyProgresses,
+          { studyId, studyStatus: 'COMPLETED' }
+        ]
+      };
+    }
+  }),
 
   // 진도 제거 (초기화)
   initialize: (studyId) => set((state) => ({
-    studyProgresses: state.studyProgresses.filter(prev => !(prev.studyId === studyId))
+    studyProgresses: state.studyProgresses.filter(prev => !(Number(prev.studyId) === Number(studyId)))
   })),
 
   // 진도 일괄 제거 (로그아웃 등)

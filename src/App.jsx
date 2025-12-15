@@ -32,6 +32,8 @@ import WordVocaPage from './pages/wordVoca/WordVocaPage'
 import WordSearchPage from './pages/wordVoca/WordSearchPage'
 import WordDetailPage from './pages/wordVoca/WordDetailPage'
 
+
+
 // 자식이 없는 단순 라우팅 리스트
 const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
@@ -87,7 +89,7 @@ const nastedRoutes = [
     path: '/studies/*',
     children: [
       // url : 학습 목록
-      { path: "search", element: <ProtectedRoute><StudyListPage /></ProtectedRoute> },
+      { path: '', element: <ProtectedRoute><StudyListPage /></ProtectedRoute> },
       { path: ":studyId", element: <ProtectedRoute><StudyDetailPage /></ProtectedRoute> },
     ]
   },
@@ -112,10 +114,7 @@ const nastedRoutes = [
   {
     path: '/mypage/*',
     children: [
-      {
-        path: 'member',
-        element: <MypageMemberPage />
-      }
+      { path: '', element: <ProtectedRoute><MypageMemberPage /></ProtectedRoute> },
     ]
   },
 ];

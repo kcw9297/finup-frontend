@@ -41,6 +41,11 @@ export function useAuth() {
     login(loginMember)
   }
 
+  // 관리자 판별 함수
+  const isAdmin = () => {
+    return loginMember.role === 'ADMIN'
+  }
+
 
   // 로그아웃 처리 (사용자가 직접 로그아웃 버튼을 누른 경우)
   const handleLogout = async () => {
@@ -60,7 +65,7 @@ export function useAuth() {
 
   // [3] 반환
   return { 
-    authenticate, handleLogout, handleLogin, loading,
-    isAuthenticated, loginMember
+    loading, isAuthenticated, loginMember,
+    authenticate, handleLogout, handleLogin, isAdmin
   }
 }
