@@ -24,59 +24,57 @@ export default function SearchBar2({ searchRq, onSubmit, onChange, filterOnChang
 
 
   return (
-    <Paper sx={{ p: 3, mb: 3 }}>
-      <Box
-        component="form"
-        onSubmit={(e) => { onSubmit(e); }}
-        sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}
+    <Box
+      component="form"
+      onSubmit={(e) => { onSubmit(e); }}
+      sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}
+    >
+
+      {filterOnChange && (
+        <FormControl size="small" sx={{ minWidth: 120, }}>
+          <InputLabel>필터</InputLabel>
+          <Select
+            value={searchRq.filter}
+            onChange={e => filterOnChange(e.target.value)}
+            autoWidth
+            label="필터"
+            sx={{ minWidth: 100, height: 40, }}
+          >
+            {/* 옵션 목록을 동적으로 생성 (커스터마이징 항목 없으면 기본 디폴트 옵션으로)*/}
+            {items.map(opt => (
+              <MenuItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </MenuItem>
+            ))
+            }
+
+          </Select>
+        </FormControl>
+      )}
+
+      <TextField
+        name="keyword"
+        placeholder="검색어 입력"
+        value={searchRq.keyword}
+        onChange={e => onChange({ keyword: e.target.value })}
+        size="small"
+        sx={{ width: 500 }}
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{
+          minWidth: 40,
+          width: 40,
+          height: 40,
+          borderRadius: 1,
+          p: 0,
+          boxShadow: 'none' // 그림자 제거
+        }}
       >
-
-        {filterOnChange && (
-          <FormControl size="small" sx={{ minWidth: 120, }}>
-            <InputLabel>필터</InputLabel>
-            <Select
-              value={searchRq.filter}
-              onChange={e => filterOnChange(e.target.value)}
-              autoWidth
-              label="필터"
-              sx={{ minWidth: 100, height: 40, }}
-            >
-              {/* 옵션 목록을 동적으로 생성 (커스터마이징 항목 없으면 기본 디폴트 옵션으로)*/}
-              {items.map(opt => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
-              ))
-              }
-
-            </Select>
-          </FormControl>
-        )}
-
-        <TextField
-          name="keyword"
-          placeholder="검색어 입력"
-          value={searchRq.keyword}
-          onChange={e => onChange({ keyword: e.target.value })}
-          size="small"
-          sx={{ width: 500 }}
-        />
-
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            minWidth: 40,
-            width: 40,
-            height: 40,
-            borderRadius: 1,
-            p: 0,
-            boxShadow: 'none' // 그림자 제거
-          }}
-        >
-          <SearchIcon />
-        </Button>
-      </Box>
-    </Paper>
+        <SearchIcon />
+      </Button>
+    </Box>
   )
 }

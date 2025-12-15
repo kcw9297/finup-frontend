@@ -84,8 +84,8 @@ export default function WordDetail() {
             {data.content}
           </Typography>
         </Box>
-
-        {/* ========== AI 요약 ========== */}
+        {/* 
+          ========== AI 요약 ========== 
         <Box sx={{ mb: 8 }}>
           <Typography
             variant="h6"
@@ -97,32 +97,31 @@ export default function WordDetail() {
           >
             AI요약
           </Typography>
+          */}
+        <Typography
+          variant="body1"
+          sx={{
+            lineHeight: 1.8,
+            textAlign: 'left'     // ★ 왼쪽 정렬
+          }}
+        >
+          {data.aiSummary}
+        </Typography>
+      </Box>
 
-          <Typography
-            variant="body1"
-            sx={{
-              lineHeight: 1.8,
-              textAlign: 'left'     // ★ 왼쪽 정렬
-            }}
-          >
-            {data.aiSummary}
-          </Typography>
-        </Box>
-
-        {/* ========== 목록 버튼 ========== */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-          <Button
-            variant="outlined"
-            sx={{
-              minWidth: 120,
-              px: 4,
-              borderRadius: '10px',
-            }}
-            onClick={() => navigate(-1)}
-          >
-            목록
-          </Button>
-        </Box>
+      {/* ========== 목록 버튼 ========== */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+        <Button
+          variant="outlined"
+          sx={{
+            minWidth: 120,
+            px: 4,
+            borderRadius: '10px',
+          }}
+          onClick={() => navigate(-1)}
+        >
+          목록
+        </Button>
       </Box>
     </Box>
   );
