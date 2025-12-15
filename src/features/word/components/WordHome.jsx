@@ -13,51 +13,49 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import WordbookPopup from './WordbookPopup';
+import { useNavigate } from 'react-router-dom';
+
+import { useWordHome } from '../hooks/useWordHome';
+import { useRecentSearch } from '../hooks/useRecentSearch';
+import { useWordSearch } from '../hooks/useWordSearch';
+import { useWordQuiz } from '../hooks/useWordQuiz';
 
 export default function WordHome() {
   const [openWordbook, setOpenWordbook] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
 
-  const todayWords = [
-    {
-      wordId: 1,
-      keyword: '재무제표',
-      description:
-        '기업의 경영활동을 일반적으로 인정된 회계원칙에 따라 간결하게 요약한 재무보고서로, 기업의 상품을 정확히 파악하기 어려운 사람들에게 기업과 관련된 재무 정보를 제공해 주는 데 목적이 있다.',
-    },
-    {
-      wordId: 2,
-      keyword: '자기자본',
-      description:
-        '기업의 총자산에서 타인자본을 제외한 부분으로 기업 소유주의 지분을 의미하며, 기업의 재무 건전성과 안정성을 판단하는 핵심 지표로 활용된다.',
-    },
-    {
-      wordId: 3,
-      keyword: '영업이익',
-      description:
-        '기업의 본업에서 벌어들인 이익을 나타내는 지표로 매출총이익에서 판매비와 관리비를 차감한 금액이며, 회사의 실제 영업 성과를 나타내는 대표적인 지표이다.',
-    },
-  ];
+  const { homeData, loading } = useWordHome();
 
-  const todayQuizzes = [
-    {
-      quizId: 1,
-      category: '금융',
-      question: '다음 설명으로 알맞은 단어는?',
-      description:
-        '장래 일정 시점에 미리 정한 가격으로 매매할 것을 현재 시점에서 약정하는 거래로, 미래의 가치를 사고 파는 것.',
-      options: ['선물거래', '합성선물'],
-    },
-    {
-      quizId: 2,
-      category: '금융',
-      question: '다음 설명으로 알맞은 단어는?',
-      description:
-        '위험회피를 목적으로 시작했으나, 고도의 레버리지를 활용해 투기적 거래에 사용되기도 하는 파생상품으로, 기초자산의 가격 변동에 연동해 가치가 변화한다.',
-      options: ['선물거래', '합성선물'],
-    },
-  ];
+  const { recentKeywords, removeRecentWord } = useRecentSearch()
+  const [openRecent, setOpenRecent] = useState(false)
+  const todayWords = homeData ?? [];
 
-  const recentKeywords = ['적자', '흑자', '영업이익', '포괄손익계산서', '재무제표', '매출총이익'];
+
+
+  const {
+    searchRq,
+    wordList,
+    pagination,
+
+    handleChangeRq,
+    handleSearch,
+    handlePage,
+    handleSearchEnter,
+    handleOrderChange,
+
+    recent,
+    fetchRecent,
+  } = useWordSearch()
+
+  const {
+    quiz,
+    locked,
+    loading: quizLoading,
+    selected,
+    result,
+    submitAnswer,
+  } = useWordQuiz()
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
@@ -66,46 +64,107 @@ export default function WordHome() {
         sx={{
           maxWidth: 1120,
           mx: 'auto',
-          mt: 1,
+          mt: 4,
           mb: 4,
         }}
       >
         <Box
           sx={{
             maxWidth: 780,
-            display: 'flex',
-            alignItems: 'center',
+            mx: 'auto',
+            position: 'relative',
           }}
+          onKeyUp={(e) => handleSearchEnter(e)}
         >
-          <TextField
-            fullWidth
-            placeholder="검색어를 입력하세요."
-            size="small"
-            variant="outlined"
-            InputProps={{
-              sx: {
-                height: 44,
-                borderRadius: 2,
-              },
-            }}
-          />
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: '1fr auto',
+            columnGap: 2,
+            alignItems: 'center',
+          }}>
+            <Box sx={{ position: 'relative' }}>
+              <TextField
+                value={searchRq.keyword}
+                fullWidth
+                size="small"
+                onChange={e => handleChangeRq({ keyword: e.target.value })}
+                onFocus={() => {
+                  fetchRecent()
+                  setOpenRecent(true)
+                }}
+                onBlur={() => {
+                  // 바로 닫지 말고 약간 지연
+                  setTimeout(() => setOpenRecent(false), 150)
+                }}
 
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    height: 44,
+                    borderRadius: '10px',
+                    '& fieldset': {
+                      borderWidth: 2,
+                      borderColor: '#003FBF',
+                    },
+                  },
+                }}
+              />
 
-          <IconButton
-            sx={{
-              bgcolor: '#003FBF',
-              borderRadius: '8px',
-              width: '40px',
-              height: '40px',
-              ml: '20px',
-              '&:hover': {
-                bgcolor: '#0035A5',
-              },
-            }}
-          >
-            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-          </IconButton>
+              {/* 최근 검색어 드롭다운 */}
+              {openRecent && recent.length > 0 && (
+                <Paper
+                  elevation={0}
+                  sx={{
+                    position: 'absolute',
+                    top: 48,        // TextField 바로 아래
+                    left: 0,
+                    right: 0,
+                    zIndex: 10,
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    border: '1px solid'
+                  }}
+                >
+                  {recent.map((word) => (
+                    <Box
+                      key={word}
+                      onMouseDown={() => {
+                        handleChangeRq({ keyword: word })
+                        handleSearch()
+                      }}
+                      sx={{
+                        px: 2,
+                        py: 1.2,
+                        cursor: 'pointer',
+                        fontSize: 13,
+                        '&:hover': {
+                          bgcolor: '#F2F5FF',
+                        },
+                      }}
+                    >
+                      {word}
+                    </Box>
+                  ))}
+                </Paper>
+              )}
+            </Box>
 
+            <IconButton
+              onClick={handleSearch}
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '10px',
+                bgcolor: '#003FBF',
+                '&:hover': {
+                  bgcolor: '#0035A5',
+                },
+              }}
+
+            >
+              <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
+            </IconButton>
+
+          </Box>
         </Box>
       </Box>
 
@@ -158,9 +217,9 @@ export default function WordHome() {
               spacing={3}
 
             >
-              {todayWords.map((word) => (
+              {todayWords.map((words) => (
                 <Paper
-                  key={word.wordId}
+                  key={words.termId}
                   variant="outlined"
                   sx={{
                     //flex: 1,
@@ -173,7 +232,11 @@ export default function WordHome() {
                     display: 'flex',          // 내용 압축
                     flexDirection: 'column',
                     gap: 1,
+                    '&:hover': {
+                      bgcolor: '#F6F8FF',
+                    },
                   }}
+                  onClick={() => navigate(`/words/detail/${words.termId}`)}
                 >
                   <Typography variant="caption">키워드</Typography>
 
@@ -181,14 +244,21 @@ export default function WordHome() {
                     variant="subtitle1"
                     sx={{ fontWeight: 700 }}
                   >
-                    {word.keyword}
+                    {words.name}
                   </Typography>
 
                   <Typography
                     variant="body2"
-                    sx={{ lineHeight: 1.5 }}
+                    sx={{
+                      lineHeight: 1.5,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 4,        // ← 보여줄 줄 수
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
                   >
-                    {word.description}
+                    {words.description}
                   </Typography>
                 </Paper>
               ))}
@@ -202,61 +272,89 @@ export default function WordHome() {
               sx={{
                 fontWeight: 700,
                 mb: 2,
-                textAlign: 'left',  // 왼쪽 정렬
+                textAlign: 'left',
                 pl: 0.5,
               }}
             >
               오늘의 퀴즈
             </Typography>
 
-            <Stack direction="row" spacing={3}>
-              {todayQuizzes.map((quiz) => (
-                <Paper
-                  key={quiz.quizId}
-                  variant="outlined"
-                  sx={{
-                    flex: 1,
-                    px: 3,
-                    py: 2,
-                    borderRadius: 2,
-                    minWidth: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 1.2,
-                  }}
-                >
-                  <Typography variant="caption">{quiz.category}</Typography>
+            {quizLoading && (
+              <Typography variant="body2" color="text.secondary">
+                퀴즈를 불러오는 중...
+              </Typography>
+            )}
 
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: 700 }}
-                  >
-                    {quiz.question}
-                  </Typography>
+            {!quizLoading && quiz && (
+              <Paper
+                variant="outlined"
+                sx={{
+                  px: 3,
+                  py: 2,
+                  borderRadius: 2,
+                  minWidth: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1.5,
+                }}
+              >
+                <Typography variant="caption">금융</Typography>
 
-                  <Typography
-                    variant="body2"
-                    sx={{ lineHeight: 1.5 }}
-                  >
-                    {quiz.description}
-                  </Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  다음 설명으로 알맞은 단어는?
+                </Typography>
 
-                  <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-                    {quiz.options.map((opt) => (
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                  {quiz.question}
+                </Typography>
+
+                <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                  {quiz.choices.map((opt) => {
+                    const isSelected = selected === opt;
+
+                    return (
                       <Button
                         key={opt}
                         variant="outlined"
                         size="small"
-                        sx={{ borderRadius: 1.5 }}
+                        disabled={locked}
+                        onClick={() => submitAnswer(opt)}
+                        sx={{
+                          flex: 1,
+                          maxWidth: 230,
+                          justifyContent: 'center',
+                          minHeight: 36,
+                          whiteSpace: 'normal',
+                          borderRadius: 1.5,
+                          borderColor: isSelected
+                            ? result
+                              ? 'success.main'
+                              : 'error.main'
+                            : 'divider',
+                          textAlign: 'center',
+                        }}
                       >
                         {opt}
                       </Button>
-                    ))}
-                  </Stack>
-                </Paper>
-              ))}
-            </Stack>
+                    );
+                  })}
+                </Stack>
+
+                {result === false && !locked && (
+                  <Typography color="error.main" sx={{ mt: 1 }}>
+                    틀렸어요! 다시 한 번 골라보세요 🙂
+                  </Typography>
+                )}
+
+                {result === true && locked && (
+                  <Typography color="success.main" sx={{ mt: 1 }}>
+                    정답입니다 🎉
+                  </Typography>
+                )}
+              </Paper>
+            )}
           </Box>
+
         </Box>
 
 
@@ -285,7 +383,10 @@ export default function WordHome() {
                   key={kw}
                   label={kw}
                   size="small"
-                  onDelete={() => { }}
+                  onDelete={(e) => {
+                    e.stopPropagation()
+                    removeRecentWord(kw)
+                  }}
                   variant="outlined" //토글배경색상
                   sx={{
                     borderRadius: '999px', // pill 형태 라운드
@@ -310,7 +411,7 @@ export default function WordHome() {
             }}
           >
             <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              이렇게 달라집니다!
+              스크랩한 단어 모아보기
             </Typography>
 
             <Typography
@@ -351,7 +452,19 @@ export default function WordHome() {
               기획재정부 시사·경제 용어 사전
             </Typography>
             <Divider sx={{ mb: 1.5 }} />
-            <Typography variant="body2" align="center">
+            <Typography
+              variant="body2"
+              align="center"
+              component="a"
+              href="https://www.moef.go.kr/sisa/main/main"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                cursor: 'pointer',
+                fontWeight: 600,
+                color: 'primary.main',
+              }}
+            >
               바로가기
             </Typography>
           </Paper>
@@ -365,3 +478,8 @@ export default function WordHome() {
     </Box>
   );
 }
+
+
+
+
+

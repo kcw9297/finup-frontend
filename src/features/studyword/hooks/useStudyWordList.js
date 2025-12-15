@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReloadStore } from "../../../base/stores/useReloadStore";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../../base/utils/fetchUtils";
@@ -19,6 +19,7 @@ export function useStudyWordList({ admin = false }) {
   const [ curFilter, setCurFilter ] = useState('') // 필터 상태 (검색어가 입력되지 않으면 검색하지 않음)
   const [ searchParams, setSearchParams ] = useSearchParams() // 검색 파라미터
   const { reloading } = useReloadStore() // 리로딩 감지
+  const [ forceReload, setForceReload ] = useState(0) // 같은 파라미터여도 리로딩 처리
 
 
   // [2] 필요 함수 선언 
@@ -107,26 +108,61 @@ export function useStudyWordList({ admin = false }) {
   }
 
   // 단어 업데이트 처리
-  const handleAfterEdit = (rq = {}, rp = {}) => {
-    setSearchRp(prev => ({...prev, data: prev.data.map(word => word.studyWordId === rq.studyWordId ? rq : word)}));
-  };
-
-  // 단어 삭제 처리
-  const handleAfterRemove = (studyWordId) => {
-    setSearchRp(prev => ({...prev, data: prev.data.filter(word => word.studyWordId !== studyWordId)}));
-  };
-
-   // 단어 파일 업로드 처리
-  const handleAfterUploadImageFile = (studyWordId, imageUrl) => {
+  const handleAfterEdit = (rq) => {
     setSearchRp(prev => ({
       ...prev, 
       data: prev.data.map(word => 
-        word.studyWordId === studyWordId 
-          ? { ...word, imageUrl } // imageUrl 업데이트
+        word.studyWordId === rq.studyWordId 
+          ? { ...word, ...rq }
           : word
       )
     }));
   };
+
+  // 단어 삭제 처리
+  const handleAfterRemove = () => {
+
+    // 삭제 후 현재 페이지에 데이터가 없고, 1페이지이면, 전 페이지로 리로드
+    const pagination = searchRp.pagination
+    const data = searchRp.data
+
+    if (data.length - 1 === 0 && pagination.pageNum > 1) {
+      setSearchParams({ ...searchRq, pageNum: searchRq.pageNum - 1});
+    } else {
+      setForceReload(prev => prev + 1) // 페이지 조정이 없다면, 강제 리로드만 수행
+    }
+  };
+
+   // 단어 파일 업로드 처리
+  const handleAfterUploadImageFile = (studyWordId, imageUrl) => {
+
+    setSearchRp(prev => {
+      // 변경된 항목만 새 객체 생성
+      const editedData = prev.data.map(word => 
+        word.studyWordId === studyWordId 
+          ? { ...word, imageUrl }
+          : word // 변경 없는 항목은 동일 참조 유지
+      );
+      
+      return { ...prev, data: editedData };
+    });
+  };
+
+  // 단어 파일 삭제 처리
+  const handleAfterRemoveImageFile = (studyWordId) => {
+    
+    setSearchRp(prev => {
+      // 변경된 항목만 새 객체 생성
+      const editedData = prev.data.map(word => 
+        word.studyWordId === studyWordId 
+          ? { ...word, imageUrl: "" }
+          : word // 변경 없는 항목은 동일 참조 유지
+      );
+      
+      return { ...prev, data: editedData };
+    });
+  };
+
 
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
@@ -145,19 +181,29 @@ export function useStudyWordList({ admin = false }) {
   // [4] useEffect 및 REST API 요청 함수 선언
   // 리로드 발생 시, 기본 파라미터로 초기화
   useEffect(() => {
-    setSearchParams(DEFAULT_SEARCH_RQ);
+
+    // 최초 접근이면 수행하지 않음
+    if (reloading == 0) return
+
+    // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
+    const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ);
+  
+    // 이미 같은 파라미터이면, 강제 리로드 번호만 올림
+    if (isDefaultParams) setForceReload(prev => prev + 1)
+    else setSearchParams(DEFAULT_SEARCH_RQ)
+  
   }, [reloading]);
 
   // 파라미터 변동 시 검색
   useEffect(() => {
     setLoading(true)
     api.get('/study-words/search', { params: searchRq, onSuccess, onError, onFinally, admin })
-  }, [searchParams, reloading])
+  }, [searchParams, forceReload])
 
   // [5] 반환
   return {
     searchRq, searchRp, loading, searchProps, 
     handleKeyword, handleSearch, handleFilter, handlePage, handleOrder, 
-    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile
+    handleAfterEdit, handleAfterRemove, handleAfterUploadImageFile, handleAfterRemoveImageFile
   }
 }

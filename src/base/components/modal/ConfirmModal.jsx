@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react';
 
 
 /**
- * DELETE 요청 확인 모달 컴포넌트
+ * 요청 확인 모달 컴포넌트
  * @since 2025-12-10
  * @author kcw
  */
-export default function DeleteConfirmModal({ modalProps }) {
+export default function ConfirmModal({ modalProps }) {
 
   /*
     modalProps 내 내용
@@ -26,7 +26,6 @@ export default function DeleteConfirmModal({ modalProps }) {
 
   // 기본 제출 옵션
   const modalSubmit = {
-    endpoint: '', // REST API URL
     admin: false, // 관리자 API
     public: false, // 공용 API
     handleSubmit: null, // 확인 클릭 시 처리할 함수
@@ -101,7 +100,8 @@ export default function DeleteConfirmModal({ modalProps }) {
         <DialogContentText sx={{ 
           fontSize: '16px',
           color: 'text.primary',
-          lineHeight: 1.6
+          lineHeight: 1.6,
+          whiteSpace: 'pre-line'
         }}>
           {content}
         </DialogContentText>
@@ -129,7 +129,7 @@ export default function DeleteConfirmModal({ modalProps }) {
             '&:hover': { bgcolor: 'base.dark' }
           }}
         >
-          {loading ? (<CircularProgress size={24} sx={{ color: 'white' }} />) : '삭제'}
+          {loading ? (<CircularProgress size={24} sx={{ color: 'white' }} />) : '확인'}
         </Button>
       </DialogActions>
 

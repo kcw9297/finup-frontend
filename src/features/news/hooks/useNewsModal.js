@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react"
-import { api } from "../../../base/utils/fetchUtils";
-import { navigate } from "../../../base/config/globalHookConfig";
+import { useState } from "react";
 
-export function useNewsModal(){
+export function useNewsModal() {
   const [open, setOpen] = useState(false);
-  const [selectedUrl, setSelectedUrl] = useState(null);
   const [article, setArticle] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [news, setNews] = useState([]);
 
   const openModal = (basicInfo) => {
     //  if (!sessionStorage.getItem("jwt")) {
@@ -15,57 +11,22 @@ export function useNewsModal(){
     //   navigate("/login");
     //   return;
     // }
-    setArticle(basicInfo)
-    setSelectedUrl(basicInfo.link)
-    setOpen(true)
-    setLoading(true);
-  }
+    setArticle(basicInfo);
+    setOpen(true);
+  };
 
   const closeModal = () => {
-    setOpen(false)
-    setArticle(null)
-    setSelectedUrl(null)
-    setLoading(false)
-  }
-  
-  const onSuccess = (items) => {
-    setArticle(prev => ({
-      ...prev, 
-      content: items.content,
-      ai: items.ai
-    }))
-  }
-  useEffect(() => {
-    if(!open || !selectedUrl) return;
-    
-    const fetchDetail = async () => {
-      setLoading(true);
-      try{
-        const res = await api.get("/news/detail-ai", {
-          params:{url:selectedUrl},
-          public: true
-        })
-        onSuccess(res.data)
-      }catch (e) {
-        // if(e.response?.status === 403) {
-        //   alert("로그인이 필요합니다.");
-        //   closeModal();
-        //   navigate("/login");
-        //   return;
-        // }
-        console.error("AI 분석 실패", e);
-      }finally{
-        setLoading(false)
-      }
-    }
-    fetchDetail()
-  },[open, selectedUrl])
+    setOpen(false);
+    setArticle(null);
+    setLoading(false);
+  };
 
   return {
     open,
     openModal,
     closeModal,
     article,
-    loading
-  }
+    setArticle,
+    loading: false,
+  };
 }

@@ -5,14 +5,15 @@ import {
   Box, IconButton, Paper, Table, TableHead, Button,
   TableBody, TableRow, TableCell, Tooltip, Typography
 } from "@mui/material";
-import SearchBar from './../../../../base/components/bar/SearchBar';
-import { useState } from "react";
 import PageBar from './../../../../base/components/bar/PageBar';
-import { PDFDownloadLink, Page, Text, Document } from '@react-pdf/renderer';
-import MemberPdfDocument from "./MemberPdfDocument";
-import { pdf } from "@react-pdf/renderer";
-import { api } from "../../../../base/utils/fetchUtils";
 import SearchBar2 from "../../../../base/components/bar/SearchBar2";
+import { TableContainer } from "@mui/material";
+import { maskEmail, maskName } from "../../../../base/utils/mask";
+import theme from "../../../../base/design/thema";
+import { downloadXlsx } from "../../../../base/utils/downloadXlsx";
+import { useMemberPdfExport } from "../hooks/useMemberPdfExport";
+import { useMemberExport } from "../hooks/useMemberExport";
+
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -50,32 +51,9 @@ export default function MemberList() {
     { value: "nickname", label: "닉네임" },
   ]
 
-  // PDF 렌더링
-  const handleDownload = async () => {
-    // [1] 회원 전체 목록 조회 요청 (PDF Export 전용 엔드포인트 사용)
-    const allMembers = await api.get("/members/list/all", {
-      params: {
-        size: 9999  // 전체 불러오기
-      },
-    })
-    // [2] 응답 데이터에서 실제 회원 배열만 추출
-    const list = allMembers.data
+  const { exportMemberPdf } = useMemberPdfExport();
+  const { fetchAllMembers } = useMemberExport();
 
-    // [3] React-PDF Document를 Blob(binary 데이터)으로 변환
-    const blob = await pdf(<MemberPdfDocument list={list} />).toBlob()
-
-    // [4] Blob을 브라우저 임시 URL로 변환하여 다운로드 링크 생성
-    const url = URL.createObjectURL(blob)
-
-    // [5] 가상의 <a> 태그를 만들어 자동으로 다운로드 트리거
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "회원목록.pdf"
-    a.click()
-
-    // [6] 메모리 누수 방지를 위해 URL 해제
-    URL.revokeObjectURL(url)
-  }
 
   // [2] 필요 데이터 정의
 
@@ -90,26 +68,60 @@ export default function MemberList() {
     loading
   } = useMemberList()
 
+
   const rows = memberList
+
+  // [3] 엑셀 다운로드용 함수
+  const handleXlsxDownload = async () => {
+    const members = await fetchAllMembers(searchRq);
+
+    const xlsxData = members.map(m => ({
+      "회원 ID": m.memberId,
+      "이메일": m.email,
+      "닉네임": m.nickname,
+      "권한": m.memberRoleValue,
+      "활성여부": m.isActive ? "활성" : "비활성",
+      "소셜": m.socialTypeValue,
+    }));
+
+    downloadXlsx({
+      data: xlsxData,
+      fileName: "회원 목록",
+      sheetName: "Members",
+    });
+  };
+
+
 
   // console.log("pagination >>>", pagination)
   const navigate = useNavigate()
 
-  // [3] 반환 컴포넌트 구성
+
+
+  // [4] 반환 컴포넌트 구성
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
 
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
-        <Box sx={{ maxWidth: "980px", mx: "auto" }}>
+        <Box sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          mb: 3,
+          maxWidth: '950px',
+          mx: 'auto'
+        }}>
           {/* 상단 타이틀 + 등록 버튼 */}
           <Box sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
             mb: 3,
-          }}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            maxWidth: 750,
+            mx: "auto",
+          }}
+          >
+            <Typography Typography variant="h4" sx={{ fontWeight: 600 }}>
               회원 목록 조회
             </Typography>
           </Box>
@@ -124,56 +136,130 @@ export default function MemberList() {
             selectItems={memberFilterOptions}
           />
 
-          <Button onClick={handleDownload}>
-            PDF 다운로드
-          </Button>
 
 
           {/* 회원 목록 테이블 */}
-          <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "1000px", mx: "auto" }}>
-            <Table sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>이름</TableCell>
-                  <TableCell sx={{ width: "25%" }}>이메일</TableCell>
-                  <TableCell>활성여부</TableCell>
-                  <TableCell>권한</TableCell>
-                  <TableCell>소셜</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {rows.length === 0 && (
+          <TableContainer component={Paper} sx={{ width: "100%", maxWidth: "950px", mx: "auto", overflowX: "auto", mt: 3 }}>
+            <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "950px", mx: "auto" }}>
+              <Table sx={{ tableLayout: "fixed" }}>
+                <TableHead>
                   <TableRow>
-                    <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
-                      회원 목록이 없습니다.
-                    </TableCell>
+                    <TableCell sx={{ width: 60 }}>ID</TableCell>
+                    <TableCell sx={{ width: 140 }}>이름</TableCell>
+                    <TableCell sx={{ width: 300 }}>이메일</TableCell>
+                    <TableCell sx={{ width: 120 }}>활성여부</TableCell>
+                    <TableCell sx={{ width: 120 }}>권한</TableCell>
+                    <TableCell sx={{ width: 120 }}>소셜</TableCell>
                   </TableRow>
-                )}
+                </TableHead>
 
-                {rows?.map((m, index) =>
-                  <TableRow
-                    key={m.memberId}
-                    hover
-                    sx={{ cursor: "pointer" }}
-                  /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
-                  >
-                    <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
-                    <TableCell>{m.nickname}</TableCell>
-                    <TableCell>{m.email}</TableCell>
-                    <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
-                    <TableCell>{m.memberRoleValue}</TableCell>
-                    <TableCell>{m.socialTypeValue}</TableCell>
-                  </TableRow>)}
-              </TableBody>
-            </Table>
-          </Paper>
-          {/* 페이지네이션 */}
-          {/* 하단 페이징 */}
-          {pagination && pagination.totalPage > 0 && (
-            <PageBar pagination={pagination} onChange={handlePage} />
-          )}
+                <TableBody>
+                  {rows.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                        회원 목록이 없습니다.
+                      </TableCell>
+                    </TableRow>
+                  )}
+
+                  {rows?.map((m, index) =>
+                    <TableRow
+                      key={m.memberId}
+                      hover
+                      sx={{ cursor: "pointer" }}
+                    /*onClick={() => navigate(`/admin/members/${m.memberId}`)*/
+                    >
+                      <TableCell sx={{ width: 60 }}>{index + 1}</TableCell>
+                      <Tooltip
+                        title={m.nickname}
+                        followCursor
+                      >
+                        <TableCell>{maskName(m.nickname)}</TableCell>
+                      </Tooltip>
+                      <Tooltip
+                        followCursor
+                        title={m.email}
+                      >
+                        <TableCell>{maskEmail(m.email)}</TableCell>
+                      </Tooltip>
+                      <TableCell>{m.isActive ? "활성" : "비활성"}</TableCell>
+                      <TableCell>{m.memberRoleValue}</TableCell>
+                      <TableCell>{m.socialTypeValue}</TableCell>
+                    </TableRow>)}
+                </TableBody>
+              </Table>
+            </Paper>
+          </TableContainer>
+
+          {/* 하단 */}
+          {/* 중앙: 페이징 바 */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 1,
+              mt: 3,
+              position: "relative",
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}>
+              {pagination && pagination.totalPage > 0 && (
+                <PageBar pagination={pagination} onChange={handlePage} />
+              )}
+            </Box>
+            {/* 오른쪽: 다운로드 버튼들 */}
+            <Box
+              sx={{
+                marginLeft: 'auto',
+                display: 'flex',
+                gap: 1,
+              }}
+            >
+              <Button
+                onClick={exportMemberPdf}
+                variant="outlined"
+                size="small"
+                sx={{
+                  mt: 3,
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  px: 2,
+                  height: 36,
+                  color: theme.palette.base.main,
+                  borderColor: 'primary.main',
+                  '&:hover': {
+                    bgcolor: theme.palette.background.light,
+                    borderColor: 'primary.main',
+                  },
+                }}
+              >
+                PDF 다운로드
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{
+                  mt: 3,
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  px: 2,
+                  height: 36,
+                  color: '#15803D',
+                  borderColor: '#15803D',
+                  '&:hover': {
+                    bgcolor: 'rgba(21, 128, 61, 0.08)',
+                    borderColor: '#15803D',
+                  },
+                }}
+                onClick={handleXlsxDownload}
+              >엑셀(xlsx) 다운로드</Button>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>

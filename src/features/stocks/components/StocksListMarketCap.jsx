@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";
 import theme from "../../../base/design/thema.js";
-import { useStockList } from "../hooks/useStocksList.js";
+import { useStockList } from "../hooks/useStocksMarketCapList.js";
 import { useNavigate } from "react-router-dom";
 
 /* Table */
@@ -54,7 +54,7 @@ export default function StocksListMarketCap() {
             </TableRow> 
           </TableHead> 
           <TableBody>
-            {data.map((row) => {                    
+            {stockList.map((row) => {                    
               return(
                 <TableRow
                   key={row.dataRank} 
@@ -95,53 +95,3 @@ export default function StocksListMarketCap() {
   );
 }
 
-/*
-const formatPrice = (num) => Number(num).toLocaleString() + '원';
-
-<div className="table-container">
-      <div className="table-header">
-        <div className="table-cell rank-wrap">
-          순위·오늘({formatted}) 기준
-        </div>
-        <div className="table-cell price">현재가</div>
-        <div className="table-cell change">등락률</div>
-        <div className="table-cell marketcap">시가총액</div>
-        <div className="table-cell weight">비중</div>
-      </div>
-
-      {data.output.map((item) => (
-        <div className="table-row" key={item.mksc_shrn_iscd}>
-          <div className="table-cell rank-wrap">
-            <div className="table-cell rank">{item.data_rank}</div>
-
-            <div className="table-cell img">
-              <img
-                src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${item.mksc_shrn_iscd}.png`}
-                alt={item.hts_kor_isnm}
-              />
-            </div>
-
-            <div className="table-cell name">{item.hts_kor_isnm}</div>
-          </div>
-
-          <div className="table-cell price">
-            {formatPrice(item.stck_prpr)}
-          </div>
-
-          <div
-            className="table-cell change"
-            style={{ color: getChangeColor(item.prdy_vrss_sign) }}
-          >
-            {item.prdy_ctrt}%
-          </div>
-
-          <div className="table-cell marketcap">
-            {formatMarketCap(item.stck_avls)}
-          </div>
-
-          <div className="table-cell weight">
-            {item.mrkt_whol_avls_rlim}%
-          </div>
-        </div>
-      ))}
-    </div>*/

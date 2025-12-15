@@ -69,34 +69,61 @@ export default function AdminNoticeList() {
     <Box sx={{ display: "flex", width: "100%" }}>
       {/* 우측 콘텐츠 영역 */}
       <Box sx={{ flexGrow: 1, padding: 4 }}>
-        <Box sx={{ maxWidth: "980px", mx: "auto" }}>
+        <Box sx={{
+          justifyContent: 'space-between', // 양 끝 정렬
+          alignItems: 'center', // 수직 중앙 정렬
+          mb: 3,
+          maxWidth: '950px',
+          mx: 'auto'
+        }}>
           {/* 상단 타이틀 + 등록 버튼 */}
           <Box sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
             mb: 3,
+            maxWidth: "750px",
+            mx: "auto",
           }}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            <Typography variant="h4" sx={{ fontWeight: 600 }}>
               공지사항 관리
             </Typography>
 
+
+          </Box>
+          <Box sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 1,
+            marginBottom: 3,
+          }}>
+            { /* 검색 바 */}
+            <Box sx={{ height: 56, display: "flex", alignItems: "center", }}>
+              <SearchBar2
+                searchRq={searchRq}
+                filterOnChange={handleFilter}
+                onChange={handleChangeRq}
+                onSubmit={handleSearch}
+              />
+            </Box>
             <Tooltip title="공지사항 등록">
               <IconButton
-                size="large"
                 onClick={() => navigate("/admin/notices/write")}
+                sx={{
+                  height: 56,
+                  width: 56,
+                  borderRadius: 2,
+                  p: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <AddIcon fontSize="large" />
               </IconButton>
             </Tooltip>
           </Box>
-          { /* 검색 바 */}
-          <SearchBar2
-            searchRq={searchRq}
-            filterOnChange={handleFilter}
-            onChange={handleChangeRq}
-            onSubmit={handleSearch}
-          />
           {/* 공지사항 테이블 */}
           <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "1000px", mx: "auto" }}>
             <Table sx={{ tableLayout: "fixed" }}>

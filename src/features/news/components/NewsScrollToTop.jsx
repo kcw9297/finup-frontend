@@ -1,14 +1,14 @@
 import { Fab, Zoom } from "@mui/material";
 import { useNewsList } from "../hooks/useNewsList"
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import useGenericNews from "../hooks/useGenericNews";
 
-export default function NewsScrollToTop({show}){
-  const {MoveToTop} = useNewsList();
+export default function NewsScrollToTop({show, onClick}){
   return(
     <Zoom in={show}>
       <Fab
         size="small"
-        onClick={MoveToTop}
+        onClick={onClick}
         sx={{
           position: "fixed",
           bottom: 24,

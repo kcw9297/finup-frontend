@@ -43,7 +43,6 @@ export function useStudyWordWriteModal({ admin = false }) {
     fields: MODAL_FIELDS,
     submitText: "등록",
     submit: {
-      reload: true,
       admin,
       handleSubmit: handleWrite
     }

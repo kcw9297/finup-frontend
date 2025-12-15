@@ -10,7 +10,7 @@ import RecommendedVideo from "../../features/home/components/RecommendedVideo";
 import StockFirm from "../../features/home/components/StockFirm";
 
 import { useHomeNotice } from "../../features/home/hooks/useHomeNotice";
-import { useExchangeRate } from "../../features/home/hooks/useExchangeRate";
+import { useExchangeRate, useMarketIndex } from "../../features/home/hooks/useExchangeRate";
 import { useKeywordNews } from "../../features/home/hooks/useKeywordNews";
 import { useRecommendedVideo } from "../../features/home/hooks/useRecommendedVideo";
 import { useStockFirm } from "../../features/home/hooks/useStockFirm";
@@ -22,6 +22,7 @@ export default function HomePage() {
   // 훅 사용
   const { current, fade, showNext } = useHomeNotice(noticeList);
   const { quotation } = useExchangeRate();
+  const { indexes } = useMarketIndex();
   const keywordNews = useKeywordNews();  
   const { videoList } = useRecommendedVideo();
   const { brokerList } = useStockFirm();
@@ -40,7 +41,8 @@ export default function HomePage() {
             showNext={showNext}
           />
           <Box sx={{display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:5}}>
-            {quotation.map((item, i) => (<ExchangeRate key={i} data={item}/>))}
+            {quotation.map((item, i) => (<ExchangeRate key={`fx-${i}`} data={item}/>))}
+            {indexes.map((item, i) => (<ExchangeRate key={`idx-${i}`} data={item}/>))}
           </Box>
         </Box>
 

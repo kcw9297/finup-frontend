@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-import Loading from './../../../base/components/layout/Loading';
 
 
 /**
@@ -17,6 +16,7 @@ export function useWordHome() {
   const [loading, setLoading] = useState(true)
 
   const { showSnackbar } = useSnackbar()
+
 
   // [2] 필요 함수 선언
   const clearHomeData = () => setHomeData(null)
@@ -38,7 +38,7 @@ export function useWordHome() {
   // [4] REST API 요청
   const loadWordHome = () => {
     setLoading(true)
-    api.get("",
+    api.get("/words/home",
       { onSuccess, onError, onFinally }
     )
   }
@@ -50,7 +50,7 @@ export function useWordHome() {
   // [5] 반환
   return {
     homeData,
-    Loading,
+    loading,
     reload: loadWordHome,
     clearHomeData,
   }

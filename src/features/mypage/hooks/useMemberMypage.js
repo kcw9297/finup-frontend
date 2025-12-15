@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
+import { useAuth } from "../../../base/hooks/useAuth";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-import { useAuthStore } from "../../../base/stores/useAuthStore";
-
 
 const INITIAL_MEMBER = {
   memberId: null,
@@ -16,6 +15,7 @@ const INITIAL_MEMBER = {
 export function useMemberMypage() {
   // [1] 상태
   const [member, setMember] = useState(INITIAL_MEMBER);
+  const { loginMember } = useAuth();
   const { showSnackbar } = useSnackbar();
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreview, setProfilePreview] = useState(""); // 미리보기 URL
@@ -37,6 +37,7 @@ export function useMemberMypage() {
 
   // [3] 마이페이지 조회
   useEffect(() => {
+    if (!loginMember?.memberId) return;
     api.get("/members/me", {
       onSuccess: (rp) => {
         const next = {
@@ -55,7 +56,7 @@ export function useMemberMypage() {
         showSnackbar("회원 정보를 불러오지 못했습니다.", "error");
       },
     });
-  }, []);
+  }, [loginMember]);
 
   // [4] 비밀번호 수정
   const submitEdit = () => {
@@ -79,7 +80,7 @@ export function useMemberMypage() {
 
     // 통과하면 서버 호출
     api.patch(
-      `/members/${member.memberId}/password`,
+      `/members/${loginMember.memberId}/password`,
       {
         onSuccess: () => {
           showSnackbar("비밀번호가 변경되었습니다.", "success");
@@ -106,7 +107,7 @@ export function useMemberMypage() {
     }
 
     api.patch(
-      `/members/${member.memberId}/nickname`,
+      `/members/${loginMember.memberId}/nickname`,
       {
         onSuccess: () => {
           showSnackbar("닉네임이 변경되었습니다.", "success");

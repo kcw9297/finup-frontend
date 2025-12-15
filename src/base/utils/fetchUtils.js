@@ -1,7 +1,10 @@
-import { navigate, showSnackbar, logout } from '../../base/config/globalHookConfig'
+import { navigate, showSnackbar } from '../../base/config/globalHookConfig'
 
 // 환경 변수 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+// CSRF 토큰 발급을 확인할 PROMISE
+let csrfPromise = null;
 
 /**
  * 내부 백엔드 서버에 REST API 요청 전송
@@ -19,8 +22,8 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     headers : {},       // HTTP Header
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
+    printMessage: true  // 메세지 출력 (기본: 활성화)
   }
-
 
   // [2] 필요 데이터 선언
   options = { ...baseOptions, ...options} // API 요청 Options
@@ -51,7 +54,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
 
     // [5] 성공/실패 처리
     if (!response.ok || !rp.success) {
-      console.log('요청 처리 실패', rp)
+      console.log(`요청 처리 실패\n${requestUrl}\n`, rp)
 
       // 토큰 만료 혹은 로그인이 필요한 서비스인 경우
       if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
@@ -69,11 +72,9 @@ async function fetchInner(endpoint, options = {}, body = {}) {
         // returnUrl 생성
         const returnUrl = currentPath + currentSearch;
         const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
-        console.log('Navigate to:', loginUrl);
-        logout();
-        window.location.href = loginUrl;
-
+        
         // 리다이렉트 값을 넘기고 반환
+        window.location.href = loginUrl;
         return { ...rp, redirected: true }
       }
 
@@ -92,8 +93,8 @@ async function fetchInner(endpoint, options = {}, body = {}) {
         return { ...rp, redirected: true }
       }
       
-      // 유효성 검사 이외 오류는 메세지 출력 (유효성 검사 오류는 미출력)
-      if (rp.status !== 'VALIDATION_INVALID_PARAMETER') 
+      // 유효성 검사 이외의 오류 메세지는 스낵바로 출력 (권한, 로그인 필요 메세지는 printMessage 옵션과 무관하게 출력)
+      if (rp.status !== 'VALIDATION_INVALID_PARAMETER' && options.printMessage) 
         showSnackbar(rp.message || '오류가 발생했습니다.')
 
       // 에러 콜백 함수 존재 시 처리
@@ -101,7 +102,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
 
       // 성공 처리
     } else {
-      console.log('요청 처리 성공', rp);
+      console.log(`요청 처리 완료\n${requestUrl}\n`, rp)
       if (options.onSuccess) options.onSuccess(rp) // 성공 콜백함수 있는 경우 실행
     } 
 
@@ -110,7 +111,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
 
     // 서버 요청 실패 처리 (서버에 요청을 보내지 않음)
   } catch (err) {
-    console.error('API 요청 시도 실패', err)
+    console.log(`API 요청 시도 실패\n${requestUrl}\n`, err)
 
     // 네트워크 에러를 전달할 응답 추가
     const errorResponse = {
@@ -120,7 +121,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     }
 
     // 스낵바 출력
-    if (options.handleError) showSnackbar(errorResponse.message)
+    showSnackbar(errorResponse.message)
 
     // 실패 콜백함수가 있다면 실행 후 오류 응답 반환
     if (options.onError) options.onError(errorResponse)
@@ -151,6 +152,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
     headers : {},       // HTTP Header
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
+    printMessage: true  // 메세지 출력 (기본: 활성화)
   }
 
 
@@ -179,7 +181,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
 
     // [5] 성공/실패 처리
     if (!response.ok || !rp.success) {
-      console.log('요청 처리 실패', rp)
+      console.log(`요청 처리 실패\n${requestUrl}\n`, rp)
       
       // 토큰 만료 혹은 로그인이 필요한 서비스인 경우
       if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
@@ -197,11 +199,9 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
         // returnUrl 생성
         const returnUrl = currentPath + currentSearch;
         const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
-        console.log('Navigate to:', loginUrl);
-        logout();
-        window.location.href = loginUrl;
-
+        
         // 리다이렉트 값을 넘기고 반환
+        window.location.href = loginUrl;
         return { ...rp, redirected: true }
       }
 
@@ -220,8 +220,8 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
         return { ...rp, redirected: true }
       }
 
-      // 유효성 검사 이외 오류는 메세지 출력 (유효성 검사 오류는 미출력)
-      if (rp.status !== 'VALIDATION_INVALID_PARAMETER') 
+      // 유효성 검사 이외의 오류 메세지는 스낵바로 출력 (권한, 로그인 필요 메세지는 printMessage 옵션과 무관하게 출력)
+      if (rp.status !== 'VALIDATION_INVALID_PARAMETER' && options.pri) 
         showSnackbar(rp.message || '오류가 발생했습니다.')
 
       // 에러 콜백 함수 존재 시 처리
@@ -229,7 +229,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
 
       // 성공 처리
     } else {
-      console.log('요청 처리 성공', rp);
+      console.log(`요청 처리 완료\n${requestUrl}\n`, rp)
       if (options.onSuccess) options.onSuccess(rp) // 성공 콜백함수 있는 경우 실행
     } 
 
@@ -238,7 +238,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
 
     // 서버 요청 실패 처리 (서버에 요청을 보내지 않음)
   } catch (err) {
-    console.error('API 요청 시도 실패', err)
+    console.log(`'API 요청 시도 실패\n${requestUrl}\n`, err)
 
     // 네트워크 에러를 전달할 응답 추가
     const errorResponse = {
@@ -248,7 +248,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
     }
 
     // 스낵바 출력
-    if (options.handleError) showSnackbar(errorResponse.message)
+    showSnackbar(errorResponse.message)
 
     // 실패 콜백함수가 있다면 실행 후 오류 응답 반환
     if (options.onError) options.onError(errorResponse)
@@ -359,8 +359,9 @@ function buildUrl(endpoint, options) {
 
   // [1] public, admin 여부 판별 값
   const { public: isPublic, admin: isAdmin } = options;
-  const hasParams = options.method === 'GET' && options.params && Object.keys(options.params).length > 0
-
+  const hasParams = (options.method === 'GET' || options.method === 'DELETE') && 
+                    options.params && 
+                    Object.keys(options.params).length > 0
 
   // [2] 경우의 수 확인 후, 기본 URL 생성
   let baseUrl;
@@ -401,19 +402,29 @@ async function getCsrf() {
   let csrf = getCsrfFromCookie()
   if (csrf) return csrf // 존재하는 경우, 그대로 반환 
 
-  // 직접 fetch 호출
-  try {
-    const response = await fetch(`${BASE_URL}/api/auth/csrf`, {
-      method: 'GET',
-      credentials: 'include',
-    })
-
-    const rp = await toJson(response)
-    console.log("요청 처리 성공", rp)
-
-  } catch (err) {
-    console.error('CSRF 토큰 발급 실패', err)
+  if (csrfPromise) {
+    await csrfPromise
+    return getCsrfFromCookie()
   }
+
+  // 직접 fetch 호출
+  csrfPromise = fetch(`${BASE_URL}/api/auth/csrf`, {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then(async (response) => {
+      const rp = await toJson(response)
+      console.log("CSRF 토큰 발급 성공", rp)
+      return getCsrfFromCookie()
+    })
+    .catch((err) => {
+      console.error('CSRF 토큰 발급 실패', err)
+      return null
+    })
+    .finally(() => {
+      // 요청 완료 후 Promise 초기화
+      csrfPromise = null
+    })
 
   // 다시 수행
   return getCsrfFromCookie()

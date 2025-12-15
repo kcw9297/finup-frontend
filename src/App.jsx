@@ -5,7 +5,7 @@ import AuthLoginPage from './pages/auth/AuthLoginPage'
 import HomePage from './pages/home/HomePage'
 import { useSnackbar } from './base/provider/SnackbarProvider'
 import { useAuth } from './base/hooks/useAuth'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { useAuthStore } from './base/stores/useAuthStore'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
@@ -19,16 +19,18 @@ import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
-import WordHomePage from './pages/word/WordHomePage'
-import WordSearchPage from './pages/word/WordSearchPage'
-import WordDetailPage from './pages/word/WordDetailPage'
-import YoutubeVideoWritePage from './pages/admin/youtube/YoutubeVideoWritePage'
-import YoutubeListPage from './pages/admin/youtube/YoutubeListPage'
+import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
 import AdminStudyListPage from './pages/study/AdminStudyListPage'
-import AdminStudyDetailPage from './pages/study/AdminStudyDetailPage'
-import YoutubeEditPage from './pages/admin/youtube/YoutubeEditPage'
+import StudyDetailPage from './pages/study/StudyDetailPage'
 import AdminStudyWordListPage from './pages/studyword/AdminStudyWordListPage'
 import MemberJoinPage from './pages/member/MemberJoinPage';
+import StudyListPage from './pages/study/StudyListPage';
+import { useBookmark } from './base/hooks/useBookmark'
+import { useStudyProgress } from './base/hooks/useStudyProgress'
+import { elements } from 'chart.js'
+import WordVocaPage from './pages/wordVoca/WordVocaPage'
+import WordSearchPage from './pages/wordVoca/WordSearchPage'
+import WordDetailPage from './pages/wordVoca/WordDetailPage'
 
 
 
@@ -38,8 +40,6 @@ const simpleRoutes = [
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
   { path: '/join', element: <GuestRoute><MemberJoinPage /></GuestRoute> }, // 회원가입 페이지
   { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
-
-
 ]
 
 // 자식이 있는 라우팅 리스트
@@ -75,27 +75,25 @@ const nastedRoutes = [
 
       // url : 개념 학습 관리
       { path: "studies", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyListPage /></ProtectedRoute> },
-      { path: "studies/:studyId", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyDetailPage /></ProtectedRoute> },
 
       // url : 개념 단어 관리
       { path: "study-words", element: <ProtectedRoute allowedRoles="ADMIN"><AdminStudyWordListPage /></ProtectedRoute> },
 
       // url : 유튜브 영상
-      { path: "youtube", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeListPage /></ProtectedRoute> },
-      { path: "youtube/write", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeVideoWritePage /></ProtectedRoute> },
-      { path: "youtube/:videoLinkId/edit", element: <ProtectedRoute allowedRoles="ADMIN"><YoutubeEditPage /></ProtectedRoute> },
+      { path: "video-links", element: <ProtectedRoute allowedRoles="ADMIN"><AdminVideoLinkListPage /></ProtectedRoute> },
 
     ]
   },
 
   {
-    path: '/admin/*',
+    path: '/studies/*',
     children: [
-
+      // url : 학습 목록
+      { path: "search", element: <ProtectedRoute><StudyListPage /></ProtectedRoute> },
+      { path: ":studyId", element: <ProtectedRoute><StudyDetailPage /></ProtectedRoute> },
     ]
   },
-
-
+      
   {
     path: '/stocks/*', //url : 종목 +
     children: [
@@ -104,6 +102,14 @@ const nastedRoutes = [
     ]
   },
 
+  {
+    path: "/words/*", // url : 단어장 +
+    children: [
+      { path: '', element: <WordVocaPage /> },
+      { path: 'search', element: <WordSearchPage /> },
+      { path: 'detail/:termId', element: <WordDetailPage /> }
+    ]
+  },
 
   {
     path: '/mypage/*',
@@ -111,35 +117,49 @@ const nastedRoutes = [
       { path: '', element: <ProtectedRoute><MypageMemberPage /></ProtectedRoute> },
     ]
   },
-
-
-  {
-    path: '/words/*',
-    children: [
-      { path: '', element: <WordHomePage /> },         // 모두공개
-      { path: 'search', element: <WordSearchPage /> }, // 무두공개
-      { path: ':wordId', element: <WordDetailPage /> } // 모두공개
-    ]
-  },
 ];
-
 
 
 export default function App() {
 
-  // 페이지 마운트 시, 최초 1회 로그인 검증
-  const { authenticate } = useAuth()
-  const { isAuthenticated, loginMember, logout } = useAuthStore()
+  // [1] 전역 상태를 관리하는 Hooks
+  const { // 인증 훅    
+    authenticate, isAuthenticated
+  } = useAuth()
+
+  const { // 북마크 전역 상태를 관리하는 훅
+    loadBookmark, clearBookmark 
+  } = useBookmark()
+
+  const { // 진도 전역 상태를 관리하는 훅
+    loadStudyProgress, clearStudyProgress 
+  } = useStudyProgress()
+
 
   // 페이지 마운트 시, 전역적으로 사용할 함수 로드
   const navigate = useNavigate()          // redirect 수행할 네비게이션
   const { showSnackbar } = useSnackbar()  // 스낵바 활성화 함수
 
+  // 렌더링 전에 동기적 실행 보장
+  useLayoutEffect(() => {
+    initGlobalHook(navigate, showSnackbar)
+  }, [navigate, showSnackbar])
+
+  // 페이지 로드 시, 반드시 수행
   useEffect(() => {
     authenticate()
-    console.log("현재 로그인 상태 : ", isAuthenticated);
-    initGlobalHook(navigate, showSnackbar, logout)
-  }, [location.pathname])
+  }, [])
+
+  // 인증 상태가 변경될 시 수행
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadBookmark()
+      loadStudyProgress()
+    } else {
+      clearBookmark()
+      clearStudyProgress()
+    }
+  }, [isAuthenticated])
 
   return (
     <>
