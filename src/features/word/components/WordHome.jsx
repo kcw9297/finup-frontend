@@ -321,7 +321,7 @@ export default function WordHome() {
                         onClick={() => submitAnswer(opt)}
                         sx={{
                           flex: 1,
-                          maxWidth: 260,
+                          maxWidth: 230,
                           justifyContent: 'center',
                           minHeight: 36,
                           whiteSpace: 'normal',
@@ -411,7 +411,7 @@ export default function WordHome() {
             }}
           >
             <Typography variant="caption" sx={{ fontWeight: 700 }}>
-              이렇게 달라집니다!
+              스크랩한 단어 모아보기
             </Typography>
 
             <Typography
