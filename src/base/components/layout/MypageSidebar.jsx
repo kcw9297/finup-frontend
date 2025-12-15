@@ -22,8 +22,9 @@ export default function MypageSidebar() {
   return (
     <Box
       sx={{
-        width: "180px",
-        padding: "8px 0 0 0",
+        textAlign: "left",
+        width: "180px",           // 사이드바 폭
+        padding: "8px 0 0 0",     // 위쪽 패딩
         display: "flex",
         flexDirection: "column",
       }}
@@ -31,11 +32,11 @@ export default function MypageSidebar() {
       {/* 제목 */}
       <Typography
         sx={{
-          fontSize: "14px",
-          fontWeight: 600,
+          fontSize: "22px",
+          fontWeight: 800,
           color: "#555",
           paddingLeft: "8px",
-          marginBottom: "12px",
+          marginBottom: "30px",
         }}
       >
         마이페이지
@@ -43,54 +44,32 @@ export default function MypageSidebar() {
 
       {/* 메뉴 영역 */}
       <Stack spacing={0.5}>
-        {/* 활성화된 메뉴 */}
-        <Button
-          sx={{
-            justifyContent: "flex-start",
-            fontSize: "14px",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            backgroundColor: "#CEDCFF57",
-            color: "#000",
-            fontWeight: 500,
-            "&:hover": {
-              backgroundColor: "#CEDCFF57",
-            },
-          }}
-        >
-          정보 수정
-        </Button>
+        {menus.map(menu => {
+          // [1] 현재 URL과 메뉴 path 비교 -> active ㅏㄴ단
+          const isActive = location.pathname.startsWith(menu.path)
 
-        <Button
-          sx={{
-            justifyContent: "flex-start",
-            fontSize: "14px",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            color: "#333",
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.03)",
-            },
-          }}
-        >
-          단어장
-        </Button>
-
-        <Button
-          sx={{
-            justifyContent: "flex-start",
-            fontSize: "14px",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            color: "#333",
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.03)",
-            },
-          }}
-        >
-          뉴스
-        </Button>
+          return (
+            <Button
+              key={menu.path}
+              onClick={() => navigate(menu.path)}
+              sx={{
+                justifyContent: "flex-start",
+                fontSize: "15px",
+                padding: "6px 12px",
+                borderRadius: "4px",
+                fontWeight: isActive ? 600 : 400,
+                backgroundColor: isActive ? "rgba(25, 118, 210, 0.08)" : "transparent",
+                color: isActive ? "#1976d2" : "#333",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }}
+            >
+              {menu.label}
+            </Button>
+          )
+        })}
       </Stack>
     </Box>
-  );
+  )
 }

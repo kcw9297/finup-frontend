@@ -146,7 +146,7 @@ export default function MemberList() {
                   <TableRow>
                     <TableCell sx={{ width: 60 }}>ID</TableCell>
                     <TableCell sx={{ width: 140 }}>이름</TableCell>
-                    <TableCell sx={{ width: 300 }}>이메일</TableCell>
+                    <TableCell sx={{ width: 280 }}>이메일</TableCell>
                     <TableCell sx={{ width: 120 }}>활성여부</TableCell>
                     <TableCell sx={{ width: 120 }}>권한</TableCell>
                     <TableCell sx={{ width: 120 }}>소셜</TableCell>
