@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState } from "react";
 
-export function useNewsModal(){
+export function useNewsModal() {
   const [open, setOpen] = useState(false);
   const [article, setArticle] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -11,21 +11,22 @@ export function useNewsModal(){
     //   navigate("/login");
     //   return;
     // }
-    setArticle(basicInfo)
-    setOpen(true)
-  }
+    setArticle(basicInfo);
+    setOpen(true);
+  };
 
   const closeModal = () => {
-    setOpen(false)
-    setArticle(null)
-    setLoading(false)
-  }
+    setOpen(false);
+    setArticle(null);
+    setLoading(false);
+  };
 
   return {
     open,
     openModal,
     closeModal,
     article,
-    loading: false
-  }
+    setArticle,
+    loading: false,
+  };
 }

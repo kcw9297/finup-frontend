@@ -14,6 +14,16 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { SORT_OPTIONS } from "../constants/viedoLinkConstant";
 import { useVideoLinkList } from "../hooks/useVideoLinkList";
 import SearchBar from "../../../base/components/bar/SearchBar";
+import OrderBar from "../../../base/components/bar/OrderBar";
+import PageBar from "../../../base/components/bar/PageBar";
+import { useVideoLinkWriteModal } from "../hooks/useVideoLinkWriteModal";
+import { useVideoLinkEditModal } from "../hooks/useVideoLinkEditModal";
+import VideoLinkFormModal from "./VideoLinkFormModal";
+import { useVideoVerify } from "../hooks/useVideoVerify";
+import WordCard from "../../../base/components/card/WordCard";
+import VideoCard from "../../../base/components/card/VideoCard";
+import { useVideoLinkRemoveModal } from "../hooks/useVideoLinkRemoveModal";
+import ConfirmModal from "../../../base/components/modal/ConfirmModal";
 
 
 /**
@@ -31,8 +41,16 @@ export default function VideoLinkList({ admin = false }) {
     handleAfterEdit, handleAfterRemove
   } = useVideoLinkList({admin})
 
+  // 비디오 검증
+  const { handleVerify } = useVideoVerify({admin})
+
+  // 사용 모달
+  const { openWriteModal, writeProps } = useVideoLinkWriteModal({handleVerify, admin})
+  const { openEditModal, editProps } = useVideoLinkEditModal({handleVerify, handleAfterEdit, admin})
+  const { openRemoveModal, removeProps } = useVideoLinkRemoveModal({handleAfterRemove, admin})
+
   // [2] 필요 데이터
-  const rows = searchRq?.data ?? [] 
+  const rows = searchRp?.data ?? []
   const pagination = searchRp?.pagination ?? {}
 
   // [3] 반환 UI
@@ -76,18 +94,19 @@ export default function VideoLinkList({ admin = false }) {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                //onClick={openWordWriteModal}
+                onClick={openWriteModal}
                 sx={{ 
                   bgcolor: 'base.main',
                   '&:hover': { bgcolor: 'base.dark' }
                 }}
               >
-                단어 등록
+                영상 등록
               </Button>
             )}
           </Box>
           
-          {/* 우측 정렬 바           <OrderBar options={SORT_OPTIONS} selected={searchRq.order} onChange={handleOrder} /> */}
+          {/* 우측 정렬 바 */}
+          <OrderBar options={SORT_OPTIONS} selected={searchRq.order} onChange={handleOrder} />
 
         </Box>
 
@@ -105,11 +124,13 @@ export default function VideoLinkList({ admin = false }) {
         ) : (
           <Grid container spacing={3} sx={{ maxWidth: '980px', mx: 'auto' }}>
             {rows.map((row) => (
-              <Grid key={row.studyWordId}>
-                <WordCard 
-                  word={{ ...row, id: row.studyWordId }} 
+              <Grid key={row.videoLinkId}>
+                <VideoCard 
+                  video={{ ...row, id: row.videoLinkId }} 
                   admin={admin}
-                  functions={{
+                  functions={{ 
+                    onClickEdit: () => openEditModal(row.videoLinkId),
+                    onClickRemove: () => openRemoveModal(row.videoLinkId),
                   }}
                 />
               </Grid>
@@ -117,13 +138,17 @@ export default function VideoLinkList({ admin = false }) {
           </Grid>
         )}
 
-        {/* 페이징 바 <PageBar pagination={pagination} onChange={handlePage}/> */}
+        {/* 페이징 바 */}
+        <PageBar pagination={pagination} onChange={handlePage}/>
         <Box sx={{mt: 5}}>
           
         </Box>
       </Box>
 
         {/* 모달 영역 */}
+        <VideoLinkFormModal modalProps={writeProps} />
+        <VideoLinkFormModal modalProps={editProps} />
+        <ConfirmModal modalProps={removeProps} />
     </Box>
   );
 }

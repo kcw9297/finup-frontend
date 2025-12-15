@@ -1,44 +1,18 @@
 import { 
   Box, Typography, Paper, Button, Chip,
-  CircularProgress
+  CircularProgress,
+  Tooltip,
+  IconButton
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import FormModal from '../../../base/components/modal/FormModal';
 import { useStudyDetail } from '../hooks/useStudyDetail';
-import { useEditModal } from '../hooks/useEditModal';
-import StudyWords from './StudyWords';
-
-
-  // 임시 단어 데이터
-  const words = [
-    { id: 1, name: '주식회사', meaning: '주식의 방법으로 ...' },
-    { id: 2, name: '배당금', meaning: '회사가 이익을 ...' },
-    { id: 3, name: '시가총액', meaning: '회사의 전체 가치 회사의 전체 가치 회사의 전체 가치 회사의 전체 가치...' },
-    { id: 4, name: '시가총액', meaning: '회사의 전체 가치 ...' },
-    { id: 5, name: '시가총액', meaning: '회사의 전체 가치 ...' },
-    { id: 6, name: '시가총액', meaning: '회사의 전체 가치 ...' },
-    { id: 7, name: '시가총액', meaning: '회사의 전체 가치 ...' },
-  ];
-
-  // 임시 영상 데이터
-  const videos = [
-    { 
-      id: 1, 
-      title: 'Aiobahn +81 feat. ななひら & P丸様。- 天天天国地獄国',
-      thumbnail: 'https://i.ytimg.com/vi/example1/hqdefault.jpg',
-      likes: '340,921',
-      views: '19,435,901'
-    },
-    { 
-      id: 2, 
-      title: '[블루 아카이브] Gregorius | Symphony | OST',
-      thumbnail: 'https://i.ytimg.com/vi/example2/hqdefault.jpg',
-      likes: '3,800',
-      views: '239,281'
-    },
-  ];
-
+import { useStudyEditModal } from '../hooks/useStudyEditModal';
+import StudyWords from '../../studyword/components/StudyWords';
+import BookmarkToggleIcon from '../../../base/components/icon/BookmarkToggleIcon';
 
 
 /**
@@ -47,12 +21,13 @@ import StudyWords from './StudyWords';
  * @since 2025-12-09
  */
 
-export default function StudyDetail({admin}) {
+export default function StudyDetail({ admin = false }) {
   
   // 사용 상태
-  const { openEditModal, editProps } = useEditModal({admin})
+  const { openEditModal, editProps } = useStudyEditModal({admin})
   const { detailRp, loading } = useStudyDetail({admin})
-  const navigate = useNavigate();
+  const { studyId } = useParams()
+  const navigate = useNavigate()
   
   // 사용 데이터
   const data = detailRp?.data ?? {}
@@ -60,9 +35,9 @@ export default function StudyDetail({admin}) {
 
   // 렌더링
   return (
-    <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', p: 4 }}>
+    <Box sx={{ width: '100%', maxWidth: 1000, mx: 'auto', p: 4 }}>
   
-      {/* 제목 섹션 (말머리 + 레벨 칩 + 수정 버튼) */}
+      {/* 제목 */}
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center', 
@@ -70,7 +45,7 @@ export default function StudyDetail({admin}) {
         mb: 3, 
         pb: 2, 
       }}>
-        {/* 왼쪽: 말머리 + 제목 + 레벨 칩 */}
+        {/* 말머리 + 제목 + 레벨 칩 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Chip 
               label={`레벨 ${level}`} 
@@ -84,7 +59,6 @@ export default function StudyDetail({admin}) {
                 width: 70,
               }} 
           />
-          <Typography>
             <Box sx={{ height: 40, display: 'flex', alignItems: 'center' }}>
               {loading ? (
                 <CircularProgress size={22} />
@@ -95,21 +69,55 @@ export default function StudyDetail({admin}) {
                 </Typography>
               )}
             </Box>
-          </Typography>
         </Box>
 
-        {/* 오른쪽: 수정 버튼 */}
-        <Button
-          variant="contained"
-          startIcon={<EditIcon />}
-          onClick={() => openEditModal(data)}
-          sx={{
-            bgcolor: 'base.main',
-            '&:hover': { bgcolor: 'base.dark' }
-          }}
-        >
-          수정
-        </Button>
+        {/* 수정 버튼 (관리자) / 북마크 & 학습 완료 및 초기화 버튼 (일반 사용자) */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+  
+          {admin && (
+            <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={() => openEditModal(data)}
+            sx={{
+              bgcolor: 'base.main',
+              '&:hover': { bgcolor: 'base.dark' }
+            }}>수정</Button>
+          )}
+
+          {!admin && (
+            <Tooltip title="북마크">
+              <IconButton>
+                <BookmarkToggleIcon target={{ targetId: studyId, bookmarkTarget: 'STUDY' }} />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {!admin && (
+            <Tooltip title="학습 완료">
+              <IconButton
+                sx={{ color: 'success.main' }}
+                onClick={() => {alert("학습 완료")}}
+              >
+                <CheckCircleIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          
+          {!admin && (
+            <Tooltip title="학습 초기화">
+              <IconButton
+                sx={{ color: 'error.main' }}
+                onClick={() => {alert("학습 초기화")}}
+              >
+                <RestartAltIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+
+        </Box>
+
       </Box>
 
       {/* 요약 */}
@@ -140,18 +148,36 @@ export default function StudyDetail({admin}) {
         </Box>
       </Box>
 
-      {/* 학습 용어 */}
+      {/* 추천 학습 용어 */}
       <Box sx={{ mb: 4 }}>
-        <StudyWords words={words} admin={admin} />
+        <StudyWords admin={admin} />
+      </Box>
+
+      {/* 추천 학습 영상 */}
+      <Box sx={{ mb: 4 }}>
+        <StudyWords admin={admin} />
       </Box>
 
       {/* 하단 버튼 */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <Button 
-          variant="outlined"
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          //gap: 2,          // 버튼 간 간격
+          mt: 10
+        }}
+      >
+        <Button
+          variant="contained"
           size="large"
-          onClick={() => navigate('/admin/studies')}
-          sx={{ minWidth: 150 }}
+          onClick={() => navigate(-1)}
+          sx={{
+            minWidth: 150,
+            bgcolor: 'base.main',
+            '&:hover': {
+              bgcolor: 'base.dark'
+            }
+          }}
         >
           목록으로
         </Button>

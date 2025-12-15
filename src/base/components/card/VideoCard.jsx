@@ -10,7 +10,7 @@ import ImageIcon from '@mui/icons-material/Image';
  * @since 2025-12-11
  * @author kcw
  */
-export default function VideoCard({ video, cardWidth = 300, cardHeight = 320, admin = false }) {
+export default function VideoCard({ video, functions, cardWidth = 300, cardHeight = 400, admin = false }) {
 
   // 카드에 담을 정보
   const { 
@@ -22,10 +22,15 @@ export default function VideoCard({ video, cardWidth = 300, cardHeight = 320, ad
     channelTitle,
     viewCount, 
     likeCount,
-  } = video || {};
+  } = video || {}
+
+  const {
+    onClickEdit,
+    onClickRemove,
+  } = functions || {}
 
   // 크기 설정
-  const imageHeight = Math.floor(cardHeight * 0.5625);
+  const imageHeight = 200;
 
   // 이미지 클릭 시 새 탭에서 영상 열기
   const handleImageClick = () => {
@@ -59,7 +64,7 @@ export default function VideoCard({ video, cardWidth = 300, cardHeight = 320, ad
           overflow: "hidden",
           cursor: "pointer",
           "&:hover": {
-            opacity: 0.9
+            opacity: 0.8
           }
         }}
       >
@@ -100,7 +105,20 @@ export default function VideoCard({ video, cardWidth = 300, cardHeight = 320, ad
 
       {/* 영상 정보 */}
       <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* 제목 */}
+
+        {/* 채널명 */}
+        <Typography 
+          variant="body2" 
+          color="text.secondary"
+          sx={{ 
+            mb: 1,
+            fontSize: '13px'
+          }}
+        >
+          {channelTitle}
+        </Typography>
+
+                {/* 제목 */}
         <Typography 
           variant="subtitle1"
           sx={{ 
@@ -117,26 +135,27 @@ export default function VideoCard({ video, cardWidth = 300, cardHeight = 320, ad
           {title}
         </Typography>
 
-        {/* 채널명 */}
-        <Typography 
-          variant="body2" 
-          color="text.secondary"
-          sx={{ 
-            mb: 1,
-            fontSize: '13px'
-          }}
-        >
-          {channelTitle}
-        </Typography>
+      </Box>
 
-        {/* 조회수/좋아요 */}
+      {/* 하단 영역 (조회수/좋아요 + 관리자 버튼) */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 2,
+          py: 1,
+          borderTop: '1px solid',
+          borderColor: 'divider'
+        }}
+      >
+        {/* 왼쪽: 조회수 / 좋아요 */}
         <Box
           sx={{
             display: "flex",
             gap: 2,
             color: "text.secondary",
-            fontSize: "13px",
-            mt: 'auto'
+            fontSize: "13px"
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
@@ -149,32 +168,20 @@ export default function VideoCard({ video, cardWidth = 300, cardHeight = 320, ad
             {likeCount?.toLocaleString() ?? 0}
           </Box>
         </Box>
+
+        {/* 오른쪽: 수정 / 삭제 */}
+        {admin && (
+          <Box>
+            <IconButton onClick={onClickEdit} size="small" sx={{ p: 0.5 }}>
+              <EditIcon fontSize="small" />
+            </IconButton>
+
+            <IconButton onClick={onClickRemove} size="small" sx={{ p: 0.5 }}>
+              <DeleteIcon fontSize="small" color="error" />
+            </IconButton>
+          </Box>
+        )}
       </Box>
-
-      {/* 수정/삭제 버튼 (관리자, 우측 하단) */}
-      {admin && (
-        <Box sx={{ 
-          display: 'flex',  
-          justifyContent: 'flex-end',
-          p: 1
-        }}>
-          <IconButton 
-            onClick={() => alert(`영상 수정: ${title}`)} 
-            size="small" 
-            sx={{ p: 0.5 }}
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-
-          <IconButton 
-            onClick={() => alert(`영상 삭제: ${title}`)} 
-            size="small" 
-            sx={{ p: 0.5 }}
-          >
-            <DeleteIcon fontSize="small" color="error" />
-          </IconButton>
-        </Box>
-      )}
     </Paper> 
   );
 }

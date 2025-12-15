@@ -23,9 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# 설정 파일 
-# (package-lock.json 디렉토리 별도 추가(자꾸 git 변경사항에 스테이징돼서 추가함))
+# 설정 파일
 .env
-.package.json
-.package-lock.json
-package-lock.json 

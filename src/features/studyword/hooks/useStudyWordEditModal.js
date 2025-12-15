@@ -14,7 +14,7 @@ export function useStudyWordEditModal({ handleAfterEdit, admin = false }) {
   // [1] 모달 상태
   const [open, setOpen] = useState(false)
   const [initialValues, setInitialValues] = useState(null)
-  const [studyWordId, setStudyWordId] = useState(false)
+  const [studyWordId, setStudyWordId] = useState(null)
   const { showSnackbar } = useSnackbar()
 
   // [2] 모달 열기/닫기 함수
