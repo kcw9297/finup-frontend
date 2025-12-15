@@ -2,6 +2,8 @@ import { Box, Paper, Typography } from "@mui/material";
 import WordCloud from "./WordCloud";
 import KeywordContent from "./KeywordContent";
 
+// 워드 클라우드 + 뉴스 리스트
+
 export default function KeywordNews({ newsList, originalKeywords, filteredKeywords, }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
