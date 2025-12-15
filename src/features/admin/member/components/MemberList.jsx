@@ -13,6 +13,7 @@ import { api } from "../../../../base/utils/fetchUtils";
 import SearchBar2 from "../../../../base/components/bar/SearchBar2";
 import { TableContainer } from "@mui/material";
 import { maskEmail, maskName } from "../../../../base/utils/mask";
+import theme from "../../../../base/design/thema";
 
 
 const INITIAL_SEARCH_RQ = {
@@ -106,8 +107,8 @@ export default function MemberList() {
           justifyContent: "center",
           alignItems: "center",
           mb: 3,
-          maxWidth: "950px",
-          mx: "auto"
+          maxWidth: '950px',
+          mx: 'auto'
         }}>
           {/* 상단 타이틀 + 등록 버튼 */}
           <Box sx={{
@@ -134,13 +135,10 @@ export default function MemberList() {
             selectItems={memberFilterOptions}
           />
 
-          <Button onClick={handleDownload}>
-            PDF 다운로드
-          </Button>
 
 
           {/* 회원 목록 테이블 */}
-          <TableContainer component={Paper} sx={{ width: "100%", maxWidth: "950px", mx: "auto", overflowX: "auto" }}>
+          <TableContainer component={Paper} sx={{ width: "100%", maxWidth: "950px", mx: "auto", overflowX: "auto", mt: 3 }}>
             <Paper elevation={0} sx={{ width: "100%", overflow: "hidden", maxWidth: "950px", mx: "auto" }}>
               <Table sx={{ tableLayout: "fixed" }}>
                 <TableHead>
@@ -196,8 +194,54 @@ export default function MemberList() {
           {pagination && pagination.totalPage > 0 && (
             <PageBar pagination={pagination} onChange={handlePage} />
           )}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 1,
+              mt: 3,
+            }}
+          >
+            <Button
+              onClick={handleDownload}
+              variant="outlined"
+              size="small"
+              sx={{
+                mt: 3,
+                fontWeight: 600,
+                borderRadius: '10px',
+                px: 2,
+                height: 36,
+                color: theme.palette.base.main,
+                borderColor: 'primary.main',
+                '&:hover': {
+                  bgcolor: theme.palette.background.light,
+                  borderColor: 'primary.main',
+                },
+              }}
+            >
+              PDF 다운로드
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{
+                mt: 3,
+                fontWeight: 600,
+                borderRadius: '10px',
+                px: 2,
+                height: 36,
+                color: '#15803D',
+                borderColor: '#15803D',
+                '&:hover': {
+                  bgcolor: 'rgba(21, 128, 61, 0.08)',
+                  borderColor: '#15803D',
+                },
+              }}
+            >엑셀(xlsx) 다운로드</Button>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </Box >
   )
 }

@@ -72,8 +72,8 @@ export default function AdminNoticeList() {
         <Box sx={{
           justifyContent: 'space-between', // 양 끝 정렬
           alignItems: 'center', // 수직 중앙 정렬
-          mb: 2,
-          maxWidth: '980px',
+          mb: 3,
+          maxWidth: '950px',
           mx: 'auto'
         }}>
           {/* 상단 타이틀 + 등록 버튼 */}
