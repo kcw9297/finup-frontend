@@ -238,8 +238,8 @@ export default function VideoLinkFormModal({ modalProps }) {
               <VideoCard 
                 video={preview} 
                 admin={false}
-                cardWidth={450}
-                cardHeight={430}
+                cardWidth={350}
+                cardHeight={370}
               />
             </Box>
           )}

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useSnackbar } from "../../../base/provider/SnackbarProvider"
 import { api } from "../../../base/utils/fetchUtils"
 import { useNavigate } from "react-router-dom"
+import { useStudyProgress } from "../../../base/hooks/useStudyProgress"
 
 /**
  * 학습 진도 시작 안내모달 상태관리 custom hook
@@ -15,6 +16,7 @@ export function useStudyProgressStartModal({ admin = false }) {
   const [ open, setOpen ] = useState(false)
   const [ study, setStudy ] = useState(false)
   const { showSnackbar } = useSnackbar()
+  const { startStudy } = useStudyProgress()
   const navigate = useNavigate()
 
   // [2] 모달 열기/닫기 함수
@@ -25,7 +27,7 @@ export function useStudyProgressStartModal({ admin = false }) {
 
   // [3] 성공/실패/최종 처리 함수 선언
   const onSuccess = (rp) => {
-    showSnackbar(rp.message, 'success');
+    startStudy(study.studyId)
     setOpen(false);
     navigate(`/studies/${study.studyId}`)
   }

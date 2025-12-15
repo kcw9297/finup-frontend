@@ -175,6 +175,7 @@ export default function StudyList({ admin = false }) {
           <Button 
             variant="contained" 
             fullWidth
+            disabled={admin}
             sx={{ 
               borderRadius: 2, 
               backgroundColor: "base.main",

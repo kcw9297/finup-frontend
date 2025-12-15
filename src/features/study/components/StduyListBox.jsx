@@ -72,7 +72,7 @@ export default function StduyListBox({ admin = false, row = {} }) {
         {/* 좌측 학습 제목 & 요약 */}
         <Box 
           onClick={() => {
-            if (isExist) navigate(`/studies/${row.studyId}`)
+            if (isExist || admin) navigate(`/studies/${row.studyId}`)
             else openStartModal(row)
           }} 
           sx={{ flex: 1, cursor: 'pointer' }}
@@ -86,10 +86,12 @@ export default function StduyListBox({ admin = false, row = {} }) {
         </Box>
 
         {/* 우측 학습 진도 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexShrink: 0 }}>
-          <StudyStatusBox studyId={row.studyId} />
-          <BookmarkToggleIcon target={{ targetId: row.studyId, bookmarkTarget: 'STUDY'}} />
-        </Box>
+        {!admin && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexShrink: 0 }}>
+            <StudyStatusBox studyId={row.studyId} />
+            <BookmarkToggleIcon target={{ targetId: row.studyId, bookmarkTarget: 'STUDY'}} />
+          </Box>
+        )}
 
           {/* 모달 영역 */}
           <ConfirmModal modalProps={startProps} />

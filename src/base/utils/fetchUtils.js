@@ -60,7 +60,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
       if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
 
         // 스낵바 출력
-        showSnackbar(rp.message || "로그인이 필요합니다.")
+        if (options.printMessage) showSnackbar(rp.message || "로그인이 필요합니다.")
 
         // 딜레이 후 리다이렉트
         const currentPath = window.location.pathname;
@@ -73,16 +73,19 @@ async function fetchInner(endpoint, options = {}, body = {}) {
         const returnUrl = currentPath + currentSearch;
         const loginUrl = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
         
-        // 리다이렉트 값을 넘기고 반환
-        window.location.href = loginUrl;
+        // 딜레이 후 리다이렉트
+        setTimeout(() => {
+          window.location.href = loginUrl;
+        }, 300);
+
         return { ...rp, redirected: true }
       }
 
-      // 권한이 부족한 경우
-      if (rp.status === 'ACCESS_DENIED') {
+      // 권한이 부족하거나 토큰이 유효하지 않은 경우
+      if (['ACCESS_DENIED', 'TOKEN_INVALID'].includes(rp.status)) {
 
         // 스낵바 출력
-        showSnackbar(rp.message || '잘못된 요청입니다.')
+        if (options.printMessage) showSnackbar(rp.message || '잘못된 요청입니다.')
 
         // 딜레이 후 리다이렉트
         setTimeout(() => {
@@ -92,10 +95,6 @@ async function fetchInner(endpoint, options = {}, body = {}) {
         // 리다이렉트 값을 넘기고 반환
         return { ...rp, redirected: true }
       }
-      
-      // 유효성 검사 이외의 오류 메세지는 스낵바로 출력 (권한, 로그인 필요 메세지는 printMessage 옵션과 무관하게 출력)
-      if (rp.status !== 'VALIDATION_INVALID_PARAMETER' && options.printMessage) 
-        showSnackbar(rp.message || '오류가 발생했습니다.')
 
       // 에러 콜백 함수 존재 시 처리
       if (options.onError) options.onError(rp)
@@ -121,7 +120,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
     }
 
     // 스낵바 출력
-    showSnackbar(errorResponse.message)
+    if (options.printMessage) showSnackbar(errorResponse.message)
 
     // 실패 콜백함수가 있다면 실행 후 오류 응답 반환
     if (options.onError) options.onError(errorResponse)
@@ -187,7 +186,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
       if (['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(rp.status)) {
 
         // 스낵바 출력
-        showSnackbar(rp.message || "로그인이 필요합니다.")
+        if (options.printMessage) showSnackbar(rp.message || "로그인이 필요합니다.")
 
         // 딜레이 후 리다이렉트
         const currentPath = window.location.pathname;
@@ -206,10 +205,10 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
       }
 
       // 권한이 부족한 경우
-      if (rp.status === 'ACCESS_DENIED') {
+      if (['ACCESS_DENIED', 'TOKEN_INVALID'].includes(rp.status)) {
 
         // 스낵바 출력
-        showSnackbar(rp.message || '잘못된 요청입니다.')
+        if (options.printMessage) showSnackbar(rp.message || '잘못된 요청입니다.')
 
         // 딜레이 후 리다이렉트
         setTimeout(() => {
@@ -219,10 +218,6 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
         // 리다이렉트 값을 넘기고 반환
         return { ...rp, redirected: true }
       }
-
-      // 유효성 검사 이외의 오류 메세지는 스낵바로 출력 (권한, 로그인 필요 메세지는 printMessage 옵션과 무관하게 출력)
-      if (rp.status !== 'VALIDATION_INVALID_PARAMETER' && options.pri) 
-        showSnackbar(rp.message || '오류가 발생했습니다.')
 
       // 에러 콜백 함수 존재 시 처리
       if (options.onError) options.onError(rp)
@@ -248,7 +243,7 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
     }
 
     // 스낵바 출력
-    showSnackbar(errorResponse.message)
+    if (options.printMessage) showSnackbar(errorResponse.message)
 
     // 실패 콜백함수가 있다면 실행 후 오류 응답 반환
     if (options.onError) options.onError(errorResponse)
@@ -277,7 +272,7 @@ async function fetchEx(endpoint, options = {}, body = {}) {
     headers : {},
     public: false,      // '/public' 요청인 경우
     admin: false,       // '/admin' 요청인 경우
-    handleError: true,  // 기본 에러 처리 활성화 
+    printMessage: true  // 메세지 출력 (기본: 활성화)
   }
 
   
@@ -327,8 +322,7 @@ async function fetchEx(endpoint, options = {}, body = {}) {
     console.error('외부 API 요청 시도 실패', err)
 
     // 스낵바 출력
-    if (options.handleError) 
-      showSnackbar('서버 연결에 실패했습니다. 잠시 후에 다시 시도해 주세요.')
+    if (options.printMessage) showSnackbar('서버 연결에 실패했습니다. 잠시 후에 다시 시도해 주세요.')
 
     // 네트워크 에러를 전달할 응답 추가
     const errorResponse = {

@@ -12,7 +12,7 @@ import { useState } from "react";
 export function useStudyProgress() {
 
   // [1] 전역 북마크
-  const { load, start, complete, initialize, clear, studyProgresses } = useStudyProgressStore()
+  const { load, start, progress, complete, initialize, clear, studyProgresses } = useStudyProgressStore()
   
   // [2] 지역 상태
   const [ loading, setLoading ] = useState(false) // 북마크 처리 로딩 상태
@@ -38,7 +38,24 @@ export function useStudyProgress() {
       setLoading(false)
     }
 
-    api.post(`/studies/${studyId}/progress`, { onSuccess, onFinally, printMessage: false })
+    api.post(`/studies/${studyId}/progress`, { onSuccess, onFinally })
+  }
+
+
+  // 학습 진행 (진행 상태로만 변경)
+  const progressStudy = (studyId) => {
+    
+    // 성공/실패/최종 함수 정의
+    const onSuccess = (rp) => {
+      progress(studyId)
+      setLoading(false)
+    }
+
+    const onFinally = () => {
+      setLoading(false)
+    }
+
+    api.patch(`/studies/${studyId}/progress/in-progress`, { onSuccess, onFinally })
   }
 
   // 학습 완료 (진도정보 갱신)
@@ -54,7 +71,7 @@ export function useStudyProgress() {
       setLoading(false)
     }
 
-    api.patch(`/studies/${studyId}/progress/complete`, { onSuccess, onFinally, printMessage: false })
+    api.patch(`/studies/${studyId}/progress/complete`, { onSuccess, onFinally })
   }
 
   // 학습 초기화 (진도 삭제)
@@ -70,7 +87,7 @@ export function useStudyProgress() {
       setLoading(false)
     }
 
-    api.delete(`/studies/${studyId}/progress`, { onSuccess, onFinally, printMessage: false })
+    api.delete(`/studies/${studyId}/progress`, { onSuccess, onFinally })
   }
 
 
@@ -82,6 +99,6 @@ export function useStudyProgress() {
   // [4] 반환
   return {
     loading, studyProgresses,
-    loadStudyProgress, startStudy, completeStudy, initializeStudy, clearStudyProgress
+    loadStudyProgress, startStudy, progressStudy, completeStudy, initializeStudy, clearStudyProgress
   }
 }
