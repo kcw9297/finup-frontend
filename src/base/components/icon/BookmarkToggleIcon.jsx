@@ -1,6 +1,6 @@
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import { useBookmark } from '../../hooks/useBookmark';
 
@@ -34,15 +34,17 @@ export default function BookmarkToggleIcon({ target }) {
 
   // [3] 컴포넌트 반환
   return (
-    <IconButton 
-      onClick={handleToggle}
-      disabled={loading}
-      sx={{ 
-        padding: '1px',
-        color: isBookmarked ? 'base.main' : 'grey.400',
-      }}
-    >
-      {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-    </IconButton>
+    <Tooltip title="북마크">
+      <IconButton 
+        onClick={handleToggle}
+        disabled={loading}
+        sx={{ 
+          padding: '1px',
+          color: isBookmarked ? 'base.main' : 'grey.400',
+        }}
+      >
+        {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+      </IconButton>
+    </Tooltip>
   );
 }

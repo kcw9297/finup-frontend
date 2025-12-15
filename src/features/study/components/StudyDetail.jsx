@@ -2,10 +2,7 @@ import {
   Box, Typography, Paper, Button, Chip,
   CircularProgress,
   Tooltip,
-  IconButton
 } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormModal from '../../../base/components/modal/FormModal';
@@ -13,6 +10,8 @@ import { useStudyDetail } from '../hooks/useStudyDetail';
 import { useStudyEditModal } from '../hooks/useStudyEditModal';
 import StudyWords from '../../studyword/components/StudyWords';
 import BookmarkToggleIcon from '../../../base/components/icon/BookmarkToggleIcon';
+import StudyProgressCompleteIcon from '../../../base/components/icon/StudyProgressCompleteIcon';
+import StudyProgressInitialzeIcon from '../../../base/components/icon/StudyProgressInitialzeIcon';
 
 
 /**
@@ -86,34 +85,15 @@ export default function StudyDetail({ admin = false }) {
           )}
 
           {!admin && (
-            <Tooltip title="북마크">
-              <IconButton>
-                <BookmarkToggleIcon target={{ targetId: studyId, bookmarkTarget: 'STUDY' }} />
-              </IconButton>
-            </Tooltip>
+            <BookmarkToggleIcon target={{ targetId: studyId, bookmarkTarget: 'STUDY' }} />
           )}
 
           {!admin && (
-            <Tooltip title="학습 완료">
-              <IconButton
-                sx={{ color: 'success.main' }}
-                onClick={() => {alert("학습 완료")}}
-              >
-                <CheckCircleIcon />
-              </IconButton>
-            </Tooltip>
+            <StudyProgressCompleteIcon studyId={studyId} />
           )}
 
-          
           {!admin && (
-            <Tooltip title="학습 초기화">
-              <IconButton
-                sx={{ color: 'error.main' }}
-                onClick={() => {alert("학습 초기화")}}
-              >
-                <RestartAltIcon />
-              </IconButton>
-            </Tooltip>
+            <StudyProgressInitialzeIcon studyId={studyId} />
           )}
 
         </Box>

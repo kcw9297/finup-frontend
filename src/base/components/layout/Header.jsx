@@ -18,7 +18,7 @@ export default function Header() {
 
   // [1] 메뉴 목록 및 사용 Hooks
   const manuItems = [
-    { label: "개념+", path: "/studies/search" },
+    { label: "개념+", path: "/studies" },
     { label: "뉴스+", path: "/news/list" },
     { label: "종목+", path: "/stocks" },
     { label: "단어장+", path: "/words" },

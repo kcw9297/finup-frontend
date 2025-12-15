@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useRef, useState } from 'react';
+import { showSnackbar } from '../../config/globalHookConfig';
 
 /**
  * 공용 폼 모달 컴포넌트
@@ -126,8 +127,9 @@ export default function FormModal({ modalProps }) {
 
       // 제출 수행
       const json = await modalSubmit.handleSubmit(cleanedRq)
-      if(!json.success && json.inputErrors) {
-        setErrors(json.inputErrors) // 유효성 검사 오류 시
+      if(!json.success) {
+        if (json.inputErrors) setErrors(json.inputErrors) // 유효성 검사 오류 시
+        else showSnackbar(json.message) // 비즈니스 오류 외 그 외 오류 발생 시 
         return
       }
 
@@ -220,6 +222,22 @@ export default function FormModal({ modalProps }) {
           ))}
         </Box>
       </DialogContent>
+
+      {/* 전역 오류 메시지 영역 */}
+      <Box sx={{ 
+        minHeight: '32px', // 고정 높이
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        px: 3,
+        py: 1
+      }}>
+        {errors && (
+          <Box sx={{ color: 'error.main', fontSize: '14px' }}>
+            {errors.global}
+          </Box>
+        )}
+      </Box>
 
       {/* 버튼 */}
       <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
