@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { api } from "@/base/utils/fetchUtils";
+import { api } from "../../../base/utils/fetchUtils";
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
+import { useAuthStore } from "../../../base/stores/useAuthStore";
 
-
-import { useAuthStore } from "@/base/stores/useAuthStore";
-import { useSnackbar } from "@/base/provider/context/SnackbarProvider";
 
 const INITIAL_MEMBER = {
+  memberId: null,
   email: "",
   nickname: "",
+  currentPassword: "",
   password: "",
   passwordConfirm: "",
 };
@@ -15,7 +16,6 @@ const INITIAL_MEMBER = {
 export function useMemberMypage() {
   // [1] 상태
   const [member, setMember] = useState(INITIAL_MEMBER);
-  const { loginUser } = useAuthStore();
   const { showSnackbar } = useSnackbar();
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreview, setProfilePreview] = useState(""); // 미리보기 URL
@@ -37,13 +37,13 @@ export function useMemberMypage() {
 
   // [3] 마이페이지 조회
   useEffect(() => {
-    if (!loginUser?.memberId) return;
-
-    api.get(`/members/${loginUser.memberId}`, {
+    api.get("/members/me", {
       onSuccess: (rp) => {
         const next = {
+          memberId: rp.data.memberId,
           email: rp.data.email,
           nickname: rp.data.nickname,
+          currentPassword: "",
           password: "",
           passwordConfirm: "",
         };
@@ -51,39 +51,53 @@ export function useMemberMypage() {
         setMember(next);
         setMemberOrigin(next);
       },
-
+      onError: () => {
+        showSnackbar("회원 정보를 불러오지 못했습니다.", "error");
+      },
     });
-  }, [loginUser]);
+  }, []);
 
   // [4] 비밀번호 수정
   const submitEdit = () => {
+    // 여기! 제일 먼저 추가
+    if (!member.currentPassword) {
+      showSnackbar("현재 비밀번호를 입력해주세요.", "warning");
+      return;
+    }
+
+    // 새 비밀번호 입력 체크
     if (!member.password) {
       showSnackbar("새 비밀번호를 입력해주세요.", "warning");
       return;
     }
 
+    // 비밀번호 확인 일치 체크
     if (member.password !== member.passwordConfirm) {
       showSnackbar("비밀번호가 일치하지 않습니다.", "error");
       return;
     }
 
+    // 통과하면 서버 호출
     api.patch(
-      `/members/${loginUser.memberId}/password`,
+      `/members/${member.memberId}/password`,
       {
         onSuccess: () => {
           showSnackbar("비밀번호가 변경되었습니다.", "success");
           setMember((prev) => ({
             ...prev,
+            currentPassword: "",
             password: "",
             passwordConfirm: "",
           }));
         },
       },
       {
+        currentPassword: member.currentPassword,
         newPassword: member.password,
       }
     );
   };
+
   // [5] 닉네임 수정
   const submitNicknameEdit = () => {
     if (!member.nickname) {
@@ -92,16 +106,18 @@ export function useMemberMypage() {
     }
 
     api.patch(
-      `/members/${loginUser.memberId}/nickname`,
+      `/members/${member.memberId}/nickname`,
       {
         onSuccess: () => {
           showSnackbar("닉네임이 변경되었습니다.", "success");
+          setMemberOrigin((prev) => ({ ...prev, nickname: member.nickname }));
         },
       },
       {
         nickname: member.nickname,
       }
     );
+
   };
   //  [6] 프로필 수정
   const submitProfileImageEdit = () => {
@@ -113,8 +129,8 @@ export function useMemberMypage() {
     const formData = new FormData();
     formData.append("file", profileFile);
 
-    api.patch(
-      `/members/${loginUser.memberId}/profile-image`,
+    api.postImage(
+      `/members/${member.memberId}/profile-image`,
       {
         onSuccess: () => {
           showSnackbar("프로필 이미지가 변경되었습니다.", "success");
@@ -123,6 +139,8 @@ export function useMemberMypage() {
       },
       formData
     );
+
+
   };
 
   // [7] 취소 (원본으로 되돌리기)
@@ -133,15 +151,15 @@ export function useMemberMypage() {
     showSnackbar("변경사항이 취소되었습니다.", "info");
   };
 
-
   return {
     member,
-    changeMember,
-    submitEdit,
-    submitNicknameEdit,
+    setMember,
     profilePreview,
     changeProfileFile,
+    submitNicknameEdit,
+    submitEdit,
     submitProfileImageEdit,
     cancelEdit,
   };
+
 }
