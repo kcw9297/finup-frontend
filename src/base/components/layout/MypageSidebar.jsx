@@ -1,6 +1,24 @@
 import { Box, Stack, Typography, Button } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function MypageSidebar() {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const menus = [
+    { label: "정보 수정", path: "/mypage" },
+    { label: "단어장", path: "/mypage/words" },
+    { label: "뉴스", path: "/mypage/news" },
+  ];
+
+  const isActive = (path) => {
+    // /mypage는 정확히 일치할 때만 활성
+    if (path === "/mypage") return location.pathname === "/mypage";
+    // 나머지는 하위 경로 포함해서 활성
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <Box
       sx={{
