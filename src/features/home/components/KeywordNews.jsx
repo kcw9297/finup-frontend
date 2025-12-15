@@ -6,7 +6,7 @@ import KeywordContent from "./KeywordContent";
 // 워드클라우드는 전역테마 적용 불가
 
 export default function KeywordNews({
-  fakeNews,
+  newsList,
   originalKeywords,
   filteredKeywords,
   showPositive,
@@ -38,8 +38,8 @@ export default function KeywordNews({
         
         {/* 핵심 키워드 */}
         <KeywordSection
-          originalKeywords={originalKeywords}   // 뉴스 갱신 시에만 바뀌는 데이터
-          filteredKeywords={filteredKeywords}   // 필터용 데이터 (워드클라우드 위치는 불변)
+          originalKeywords={originalKeywords}
+          filteredKeywords={filteredKeywords}
           showPositive={showPositive}
           showNegative={showNegative}
           setShowPositive={setShowPositive}
@@ -48,7 +48,7 @@ export default function KeywordNews({
 
         {/* 기사 본문 */}
         <Box sx={{ width: "100%" }}>
-          <KeywordContent list={fakeNews} />
+          <KeywordContent list={newsList} />
         </Box>
       </Box>
 
