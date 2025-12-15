@@ -1,6 +1,8 @@
 import { Box, Typography, Avatar } from "@mui/material";
 import moment from "moment";
 
+// 뉴스 원문
+
 export default function KeywordContent({ list }) {
   return (
     <Box sx={{ height: 400, overflow: "auto" }}>

@@ -20,12 +20,7 @@ export function useKeywordNews () {
       });
     });
 
-    return Array.from(counter.entries()).map(([text, value]) => ({
-      text,
-      value,
-      sentiment: "positive",
-      color: "#3182F6",
-    }));
+    return Array.from(counter.entries()).map(([text, value]) => ({ text, value }));
   }, [newsList]);
 
   const filteredKeywords = useMemo(() => {
