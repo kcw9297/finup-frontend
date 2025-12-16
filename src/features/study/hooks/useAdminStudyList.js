@@ -52,7 +52,7 @@ export function useAdminStudyList() {
   const handleFilter = filter => {
 
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...searchRq, keyword: searchRq.keyword, filter };
+    const nextRq = { ...searchRq, keyword: searchRq.keyword, filter, pageNum: DEFAULT_SEARCH_RQ.pageNum };
     if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
     
     // 검색 수행
