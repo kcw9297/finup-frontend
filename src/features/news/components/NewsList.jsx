@@ -45,10 +45,10 @@ export default function NewsList() {
             sx={{
               borderRadius: "16px",
               px: 1.5,
-              backgroundColor:
-                category === item.value ? "#EDF2FF" : "transparent",
+              backgroundColor: category === item.value ? "#EDF2FF" : "transparent",
               color: category === item.value ? "#3B5BDB" : "#666",
               fontWeight: category === item.value ? 600 : 400,
+              "&:active": {boxShadow: "none", },
             }}
           />
         ))}
@@ -62,6 +62,7 @@ export default function NewsList() {
 
         <NewsScrollToTop show={showTop && !open} onClick={scrollToTop} />
       </Box>
+      
       {/* 뉴스 상세 모달 */}
       <NewsModal
         open={open}

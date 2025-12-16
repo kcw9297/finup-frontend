@@ -49,6 +49,11 @@ export default function StocksListTradingValue() {
     if (sign === '2') return theme.palette.stock.rise; // 상승
     if (sign === '5') return theme.palette.stock.fall; // 하락    
   };
+
+  const getChangeSymbol = (sign) => {
+    if (sign === '2') return '+'; // 상승
+    if (sign === '5') return ''; // 하락    
+  };
   
   return (
     <>
@@ -85,13 +90,8 @@ export default function StocksListTradingValue() {
                     {row.htsKorIsnm} 
                   </TableCell> 
                   <TableCell align="right">{Number(row.stckPrpr).toLocaleString()}원</TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      color: getChangeColor(row.prdyVrssSign)                 
-                    }}
-                    >
-                    {row.prdyCtrt}%
+                  <TableCell align="right" sx={{ color: getChangeColor(row.prdyVrssSign) }}>
+                    {`${getChangeSymbol(row.prdyVrssSign)}${row.prdyCtrt}%`}
                   </TableCell> 
                   <TableCell align="right">{formatTradingValue(row.acmlTrPbmn)}</TableCell> 
                   <TableCell align="right">{Number(row.avrgVol).toLocaleString()}주</TableCell> 

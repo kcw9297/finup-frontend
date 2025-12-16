@@ -9,8 +9,7 @@ export function useStocksNews(stockName){
   const [showTop, setShowTop] = useState(false);
   const lastRequestRef = useRef(0);
   const CATEGORY_LIST = [
-    { label: "최신뉴스", value: "date" },
-    { label: "주요뉴스", value: "sim" },
+    { label: "최신뉴스", value: "date" }
   ];
 
   // 카테고리 변경 함수
@@ -25,7 +24,7 @@ export function useStocksNews(stockName){
     setLoading(true);
     try {
       const res = await api.get("/stocks/news", {
-        params: { category, stockName }, 
+        params: { stockName }, 
         public: true,
       });
       if (lastRequestRef.current != requestId) {
@@ -39,7 +38,7 @@ export function useStocksNews(stockName){
         setLoading(false);
       }
     }
-  }, [category, stockName]);
+  }, [stockName]);
 
   const MoveToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -64,7 +63,7 @@ export function useStocksNews(stockName){
   // 카테고리 바뀔 때 1번만 API 호출
   useEffect(() => {
     fetchNews();
-  }, [category, stockName]);
+  }, [stockName]);
 
 
   useEffect(() => {

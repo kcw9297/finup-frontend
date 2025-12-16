@@ -1,11 +1,12 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
+import { useState } from "react";
 
 import MainLayout from "../../base/layouts/MainLayout";
-
 import Notice from "../../features/home/components/Notice";
 import Banner from "../../features/home/components/Banner";
 import ExchangeRate from "../../features/home/components/ExchangeRate";
 import KeywordNews from "../../features/home/components/KeywordNews";
+import NewsDetailModal from "../../features/news/components/NewsModal";
 import RecommendedVideo from "../../features/home/components/RecommendedVideo";
 import StockFirm from "../../features/home/components/StockFirm";
 
@@ -18,7 +19,6 @@ import { useHomeNoticeList } from "../../features/notice/hooks/useHomeNoticeList
 import { useAuth } from "../../base/hooks/useAuth";
 
 export default function HomePage() {
-
   // 공지 데이터 (custom hook)
   const { isAdmin } = useAuth()
   const { listRp, loading: loadingNotice } = useHomeNoticeList({ admin: isAdmin() })
@@ -28,9 +28,24 @@ export default function HomePage() {
   const { current, fade, showNext } = useHomeNotice(listRows)
   const { quotation } = useExchangeRate();
   const { indexes } = useMarketIndex();
-  const keywordNews = useKeywordNews();  
   const { videoList } = useRecommendedVideo();
   const { brokerList } = useStockFirm();
+  const keywordNews = useKeywordNews();
+
+
+  // 뉴스 모달 상태
+  const [open, setOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+
+  const openModal = (article) => {
+    setSelectedArticle(article);
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+    setSelectedArticle(null);
+  };
 
   return (
     <>
@@ -57,7 +72,7 @@ export default function HomePage() {
 
         {/* Buttom */}
         <Box sx={{display:'flex', flexDirection:'column', gap:'50px'}}>
-          <KeywordNews {...keywordNews}/>
+          <KeywordNews {...keywordNews} onItemClick={openModal}/>
           <RecommendedVideo videoList={videoList}/>
           <StockFirm brokerList={brokerList}/>
         </Box>
@@ -66,6 +81,13 @@ export default function HomePage() {
         <Box sx={{height:'30px'}}/>
         
       </MainLayout>
+
+      <NewsDetailModal
+        open={open}
+        onClose={closeModal}
+        article={selectedArticle}
+        loading={false}
+      />
     </>
   )
 }

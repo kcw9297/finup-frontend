@@ -5,6 +5,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 // 시작 화면
 
 export default function QuizIntro({ onStart, onClose }) {
+
   return (
     <>
       <Box sx={{display: 'flex', flexDirection: 'row-reverse', margin:'10px'}}>

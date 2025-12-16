@@ -436,7 +436,7 @@ async function getCsrf() {
 
   // 직접 fetch 호출
   csrfPromise = fetch(`${BASE_URL}/api/auth/csrf`, {
-    method: 'GET',
+    method: 'POST',
     credentials: 'include',
   })
     .then(async (response) => {
