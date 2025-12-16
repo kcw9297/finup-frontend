@@ -1,45 +1,51 @@
-import { Tabs, Tab } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import { useState } from "react";
 import StocksListMarketCap from "./StocksListMarketCap";
 import StocksListTradingValue from "./StocksListTradingValue";
 
-/* 종목+ 카테고리에서 공통적으로 사용하는 탭(시가총액, 거래량) */
+/* 종목+ 카테고리 공통 탭 (Chip 버전) */
 export default function StocksListTab() {
   console.log("StocksListTab 렌더됨");
-  const [value, setValue] = useState(0); 
-  
-  return (    
-    <>    
-    <Tabs 
-      value={value}
-      onChange={(e, v) => setValue(v)}
-      TabIndicatorProps={{
-        style: {
-          //backgroundColor: 'var(--normal-active)',
-          //height: '2px',
-        },
-      }}
-      sx={{
-        //background: 'white',
-        paddingY: 2,
-        '& .MuiTab-root': {
-          //minWidth: 'auto',
-          //padding: '8px 16px',
-          //fontSize: '16px',
-          //fontFamily: 'Inter',
-          //color: 'var(--normal-inactive)',
-        },
-        '& .Mui-selected': {
-          //color: 'var(--normal-active)',
-        },
-      }}
-    >
-      <Tab label="시가총액" />
-      <Tab label="거래대금" />        
-    </Tabs>
 
-    {value === 0 && <StocksListMarketCap />}
-    {value === 1 && <StocksListTradingValue />}    
+  const [value, setValue] = useState(0);
+
+  const tabs = [
+    { label: "시가총액", value: 0 },
+    { label: "거래대금", value: 1 },
+  ];
+
+  return (
+    <>
+      {/* Chip 영역 */}
+      <Box sx={{ display: "flex", gap: 1, paddingY: 2 }}>
+        {tabs.map((item) => (
+          <Chip
+            key={item.value}
+            label={item.label}
+            clickable
+            onClick={() => setValue(item.value)}
+            sx={{
+              borderRadius: "16px",
+              px: 1.5,
+              backgroundColor:
+                value === item.value ? "#EDF2FF" : "transparent",
+              color: value === item.value ? "#3B5BDB" : "#666",
+              fontWeight: value === item.value ? 600 : 400,
+              "&:hover": {
+                backgroundColor:
+                  value === item.value ? "#EDF2FF" : "#F5F5F5",
+              },
+              "&:active": {
+                boxShadow: "none",
+              },
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* 콘텐츠 */}
+      {value === 0 && <StocksListMarketCap />}
+      {value === 1 && <StocksListTradingValue />}
     </>
   );
 }
