@@ -13,10 +13,23 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { api } from "../../../base/utils/fetchUtils";
+import { useEffect, useRef } from "react";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-import { useMemberMypage } from "../hooks/useMemberMypage";
+import { useMemberNickname } from "../../member/hooks/useMemberNickname";
+import { useMemberPassword } from "../../member/hooks/useMemberPassword";
+import { useMemberProfileImage } from "../../member/hooks/useMemberProfileImage";
+import { useMypageMemberUI } from "../hooks/useMypageMemberUI";
+import { useMeDetail } from "../hooks/useMeDetail";
+
+
+/*
+수정 API는 성공만 반환 (URL 던져주지 않아도 됨)
+
+프론트는 성공 시 무조건 refreshMe()
+
+화면 표시 데이터는 오직 me에서만
+*/
+
 
 const COLORS = {
   pageBg: "#F5F7FF",
@@ -46,42 +59,39 @@ const textFieldSx = {
 };
 
 export default function MypageMember() {
-  const { showSnackbar } = useSnackbar();
 
-  // 모달 상태
-  const [openNickname, setOpenNickname] = useState(false);
+  const { me, refreshMe } = useMeDetail()
 
+  const {
+    nicknameRq,
+    changeNicknameRq,
+    submitNickname,
+    loading: nicknameLoading,
+  } = useMemberNickname()
 
-
-  // 모달 입력값
-  const [nicknameDraft, setNicknameDraft] = useState("");
-  const [pwDraft, setPwDraft] = useState({
-    currentPassword: "",
-    password: "",
-    passwordConfirm: "",
-  })
+  const {
+    passwordRq,
+    changePasswordRq,
+    submitPassword,
+  } = useMemberPassword()
 
 
   const {
-    member,
-    setMember,
     profilePreview,
-    changeProfileFile,
-    submitNicknameEdit,
-    submitPasswordEdit,
-    submitProfileImageEdit,
-    cancelEdit,
-    isNicknameChanged,
-    isProfileChanged,
-    isPasswordReady,
+    submitProfileImage,
+    changeProfileImage,
+  } = useMemberProfileImage();
 
-    setOpenPassword,
+  const {
+    openNickname,
+    setOpenNickname,
     openPassword,
-
-    setOpenProfile,
+    setOpenPassword,
     openProfile,
-    imageVersion,
-  } = useMemberMypage()
+    setOpenProfile,
+    handleProfileMouseEnter,
+    handleProfileMouseLeave,
+  } = useMypageMemberUI();
 
 
   // ✅ hover로 바로 모달 열기(너무 민감하면 딜레이)
@@ -92,17 +102,14 @@ export default function MypageMember() {
 
   // 모달 열기
   const openNicknameModal = () => {
-    setNicknameDraft(member.nickname);
+    changeNicknameRq({ nickname: me.nickname ?? "" });
     setOpenNickname(true);
   };
 
-  const openPasswordModal = () => {
-    setPwDraft({ currentPassword: "", password: "", passwordConfirm: "" });
-    setOpenPassword(true);
-  };
 
-  const openProfileModal = () => {
-    setOpenProfile(true);
+  const openPasswordModal = () => {
+    changePasswordRq({ currentPassword: "", password: "", passwordConfirm: "" });
+    setOpenPassword(true);
   };
 
   // 저장 액션들
@@ -116,27 +123,6 @@ export default function MypageMember() {
     };
   }, [])
 
-
-  // ✅ 프로필 hover 이벤트
-  const handleProfileMouseEnter = () => {
-    if (openProfile) return;
-
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-
-    hoverTimerRef.current = setTimeout(() => {
-      openProfileModal();
-    }, 200); // 민감하면 200~300 추천
-  };
-
-  const handleProfileMouseLeave = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-  }
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', py: 6 }}>
@@ -179,7 +165,7 @@ export default function MypageMember() {
               <Box
                 onMouseEnter={handleProfileMouseEnter}
                 onMouseLeave={handleProfileMouseLeave}
-                onClick={openProfileModal} // 모바일 대비 클릭도 유지
+                onClick={() => setOpenProfile(true)} // 모바일 대비 클릭도 유지
                 sx={{
                   width: 220,
                   height: 220,
@@ -196,9 +182,8 @@ export default function MypageMember() {
                 <Avatar
                   src={
                     profilePreview ||
-                    (member.profileImageUrl
-                      ? `${member.profileImageUrl}?t=${imageVersion}`
-                      : "/assets/profile-sample.png")
+                    me.profileImageUrl ||
+                    "/assets/profile-sample.png"
                   }
                   sx={{ width: "100%", height: "100%" }}
                 />
@@ -219,10 +204,10 @@ export default function MypageMember() {
             {/* 읽기 전용 정보 */}
             <Box sx={{ flex: 1, maxWidth: 520 }}>
               <Stack spacing={2.5}>
-                <ReadOnlyRow label="이메일" value={member.email} />
+                <ReadOnlyRow label="이메일" value={me?.email} />
                 <ReadOnlyRow
                   label="닉네임"
-                  value={member.nickname}
+                  value={me?.nickname}
                   onEdit={openNicknameModal}
                 />
                 <ReadOnlyRow
@@ -247,8 +232,8 @@ export default function MypageMember() {
                 autoFocus
                 fullWidth
                 size="small"
-                value={nicknameDraft}
-                onChange={(e) => setNicknameDraft(e.target.value)}
+                value={nicknameRq.nickname}
+                onChange={(e) => changeNicknameRq({ nickname: e.target.value })}
                 sx={{ mt: 1, ...textFieldSx }}
               />
             </DialogContent>
@@ -258,13 +243,13 @@ export default function MypageMember() {
               }>취소</Button>
 
               <Button variant="contained"
-                onClick={() => {
-                  setMember(prev => ({
-                    ...prev,
-                    nickname: nicknameDraft
-                  }))
-                  submitNicknameEdit(nicknameDraft)
-                  setOpenNickname(false)
+                disabled={nicknameLoading}
+                onClick={async () => {
+                  const ok = await submitNickname()
+                  if (ok) {
+                    refreshMe()
+                    setOpenNickname(false)
+                  }
                 }}>
                 저장
               </Button>
@@ -285,9 +270,9 @@ export default function MypageMember() {
                 size="small"
                 type="password"
                 label="현재 비밀번호"
-                value={pwDraft.currentPassword}
+                value={passwordRq.currentPassword}
                 onChange={(e) =>
-                  setPwDraft((p) => ({ ...p, currentPassword: e.target.value }))
+                  changePasswordRq({ currentPassword: e.target.value })
                 }
                 sx={{ mt: 1, ...textFieldSx }}
               />
@@ -297,9 +282,9 @@ export default function MypageMember() {
                 size="small"
                 type="password"
                 label="새 비밀번호"
-                value={pwDraft.password}
+                value={passwordRq.password}
                 onChange={(e) =>
-                  setPwDraft((p) => ({ ...p, password: e.target.value }))
+                  changePasswordRq({ password: e.target.value })
                 }
                 sx={{ mt: 2, ...textFieldSx }}
               />
@@ -309,9 +294,8 @@ export default function MypageMember() {
                 size="small"
                 type="password"
                 label="비밀번호 확인"
-                value={pwDraft.passwordConfirm}
-                onChange={(e) =>
-                  setPwDraft((p) => ({ ...p, passwordConfirm: e.target.value }))
+                value={passwordRq.passwordConfirm}
+                onChange={(e) => changePasswordRq({ passwordConfirm: e.target.value })
                 }
                 sx={{ mt: 2, ...textFieldSx }}
               />
@@ -319,9 +303,13 @@ export default function MypageMember() {
             <DialogActions>
               <Button onClick={() => setOpenPassword(false)}>취소</Button>
               <Button variant="contained"
-                onClick={() =>
-                  submitPasswordEdit(pwDraft)
-                }>
+                onClick={async () => {
+                  const ok = await submitPassword();
+                  if (ok) {
+                    refreshMe()
+                    setOpenPassword(false);
+                  }
+                }}>
                 저장
               </Button>
             </DialogActions>
@@ -340,9 +328,8 @@ export default function MypageMember() {
                 <Avatar
                   src={
                     profilePreview ||
-                    (member.profileImageUrl
-                      ? `${member.profileImageUrl}?t=${imageVersion}`
-                      : "/assets/profile-sample.png")
+                    me.profileImageUrl ||
+                    "/assets/profile-sample.png"
                   }
 
                   sx={{ width: 72, height: 72 }}
@@ -355,7 +342,7 @@ export default function MypageMember() {
                     accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0] || null
-                      changeProfileFile(file)
+                      changeProfileImage(file)
                     }}
                   />
                 </Button>
@@ -369,7 +356,14 @@ export default function MypageMember() {
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpenProfile(false)}>취소</Button>
-              <Button variant="contained" onClick={submitProfileImageEdit}>
+              <Button variant="contained" onClick={async () => {
+                const ok = await submitProfileImage()
+                if (ok) {
+                  refreshMe()
+                  setOpenProfile(false)
+                }
+              }
+              }>
                 저장
               </Button>
             </DialogActions>

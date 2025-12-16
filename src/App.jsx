@@ -29,6 +29,8 @@ import WordDetailPage from './pages/wordVoca/WordDetailPage'
 import AdminNoticeListPage from './pages/notice/AdminNoticeListPage'
 import NoticeListPage from './pages/notice/NoticeListPage'
 import NoticeDetailPage from './pages/notice/NoticeDetailPage'
+import { path } from 'd3'
+import MypageBookmarkPage from './pages/mypage/MypageBookmarkPage'
 
 
 
@@ -64,7 +66,7 @@ const nastedRoutes = [
     children: [
       // url : 관리자 공지사항
       { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><AdminNoticeListPage /></ProtectedRoute> },
-      
+
       // url : 회원 목록
       { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
 
@@ -80,7 +82,7 @@ const nastedRoutes = [
     ]
   },
 
-    {
+  {
     path: '/notices/*',
     children: [
       // url : 공지사항 (모두 공개)
@@ -97,7 +99,7 @@ const nastedRoutes = [
       { path: ":studyId", element: <ProtectedRoute><StudyDetailPage /></ProtectedRoute> },
     ]
   },
-      
+
   {
     path: '/stocks/*', //url : 종목 +
     children: [
@@ -119,6 +121,7 @@ const nastedRoutes = [
     path: '/mypage/*',
     children: [
       { path: '', element: <ProtectedRoute><MypageMemberPage /></ProtectedRoute> },
+      { path: 'bookmarks', element: <ProtectedRoute><MypageBookmarkPage /></ProtectedRoute> },
     ]
   },
 ];
@@ -132,11 +135,11 @@ export default function App() {
   } = useAuth()
 
   const { // 북마크 전역 상태를 관리하는 훅
-    loadBookmark, clearBookmark 
+    loadBookmark, clearBookmark
   } = useBookmark()
 
   const { // 진도 전역 상태를 관리하는 훅
-    loadStudyProgress, clearStudyProgress 
+    loadStudyProgress, clearStudyProgress
   } = useStudyProgress()
 
 

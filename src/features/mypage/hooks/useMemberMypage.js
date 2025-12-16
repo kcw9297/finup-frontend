@@ -2,22 +2,30 @@ import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 import { useAuth } from "../../../base/hooks/useAuth";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-import Loading from './../../../base/components/layout/Loading';
 
 const INITIAL_MEMBER = {
   memberId: null,
   email: "",
   nickname: "",
+  profileImageUrl: "",
+};
+
+const INITIAL_PASSWORD = {
   currentPassword: "",
   password: "",
   passwordConfirm: "",
 };
 
+
 export function useMemberMypage() {
   // [1] 상태
   const [openProfile, setOpenProfile] = useState(false);
+
+  // 회원 정보, 비밀번호 분리
   const [member, setMember] = useState(INITIAL_MEMBER);
-  const { loginMember, handleLogin } = useAuth();
+  const [passwordForm, setPasswordForm] = useState(INITIAL_PASSWORD);
+
+  const { loginMember, updateLoginMember, } = useAuth();
 
 
   const { showSnackbar } = useSnackbar();
@@ -35,8 +43,6 @@ export function useMemberMypage() {
 
   // [1] 프로필 정보 조회
   const fetchMe = () => {
-    if (!loginMember?.memberId) return;
-
     api.get("/members/me/detail", {
       onSuccess: (rp) => {
         const data = rp.data;
@@ -49,7 +55,7 @@ export function useMemberMypage() {
           password: "",
           passwordConfirm: "",
           profileImageUrl: data.profileImageUrl,
-        };
+        }
 
         setMember(next);
         setMemberOrigin(next);
@@ -60,7 +66,6 @@ export function useMemberMypage() {
       },
     });
   };
-
 
 
 
@@ -86,7 +91,7 @@ export function useMemberMypage() {
   // [3] 마이페이지 조회
   useEffect(() => {
     fetchMe()
-  }, [loginMember?.memberId]);
+  }, [])
 
 
   const validatePassword = ({ currentPassword, password, passwordConfirm }) => {
@@ -131,7 +136,11 @@ export function useMemberMypage() {
         onSuccess: () => {
           showSnackbar("비밀번호가 변경되었습니다.", "success")
           setOpenPassword(false)
+          fetchMe()
         },
+        onError: (rp) => {
+          showSnackbar(rp?.message || "비밀번호 변경에 실패했습니다.", "error")
+        }
       },
       {
         currentPassword: pwDraft.currentPassword,
@@ -147,16 +156,16 @@ export function useMemberMypage() {
     api.patch(
       "/members/me/nickname",
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           showSnackbar("닉네임이 변경되었습니다.", "success")
-          handleLogin({
-            ...loginMember,
-            nickname,
-          })
+
           fetchMe()
         },
+        onError: (rp) => {
+          showSnackbar(rp?.message || "닉네임 변경에 실패했습니다.", "error")
+        }
       },
-      { nickname }
+      { nickname: nickname }
     )
   }
 
@@ -165,42 +174,41 @@ export function useMemberMypage() {
 
   //  [6] 프로필 이미지 수정
   const submitProfileImageEdit = () => {
-    if (!profileFile) {
+    const file = profileFile
+
+    if (!file) {
       showSnackbar("업로드할 이미지를 선택해주세요.", "warning");
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", profileFile);
+    formData.append("file", file);
 
     api.postImage(
       `/members/me/profile-image`,
       {
-        onSuccess: (rp) => {
-          const newProfileImageUrl = rp.data?.profileImageUrl;
+        onSuccess: async () => {
+          //  1. 스낵바
+          showSnackbar("프로필 이미지가 변경되었습니다.", "success")
+          const newTimestamp = Date.now()
 
-          showSnackbar("프로필 이미지가 변경되었습니다.", "success");
-
-          //  1. authStore 갱신 (헤더 즉시 반영)
-          if (newProfileImageUrl) {
-            handleLogin({
-              ...loginMember,
-              profileImageUrl: newProfileImageUrl,
-            });
-          }
-
-          //  2. 마이페이지 상세 갱신
-          fetchMe();
+          // if (updateLoginMember && loginMember.profileImageUrl) {
+          //   // 기존 URL 뒤에 타임스탬프를 갱신하여 브라우저가 새 이미지를 로드하게 함
+          //   const baseUrl = loginMember.profileImageUrl.split('?')[0];
+          //   updateLoginMember({
+          //     profileImageUrl: `${baseUrl}?v=${newTimestamp}`
+          //   });
+          // }
+          //  2. 마이페이지 상세 갱신 / 로그인 상태 갱신
+          // await refreshAuth()
 
           //  3. UI 정리
-          setImageVersion(Date.now());
-          setProfileFile(null);
-          setProfilePreview("");
-          setOpenProfile(false);
+          fetchMe()
+          setProfileFile(null)
+          setProfilePreview("")
+          setOpenProfile(false)
         },
-      },
-      formData
-    )
+      }, formData)
   }
 
   // [7] 취소 (원본으로 되돌리기)

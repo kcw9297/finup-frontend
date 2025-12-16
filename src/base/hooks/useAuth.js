@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 export function useAuth() {
 
   // 전역 저장소
-  const { login, logout, isAuthenticated, loginMember, loading, setLoading  } = useAuthStore()
+  const { login, logout, isAuthenticated, loginMember, loading, setLoading } = useAuthStore()
   const { showSnackbar } = useSnackbar()
   const location = useLocation() // 현재 경로
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ export function useAuth() {
   const authenticate = async () => {
 
     // 성공/실패/최종 콜백 함수 선언
-    const onSuccess = rp => { 
+    const onSuccess = rp => {
       // data가 있으면 로그인 처리, 없으면 로그아웃
       if (rp.data) login(rp.data)
       else logout()
@@ -53,7 +53,7 @@ export function useAuth() {
     const onSuccess = rp => {
       showSnackbar(rp.message, 'success') // 로그아웃 안내 출력
       logout() // 로그아웃 처리
-      if (!location.pathname === '/') navigate('/', { replace: true }) // 홈으로 이동
+      if (location.pathname === '/') navigate('/', { replace: true }) // 홈으로 이동
     }
 
     const onFinally = () => {
@@ -64,7 +64,7 @@ export function useAuth() {
   }
 
   // [3] 반환
-  return { 
+  return {
     loading, isAuthenticated, loginMember, logout,
     authenticate, handleLogout, handleLogin, isAdmin
   }
