@@ -13,7 +13,7 @@ export function useQuiz(){
   // [4] REST API 요청 함수 정의 
   useEffect(()=>{
     async function fetchQuiz() {
-      const rp = await api.get(`/quiz/getQuestion`);
+      const rp = await api.get(`/quiz/getQuestion`, { public: true });
       setQuiz(rp.data);
       setLoading(false);
     }
