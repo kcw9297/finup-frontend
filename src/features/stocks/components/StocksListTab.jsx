@@ -35,13 +35,11 @@ export default function StocksListTab() {
       }}
     >
       <Tab label="시가총액" />
-      <Tab label="거래대금" />
-      <Tab label="나머지는 아직 뭐할지 안정함" />      
+      <Tab label="거래대금" />        
     </Tabs>
 
     {value === 0 && <StocksListMarketCap />}
-    {value === 1 && <StocksListTradingValue />}
-    {/* {value === 1 && <StocksListVolume />} */}
+    {value === 1 && <StocksListTradingValue />}    
     </>
   );
 }
