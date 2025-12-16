@@ -119,7 +119,7 @@ export default function StocksDetailStock(){
         </Box>
 
         {/* AI분석 */}
-        <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 3 }}>
+        <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 3}}>
       
           {/* 제목 */}
           <Box sx={{display: "flex"}}>
@@ -129,8 +129,8 @@ export default function StocksDetailStock(){
           </Box>
           
           {/* 내용 카드 */}
-          <Card variant="outlined" sx={{ borderRadius: 2 }}>
-            <CardContent>
+          <Card variant="outlined" sx={{ border: 0, }}>
+            <CardContent sx={{ padding: 0, margin: 0 }}>
               {loadingAi && (
                 <Box sx={{ 
                   display: "flex", 
@@ -144,59 +144,41 @@ export default function StocksDetailStock(){
                       animation: `${sparkle} 1.5s ease-in-out infinite`,
                     }} 
                   />
-                  <Typography sx={{ fontSize: 14, color: "#3B5BDB", fontWeight: 600 }}>
+                  <Typography sx={{ margin:2, fontSize: 14, color: "#3B5BDB", fontWeight: 600 }}>
                     AI 분석 중…
                   </Typography>
                 </Box>
               )}
-              <Box>
-              {/* 종합 요약 */}
-              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+              
+              <Box
+                sx={{ display: 'grid', gridTemplateColumns: '100px 1fr', rowGap: 2, alignItems: 'center', 
+                  "& .MuiChip-root": { justifySelf: 'start', },
+                  "& .MuiTypography-root": { fontSize: 15, lineHeight: 1.6 }
+                }}
+              >
+                {/* 종합 요약 */}
                 <Chip label="종합 요약" color="secondary" variant="outlined" />
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  {detailStockAi.summary}
-                </Typography>
-              </Stack>
+                <Typography>{detailStockAi.summary}</Typography>
 
-              {/* 투자 포인트 */}
-              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                {/* 투자 포인트 */}
                 <Chip label="투자 포인트" color="primary" variant="outlined" />
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  {detailStockAi.investmentPoint}
-                </Typography>
-              </Stack>
+                <Typography>{detailStockAi.investmentPoint}</Typography>
 
-              {/* 가격 */}
-              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                {/* 가격 */}
                 <Chip label="가격" color="success" variant="outlined" />
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  {detailStockAi.price}
-                </Typography>
-              </Stack>
+                <Typography>{detailStockAi.price}</Typography>
 
-              {/* 가치평가 */}
-              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                {/* 가치평가 */}
                 <Chip label="가치평가" color="info" variant="outlined" />
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  {detailStockAi.valuation}
-                </Typography>
-              </Stack>
+                <Typography>{detailStockAi.valuation}</Typography>
 
-              {/* 수급·거래 */}
-              <Stack spacing={1} alignItems="flex-start" sx={{ mb: 3 }}>
+                {/* 수급·거래 */}
                 <Chip label="수급·거래" color="warning" variant="outlined" />
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  {detailStockAi.flow}
-                </Typography>
-              </Stack>
+                <Typography>{detailStockAi.flow}</Typography>
 
-              {/* 리스크·상태 */}
-              <Stack spacing={1} alignItems="flex-start" >
+                {/* 리스크·상태 */}
                 <Chip label="리스크·상태" color="error" variant="outlined" />
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  {detailStockAi.risk}
-                </Typography>
-              </Stack>                
+                <Typography>{detailStockAi.risk}</Typography>
               </Box>
             </CardContent>
           </Card>
@@ -263,7 +245,7 @@ function InfoCard({ title, rows }) {
     >
       {/* 제목 */}
       <Box sx={{ height: 50, display: "flex", alignItems: "center" }}>
-        <Typography fontSize={16} fontWeight={400}>
+        <Typography fontSize={16} fontWeight={400} color="text.light">
           {title}
         </Typography>
       </Box>
@@ -290,11 +272,7 @@ function InfoCard({ title, rows }) {
             </Stack>
 
             {/* 오른쪽 값 */}
-            <Typography
-              fontSize={16}
-              sx={{ color: item.color }}
-              textAlign="right"
-            >
+            <Typography fontSize={16} textAlign="right">
               {item.value}
             </Typography>
           </Box>

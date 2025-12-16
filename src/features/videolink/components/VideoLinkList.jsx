@@ -37,7 +37,7 @@ export default function VideoLinkList({ admin = false }) {
   // [1] 검색 요청 상태
   const {
     searchRq, searchRp, loading, searchProps, 
-    handleKeyword, handleSearch, handleFilter, handlePage, handleOrder, 
+    handlePage, handleOrder, 
     handleAfterEdit, handleAfterRemove
   } = useVideoLinkList({admin})
 

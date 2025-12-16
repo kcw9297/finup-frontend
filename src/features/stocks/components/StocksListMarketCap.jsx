@@ -39,6 +39,11 @@ export default function StocksListMarketCap() {
     if (sign === '2') return theme.palette.stock.rise; // 상승
     if (sign === '5') return theme.palette.stock.fall; // 하락    
   };
+
+  const getChangeSymbol = (sign) => {
+    if (sign === '2') return '+'; // 상승
+    if (sign === '5') return ''; // 하락    
+  };
   
   return (
     <>
@@ -75,13 +80,8 @@ export default function StocksListMarketCap() {
                     {row.htsKorIsnm} 
                   </TableCell> 
                   <TableCell align="right">{Number(row.stckPrpr).toLocaleString()}원</TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      color: getChangeColor(row.prdyVrssSign)                 
-                    }}
-                    >
-                    {row.prdyCtrt}%
+                  <TableCell align="right" sx={{ color: getChangeColor(row.prdyVrssSign) }}>
+                    {`${getChangeSymbol(row.prdyVrssSign)}${row.prdyCtrt}%`}
                   </TableCell> 
                   <TableCell align="right">{formatMarketCap(row.stckAvls)}</TableCell> 
                   <TableCell align="right">{row.mrktWholAvlsRlim}%</TableCell> 

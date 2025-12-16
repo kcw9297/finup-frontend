@@ -64,7 +64,7 @@ export function useVideoLinkList({ admin = false }) {
     if (!curKeyword || curKeyword === '') return
 
     // 다음 요청
-    const nextRq = { ...searchRq, filter: curFilter, keyword: curKeyword };
+    const nextRq = { ...searchRq, filter, keyword: curKeyword };
 
     // 현재 파라미터와 동일한 경우 수행하지 않음
     if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
