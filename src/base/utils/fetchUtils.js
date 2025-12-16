@@ -1,4 +1,4 @@
-import { navigate, showSnackbar } from '../../base/config/globalHookConfig'
+import { navigate, showSnackbar, logout } from '../../base/config/globalHookConfig'
 
 // 환경 변수 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -81,14 +81,30 @@ async function fetchInner(endpoint, options = {}, body = {}) {
         return { ...rp, redirected: true }
       }
 
-      // 권한이 부족하거나 토큰이 유효하지 않은 경우
-      if (['ACCESS_DENIED', 'TOKEN_INVALID'].includes(rp.status)) {
+      // 권한이 부족한 경우
+      if (rp.status === 'ACCESS_DENIED') {
 
         // 스낵바 출력
         if (options.printMessage) showSnackbar(rp.message || '잘못된 요청입니다.')
 
         // 딜레이 후 리다이렉트
         setTimeout(() => {
+          navigate('/', { replace: true })
+        }, 300);
+
+        // 리다이렉트 값을 넘기고 반환
+        return { ...rp, redirected: true }
+      }
+
+      // 토큰이 유효하지 않은 경우
+      if (rp.status === 'TOKEN_INVALID') {
+
+        // 스낵바 출력
+        if (options.printMessage) showSnackbar(rp.message || '로그인 정보가 유효하지 않습니다.')
+
+        // 딜레이 후 리다이렉트
+        setTimeout(() => {
+          logout()
           navigate('/', { replace: true })
         }, 300);
 
@@ -204,14 +220,31 @@ async function fetchInnerFile(endpoint, options = {}, formData) {
         return { ...rp, redirected: true }
       }
 
+      
       // 권한이 부족한 경우
-      if (['ACCESS_DENIED', 'TOKEN_INVALID'].includes(rp.status)) {
+      if (rp.status === 'ACCESS_DENIED') {
 
         // 스낵바 출력
         if (options.printMessage) showSnackbar(rp.message || '잘못된 요청입니다.')
 
         // 딜레이 후 리다이렉트
         setTimeout(() => {
+          navigate('/', { replace: true })
+        }, 300);
+
+        // 리다이렉트 값을 넘기고 반환
+        return { ...rp, redirected: true }
+      }
+
+      // 토큰이 유효하지 않은 경우
+      if (rp.status === 'TOKEN_INVALID') {
+
+        // 스낵바 출력
+        if (options.printMessage) showSnackbar(rp.message || '로그인 정보가 유효하지 않습니다.')
+
+        // 딜레이 후 리다이렉트
+        setTimeout(() => {
+          logout()
           navigate('/', { replace: true })
         }, 300);
 

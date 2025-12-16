@@ -43,7 +43,7 @@ export function useAuth() {
 
   // 관리자 판별 함수
   const isAdmin = () => {
-    return loginMember.role === 'ADMIN'
+    return loginMember?.role === 'ADMIN'
   }
 
 
@@ -65,7 +65,7 @@ export function useAuth() {
 
   // [3] 반환
   return { 
-    loading, isAuthenticated, loginMember,
+    loading, isAuthenticated, loginMember, logout,
     authenticate, handleLogout, handleLogin, isAdmin
   }
 }

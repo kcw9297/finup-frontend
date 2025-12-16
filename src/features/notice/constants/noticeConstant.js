@@ -5,7 +5,7 @@ export const DEFAULT_SEARCH_RQ = {
   filter: "",
   order: 'latest',
   pageNum: 1,
-  size: 5
+  pageSize: 5
 }
 
 // 필터 옵션 filter
@@ -26,3 +26,26 @@ export const MODAL_FIELDS = [
   { name: 'title', label: '제목', helperText: '30자 이내 제목 입력 (특수문자 제외)' },
   { name: 'content', label: '본문', multiline: 5, rows: 5, helperText: '1000자 이내 본문 입력' },
 ];
+
+// 공지사항 작성일 렌더링 함수
+export function formatDetailDate(dateString) {
+  if (!dateString) return ""
+  const date = new Date(dateString)
+  return date.toLocaleString("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
+export function formatListDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  }
