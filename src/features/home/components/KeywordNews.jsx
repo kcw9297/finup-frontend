@@ -3,7 +3,7 @@ import WordCloud from "./WordCloud";
 import KeywordContent from "./KeywordContent";
 
 // 워드 클라우드 + 뉴스 리스트
-export default function KeywordNews({ newsList, originalKeywords }) {
+export default function KeywordNews({ newsList, originalKeywords, onItemClick }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {/* 제목 */}
@@ -48,7 +48,7 @@ export default function KeywordNews({ newsList, originalKeywords }) {
 
         {/* 기사 리스트 */}
         <Box sx={{ width: "100%" }}>
-          <KeywordContent list={newsList} />
+          <KeywordContent list={newsList} onItemClick={onItemClick} />
         </Box>
       </Box>
     </Box>
