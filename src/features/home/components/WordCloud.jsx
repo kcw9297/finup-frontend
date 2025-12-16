@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import cloud from "d3-cloud";
 
 // 퍼센트 기반 워드클라우드
+// - 테마 사용 불가
 // - 키워드를 빈도순으로 정렬
 // - 전체를 100%로 보고 단계 분배
 
@@ -42,8 +43,8 @@ export default function WordCloud({ originalWords }) {
     return sorted.map((word, index) => {
       const percent = (index / total) * 100;
       let level = 1;
-      if (percent < 10) level = 3;
-      else if (percent < 40) level = 2;
+      if (percent < 7) level = 3;
+      else if (percent < 35) level = 2;
       return {
         ...word,
         level,
@@ -79,7 +80,6 @@ export default function WordCloud({ originalWords }) {
           }))
         );
       });
-
     layout.start();
   }, [wordsWithLevel, size]);
 
