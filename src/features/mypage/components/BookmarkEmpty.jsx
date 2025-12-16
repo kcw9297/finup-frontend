@@ -4,12 +4,12 @@ export default function BookmarkEmpty() {
   return (
     <Box
       sx={{
-        py: 8,
+        py: 10,
         textAlign: 'center',
         color: 'text.secondary',
       }}
     >
-      <Typography variant="h6" sx={{ mb: 1 }}>
+      <Typography sx={{ fontWeight: 600, mb: 1 }}>
         북마크한 개념 학습이 없습니다
       </Typography>
       <Typography variant="body2">

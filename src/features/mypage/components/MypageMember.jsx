@@ -376,7 +376,7 @@ export default function MypageMember() {
 
 function ReadOnlyRow({ label, value, onEdit }) {
   return (
-    <Box>
+    <Box sx={{ position: "relative" }}>
       <Typography
         variant="caption"
         sx={{ display: "block", mb: 0.5, color: COLORS.label }}
@@ -388,7 +388,17 @@ function ReadOnlyRow({ label, value, onEdit }) {
         <TextField fullWidth size="small" value={value || ""} disabled sx={textFieldSx} />
 
         {onEdit && (
-          <IconButton onClick={onEdit} size="small" aria-label={`${label} 수정`}>
+          <IconButton
+            sx={{
+              position: "absolute",
+              right: 7,
+              top: "68%",
+              transform: "translateY(-50%)",
+            }}
+            onClick={onEdit}
+            size="small"
+            aria-label={`${label} 수정`}>
+
             <EditIcon fontSize="small" />
           </IconButton>
         )}
