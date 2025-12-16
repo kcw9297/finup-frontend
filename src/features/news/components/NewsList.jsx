@@ -62,6 +62,7 @@ export default function NewsList() {
 
         <NewsScrollToTop show={showTop && !open} onClick={scrollToTop} />
       </Box>
+      
       {/* 뉴스 상세 모달 */}
       <NewsModal
         open={open}

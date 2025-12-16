@@ -10,7 +10,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-
+import thema from "../../../base/design/thema.js";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 export default function NewsDetailModal({ open, onClose, article, loading }) {
   if (!article) return null;
   const hasDeepAi =
@@ -182,19 +183,31 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                 )?.map((item, idx) => (
                   <Box
                     key={idx}
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 1.5,
-                      mb: 1.5,
-                    }}
+                    sx={{mb:2}}
                   >
-                    <Chip
-                      label={item.term}
-                      color="primary"
-                      variant="outlined"
-                      size="small"
-                    />
+                    <Box 
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 0.5,
+                        mb: 0.5,
+                      }}
+                    >
+                      <Chip
+                        icon={<BookmarkBorderIcon
+                          sx={{
+                            fontSize: 18,
+                            color: "#bbb",
+                            transition: "color 0.3s ease",
+                            "&:hover": { color: thema.palette.base.dark },
+                          }}
+                        />}
+                        label={item.term}
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                      />
+                    </Box>
                     <Box sx={{ fontSize: 14, lineHeight: 1.4 }}>
                       {item.definition}
                     </Box>
