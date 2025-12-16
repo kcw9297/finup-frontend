@@ -10,18 +10,23 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import thema from "../../../base/design/thema.js";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 export default function NewsDetailModal({ open, onClose, article, loading }) {
   if (!article) return null;
-  const hasDeepAi =
-    typeof article?.ai?.summary === "string" && article.ai.summary.length > 0;
+  const hasDeepAi = 
+  article?.ai?.type === "DEEP" &&
+  typeof article?.ai?.summary === "string" &&
+  article.ai.summary.length > 0;
 
   const hasLightAi =
+    article?.ai?.type === "LIGHT" &&
     !!article?.summary &&
     typeof article?.summary?.summary === "string" &&
     article.summary.summary.length > 0;
 
-  const showLightSection = loading || hasLightAi;
+  const showLightSection = loading || hasDeepAi || hasLightAi;
 
   const formattedDate = moment(article.publishedAt).format("YYYY-MM-DD HH:mm");
   const sparkle = keyframes`
@@ -31,6 +36,9 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
   `;
   console.log("summary raw =", article.summary);
   console.log("hasLightAi =", hasLightAi);
+  console.log("ai raw =", article.ai);
+  console.log("hasDeepAi =", hasDeepAi);
+  console.log("raw =", article);
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -109,7 +117,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
             </Box>
           )}
           {/* 요약 */}
-          {(hasDeepAi || showLightSection) && (
+          {showLightSection && (
             <Box sx={{ mb: 10 }}>
               <Box
                 sx={{
@@ -182,19 +190,31 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                 )?.map((item, idx) => (
                   <Box
                     key={idx}
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 1.5,
-                      mb: 1.5,
-                    }}
+                    sx={{mb:2}}
                   >
-                    <Chip
-                      label={item.term}
-                      color="primary"
-                      variant="outlined"
-                      size="small"
-                    />
+                    <Box 
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 0.5,
+                        mb: 0.5,
+                      }}
+                    >
+                      <Chip
+                        icon={<BookmarkBorderIcon
+                          sx={{
+                            fontSize: 18,
+                            color: "#bbb",
+                            transition: "color 0.3s ease",
+                            "&:hover": { color: thema.palette.base.dark },
+                          }}
+                        />}
+                        label={item.term}
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                      />
+                    </Box>
                     <Box sx={{ fontSize: 14, lineHeight: 1.4 }}>
                       {item.definition}
                     </Box>

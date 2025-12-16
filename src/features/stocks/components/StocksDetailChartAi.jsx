@@ -1,25 +1,6 @@
 import { Box, Chip, Paper, Typography } from "@mui/material";
 
-export default function useStocksDetailChartAi({ai}){
-  if(!ai){
-    return (
-    <Box 
-      sx={{
-        height:"300px",
-        border: "1px solid #ddd",
-        borderRadius: 2,
-        p: 2,
-        background: "#fafafa",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "text.secondary",
-      }}
-    >
-      AI분석을 불러오는 중입니다...
-    </Box>
-    )
-  }
+export default function StocksDetailChartAi({ai}){
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
 
