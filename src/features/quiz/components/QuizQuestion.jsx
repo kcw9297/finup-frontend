@@ -1,6 +1,6 @@
 import { Box, Typography, IconButton, RadioGroup, FormControlLabel, Radio, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // 문제 제출
 
@@ -56,12 +56,12 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
         }}
       >
         {questions.map((q, idx) => (
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+        <Box key={idx} sx={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
           <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
-            {q.id}. {q.question}
+            {idx + 1}. {q.question} 
           </Typography>
           <RadioGroup value={answers[idx]} onChange={(e) => handleSelect(idx, e.target.value)}>
-            {q.options.map((opt, i) => (
+            {q.choices.map((opt, i) => (
               <FormControlLabel
                 key={i}
                 value={i}
