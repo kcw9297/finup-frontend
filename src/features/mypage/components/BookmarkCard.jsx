@@ -1,5 +1,6 @@
-import { Paper } from "@mui/material";
-
+import { Box, IconButton, Paper, Typography } from "@mui/material";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { navigate } from "../../../base/config/globalHookConfig";
 export default function BookmarkCard({ item, onRemove }) {
 
   return (
@@ -33,9 +34,11 @@ export default function BookmarkCard({ item, onRemove }) {
       </Box>
 
       {/* 본문 */}
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, cursor: 'pointer' }}
+        onClick={() => navigate(`/studies/${item.studyId}`)}
+      >
         <Typography sx={{ fontWeight: 600, mb: 0.5 }}>
-          {item.title}
+          {item.name}
         </Typography>
         <Typography
           variant="body2"
@@ -51,7 +54,7 @@ export default function BookmarkCard({ item, onRemove }) {
         </Typography>
       </Box>
 
-      {/* 액션 */}
+      {/* 삭제 */}
       <IconButton
         onClick={() => onRemove(item)}
         sx={{
@@ -61,7 +64,7 @@ export default function BookmarkCard({ item, onRemove }) {
           },
         }}
       >
-        <BookmarkRemoveIcon />
+        <BookmarkIcon />
       </IconButton>
     </Paper>
   );
