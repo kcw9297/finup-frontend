@@ -1,11 +1,14 @@
-import { Paper, Box, Typography, IconButton } from "@mui/material"
+import { Paper, Box, Typography, IconButton, CircularProgress } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
 
 // 공지사항
 
-export default function Notice({ noticeList, noticeCurrent, fade, showNext }) {
+export default function Notice({ noticeList, noticeCurrent, fade, showNext, loading }) {
   
+  // 아직 렌더링되지 않은 경우 빈 객체
+  const currentNotice = noticeList[noticeCurrent] || {}
+
   return (
     <Paper
       elevation={0}
@@ -44,15 +47,29 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext }) {
         <Typography className="title">공지사항</Typography>
         <Typography className="title">|</Typography>
 
-        <Typography
-          className="notice-text"
-          sx={{
-            opacity: fade ? 1 : 0,
-            transition: "opacity 0.3s ease-in-out",
-          }}
-        >
-          {noticeList[noticeCurrent]}
-        </Typography>
+        {loading ? (
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              mx: 2
+            }}
+          >
+            <CircularProgress size={20} />
+          </Box>
+        ) : (
+          <Typography
+            className="notice-text"
+            sx={{
+              opacity: fade ? 1 : 0,
+              transition: "opacity 0.3s ease-in-out",
+            }}
+          >
+            {currentNotice.title}
+          </Typography>
+        )}
+
       </Box>
 
       {/* 오른쪽 이동 버튼 */}

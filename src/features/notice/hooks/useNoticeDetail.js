@@ -1,65 +1,55 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-
-const INITIAL_DETAIL_RQ = { noticeId: null }
+import { useNavigate, useParams } from "react-router-dom";
 
 /**
  * 공지사항 상세 정보 훅
  * @author khj
  * @since 2025-12-02
  */
-export function useNoticeDetail() {
-  // [1] 필요 데이터 선언
-  const [detailRq, setDetailRq] = useState(INITIAL_DETAIL_RQ)
-  const [detailRp, setDetailRp] = useState(null)
 
-  const [loading, setLoding] = useState(false)
+export function useNoticeDetail({ admin = false }) {
+
+  // [1] 사용 상태 선언
+  const { noticeId } = useParams()
+  const [ detailRp, setDetailRp ] = useState(null)
+  const [ loading, setLoading ] = useState(true)
   const { showSnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
-  // [2] 입력 데이터 상태 변경 함수
-  const changeDetailRq = rq =>
-    setDetailRq(prev => ({ ...prev, ...rq }))
 
-  // [3] 성공/실패/콜백 정의
-  const onSuccess = rp => {
-    setDetailRp(rp.data)
+  // [2] 성공/실패/콜백 정의
+  const onSuccess = (rp) => {
+    setDetailRp(rp)
   }
-  const onError = () => {
-    showSnackbar("공지사항 정보를 가져오지 못했습니다.", "error")
+
+  const onError = (rp) => {
+
+    // 조회 실패 메세지 출력
+    showSnackbar(rp.message)
+    setDetailRp(null)
+    
+    // 잠시 후 목록으로 리다이렉트
+    setTimeout(() => {
+      const redirect = admin ? '/admin/notices' : '/notices'
+      navigate(redirect, { replace: true })
+    }, 300);
   }
   const onFinally = () => {
-    setLoding(false)
+    setLoading(false)
   }
 
-  // [4] REST API 호출 함수 정의
-  const fetchDetail = () => {
-    if (!detailRq.noticeId) return
-
-    setDetailRp(null)
-    setLoding(true)
-
-    api.get(
-      `/notices/${detailRq.noticeId}`,
-      {
-        admin: true,
-        onSuccess, onError, onFinally
-      }
-    )
-  }
-
-  // [5] noticeId 변경 시 자동 실행
+  // [3] useEffect 선언
   useEffect(() => {
-    if (detailRq.noticeId) {
-      (async () => {
-        fetchDetail();
-      })()
-    }
-  }, [detailRq.noticeId])
 
-  // [6] 반환
+    // noticeId가 로드된 경우에만 조회
+    if (noticeId) api.get(`/notices/${noticeId}`, { onSuccess, onError, onFinally, public: true })
+
+  }, [noticeId])
+
+  // [4] 반환
   return {
-    detailRq, detailRp, loading,
-    changeDetailRq, fetchDetail,
+    noticeId, detailRp, loading
   }
 }

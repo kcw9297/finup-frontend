@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 import MainLayout from "../../base/layouts/MainLayout";
 
@@ -14,13 +14,18 @@ import { useExchangeRate, useMarketIndex } from "../../features/home/hooks/useEx
 import { useKeywordNews } from "../../features/home/hooks/useKeywordNews";
 import { useRecommendedVideo } from "../../features/home/hooks/useRecommendedVideo";
 import { useStockFirm } from "../../features/home/hooks/useStockFirm";
+import { useHomeNoticeList } from "../../features/notice/hooks/useHomeNoticeList";
+import { useAuth } from "../../base/hooks/useAuth";
 
 export default function HomePage() {
-  // 공지 데이터
-  const noticeList = [ "서버 점검 안내(25.12.01)", "신규 기능 업데이트 안내", "서비스 이용 시 유의 사항" ]
+
+  // 공지 데이터 (custom hook)
+  const { isAdmin } = useAuth()
+  const { listRp, loading: loadingNotice } = useHomeNoticeList({ admin: isAdmin() })
+  const listRows = listRp?.data ?? []
 
   // 훅 사용
-  const { current, fade, showNext } = useHomeNotice(noticeList);
+  const { current, fade, showNext } = useHomeNotice(listRows)
   const { quotation } = useExchangeRate();
   const { indexes } = useMarketIndex();
   const keywordNews = useKeywordNews();  
@@ -34,12 +39,13 @@ export default function HomePage() {
         {/* Top */}
         <Box sx={{display:'flex', flexDirection:'column', gap:'20px',}}>
           <Banner/>
-          <Notice
-            noticeList={noticeList}
-            noticeCurrent={current}
-            fade={fade}
-            showNext={showNext}
-          />
+            <Notice
+              noticeList={listRows}
+              noticeCurrent={current}
+              fade={fade}
+              showNext={showNext}
+              loading={loadingNotice}
+            />
           <Box sx={{display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:5}}>
             {quotation.map((item, i) => (<ExchangeRate key={`fx-${i}`} data={item}/>))}
             {indexes.map((item, i) => (<ExchangeRate key={`idx-${i}`} data={item}/>))}

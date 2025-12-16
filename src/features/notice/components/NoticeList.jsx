@@ -15,7 +15,7 @@ import FormModal from "../../../base/components/modal/FormModal";
 import ConfirmModal from "../../../base/components/modal/ConfirmModal";
 import { useNavigate } from "react-router-dom"
 import { useNoticeList } from "../hooks/useNoticeList";
-import { SORT_OPTIONS } from "../constants/noticeConstant";
+import { formatListDate, SORT_OPTIONS } from "../constants/noticeConstant";
 import { useNoticeWrite } from "../../admin/notices/hooks/useNoticeWrite";
 import { useNoticeWriteModal } from "../hooks/useNoticeWriteModal";
 import { useNoticeEditModal } from "../hooks/useNoticeEditModal";
@@ -34,7 +34,7 @@ export default function NoticeList({ admin = false }) {
     searchRq, searchRp, loading, searchProps,
     handlePage, handleOrder,
     handleAfterEdit, handleAfterRemove
-  } = useNoticeList()
+  } = useNoticeList({admin})
 
   const navigate = useNavigate()
 
@@ -47,20 +47,7 @@ export default function NoticeList({ admin = false }) {
   const rows = searchRp?.data ?? []
   const pagination = searchRp?.pagination ?? {}
 
-
-  // [2] 사용 함수 선언
-  // 날짜 포맷 함수
-  function formatDate(dateString) {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  }
-
- // [3] 반환 UI
+ // 반환 UI
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
 
@@ -125,22 +112,23 @@ export default function NoticeList({ admin = false }) {
             <TableHead>
               <TableRow>
                 <TableCell align="center" sx={{ width: '10%' }}>No.</TableCell>
-                <TableCell sx={{ width: '65%', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>제목</TableCell>
-                <TableCell align="center" sx={{ width: '10%' }}>조회수</TableCell>
-                <TableCell align="center" sx={{ width: '15%' }}></TableCell>
+                <TableCell sx={{ width: '50%', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>제목</TableCell>
+                <TableCell align="center" sx={{ width: '15%' }}>작성일</TableCell>
+                <TableCell align="center" sx={{ width: '15%' }}>조회수</TableCell>
+                <TableCell align="center" sx={{ width: '10%' }}></TableCell>
               </TableRow>
             </TableHead>
 
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center" sx={{ py: 15 }}>
+                  <TableCell colSpan={5} align="center" sx={{ py: 15 }}>
                     <CircularProgress />
                   </TableCell>
                 </TableRow>
               ) : rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center" sx={{ py: 15 }}>
+                  <TableCell colSpan={5} align="center" sx={{ py: 15 }}>
                     등록한 공지사항이 없습니다.
                   </TableCell>
                 </TableRow>
@@ -151,7 +139,8 @@ export default function NoticeList({ admin = false }) {
                     hover
                   >
                     <TableCell align="center">{row.noticeId}</TableCell>
-                    <TableCell onClick={() => navigate(`/notices/${row.noticeId}`)} sx={{ cursor: "pointer" }}>{row.title}</TableCell>
+                    <TableCell onClick={() => navigate(`/notices/detail/${row.noticeId}`)} sx={{ cursor: "pointer" }}>{row.title}</TableCell>
+                    <TableCell align="center">{formatListDate(row.cdate)}</TableCell>
                     <TableCell align="center">{Number(row.viewCount).toLocaleString('ko-KR')}</TableCell>
                     <TableCell align="center">
                         {admin && ( // 관리자에게만 표시되는 버튼
