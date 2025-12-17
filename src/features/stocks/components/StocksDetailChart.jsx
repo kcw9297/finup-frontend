@@ -22,20 +22,21 @@ export default function StocksDetailChart(){
       </Box>
       <Box sx={{width: "1400px", display:"flex", flexDirection:"row"}}>
         <Box sx={{width: "1000px", mx: "auto", display: "flex", flexDirection:"column", gap: 3, mt: 2}}>
-          <CandleTypeTabs 
-            sx={{marginLeft:"16px"}}
-            value={candleType} 
-            onChange={(e,v) => v && setCandleType(v)} 
-            renderButton={(type) => (
-              <StocksDetailTooltip text={chartToolTipText[type]}>
-                <ToggleButton value={type}>
-                  {type === "day" && "일"}
-                  {type === "week" && "주"}
-                  {type === "month" && "월"}
-                </ToggleButton>
-              </StocksDetailTooltip>
-          )} />
-          <Box sx={{ flexBasis:"70%", flexShrink: 0, background: "#ffffff", p: 2, borderRadius: 2, border:1, borderColor:'line.main' , height:700, mb:2, marginLeft:10}}>
+          <Box sx={{marginLeft:"16px"}}>
+            <CandleTypeTabs 
+              value={candleType} 
+              onChange={(e,v) => v && setCandleType(v)} 
+              renderButton={(type) => (
+                <StocksDetailTooltip text={chartToolTipText[type]}>
+                  <ToggleButton value={type}>
+                    {type === "day" && "일"}
+                    {type === "week" && "주"}
+                    {type === "month" && "월"}
+                  </ToggleButton>
+                </StocksDetailTooltip>
+            )} />
+          </Box>
+          <Box sx={{ flexBasis:"70%", flexShrink: 0, background: "#ffffff", p: 2, borderRadius: 2, border:1, borderColor:'line.main' , height:700, mb:2, marginLeft:"16px"}}>
             {items.length > 0 && (
               <CombinedChart items={items} />
             )}
