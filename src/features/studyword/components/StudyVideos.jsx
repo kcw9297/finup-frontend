@@ -5,8 +5,10 @@ import {
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WordCard from '../../../base/components/card/WordCard';
+import { useRecommendVideoLinkHook } from '../hooks/useRecommendVideoLinkHook';
+import VideoCard from '../../../base/components/card/VideoCard';
 
 
 /**
@@ -15,11 +17,24 @@ import WordCard from '../../../base/components/card/WordCard';
  * @since 2025-12-09
  */
 
-export default function StudyVideos({ words = [], admin = false }) {
+export default function StudyVideos({ admin = false }) {
 
-  // 페이지 상태 (words 여기서 가져올 것)
+  // [1] 페이지 상태
   const [currentPage, setCurrentPage] = useState(0);
-  const pageCount = Math.max(1, Math.ceil(words.length / 4));
+
+
+  // [2] 추천 영상 훅
+  const { recommendRp, recommend, retryRecommend, loading, } = useRecommendVideoLinkHook()
+
+  const pageSize = 4
+  const pageCount = Math.max(1, Math.ceil((recommendRp?.length ?? 0) / pageSize))
+
+  // [3] 최초 진입 시 추천 호출
+  useEffect(() => {
+    recommend()
+  }, [])
+
+
 
   // 렌더링
   return (
@@ -65,7 +80,8 @@ export default function StudyVideos({ words = [], admin = false }) {
                 height: 32
               }}
               onClick={() => {
-                alert('재추천 기능')
+                setCurrentPage(0);  // 페이지 초기화
+                retryRecommend()
               }}
             >
               <RefreshIcon fontSize="small" />
@@ -95,7 +111,7 @@ export default function StudyVideos({ words = [], admin = false }) {
 
       {/* 영상 그리드 (4개씩) */}
       {/* 관리자가 아니고, 영상이 없으면 빈 메세지 */}
-      {!admin && words.length === 0 ? (
+      {!admin && recommendRp?.length === 0 ? (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 350, maxHeight: 350 }}>
           <Typography variant="body2" color="text.secondary">
             추천된 영상이 없습니다.
@@ -106,9 +122,10 @@ export default function StudyVideos({ words = [], admin = false }) {
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
 
           {/* 영상 카드들 */}
-          {words.slice(currentPage * 3, currentPage * 3 + 3).map((word) => (
-            <WordCard key={word.id} word={word} />
-          ))}
+          {recommendRp?.slice(currentPage * pageSize,
+            currentPage * pageSize + pageSize).map((video) => (
+              <VideoCard key={video.videoLinkId} video={video} />
+            ))}
 
         </Box>
       )}

@@ -4,7 +4,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from '@mui/icons-material/Image';
-
 /**
  * 영상 카드 공용 컴포넌트
  * @since 2025-12-11
@@ -13,14 +12,14 @@ import ImageIcon from '@mui/icons-material/Image';
 export default function VideoCard({ video, functions, cardWidth = 300, cardHeight = 370, admin = false }) {
 
   // 카드에 담을 정보
-  const { 
+  const {
     videoLinkId,
-    videoUrl, 
-    title, 
+    videoUrl,
+    title,
     duration,
-    thumbnailUrl, 
+    thumbnailUrl,
     channelTitle,
-    viewCount, 
+    viewCount,
     likeCount,
   } = video || {}
 
@@ -35,12 +34,12 @@ export default function VideoCard({ video, functions, cardWidth = 300, cardHeigh
   // 이미지 클릭 시 새 탭에서 영상 열기
   const handleImageClick = () => {
     window.open(videoUrl, "_blank");
-  };
+  }
 
   return (
-    <Paper 
+    <Paper
       elevation={0}
-      sx={{ 
+      sx={{
         width: cardWidth,
         height: cardHeight,
         border: '2px solid',
@@ -107,10 +106,10 @@ export default function VideoCard({ video, functions, cardWidth = 300, cardHeigh
       <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
 
         {/* 채널명 */}
-        <Typography 
-          variant="body2" 
+        <Typography
+          variant="body2"
           color="text.secondary"
-          sx={{ 
+          sx={{
             mb: 1,
             fontSize: '13px'
           }}
@@ -118,10 +117,10 @@ export default function VideoCard({ video, functions, cardWidth = 300, cardHeigh
           {channelTitle}
         </Typography>
 
-                {/* 제목 */}
-        <Typography 
+        {/* 제목 */}
+        <Typography
           variant="subtitle1"
-          sx={{ 
+          sx={{
             fontWeight: 600,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -182,6 +181,6 @@ export default function VideoCard({ video, functions, cardWidth = 300, cardHeigh
           </Box>
         )}
       </Box>
-    </Paper> 
+    </Paper>
   );
 }
