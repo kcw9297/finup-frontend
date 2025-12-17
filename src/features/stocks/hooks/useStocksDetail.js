@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 import theme from "../../../base/design/thema";
 import { stockToolTipText } from "../constants/stocksToolTipText";
+import { navigate, showSnackbar } from "../../../base/config/globalHookConfig";
 
 export function useStockDetail(code) {
 
@@ -27,6 +28,13 @@ export function useStockDetail(code) {
     //const detail = res.data.data;
     try{     
       const rp = await api.get(`/stocks/detail/${code}`);
+      
+      if (!rp.success) {
+        showSnackbar(rp.message || "종목 조회 중 오류가 발생했습니다.");
+        navigate("/stocks"); // 리스트 페이지로 이동
+        return;
+      }
+
       const detail = rp.data;
 
       /* 네임 카드  */
