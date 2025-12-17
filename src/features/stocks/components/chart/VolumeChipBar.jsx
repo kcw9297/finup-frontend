@@ -19,7 +19,7 @@ export default function VolumeChipBar({volume}){
       <StocksDetailTooltip textKey="volMa20">
         <Chip
           label={`MA20 거래량 ${formatCompact(volume?.volMa20) ?? "-"}`}
-          sx={{ background: "#eef2ff", color: "#4338ca" }}
+          sx={{ background: "#ecfdf5", color: "#16a34a" }}
         />
       </StocksDetailTooltip>
 

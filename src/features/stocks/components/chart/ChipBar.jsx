@@ -4,7 +4,7 @@ import StocksDetailTooltip from "../StocksDetailTooptip";
 
 export default function ChipBar({ohlc, ma}){
   return(
-    <Stack spacing={1} sx={{mb:1}}>
+    <Stack id="chipbar-ohlc" spacing={1} sx={{mb:1}}>
       {/* OHLC */}
       <Stack direction="row" spacing={1}>
         <StocksDetailTooltip textKey="open">
