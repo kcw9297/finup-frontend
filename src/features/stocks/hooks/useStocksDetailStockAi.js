@@ -20,7 +20,7 @@ export function useStockDetailStockAi(code){
 
   const fetchStockAi = async () => {
     
-    const rp = await api.get(`/stocks/detail/stock-ai/${code}`, { public: true });
+    const rp = await api.get(`/stocks/detail/stock-ai/${code}`);
     const stockAi = rp.data.detailAi;
     const youtube = rp.data.youtube;
     

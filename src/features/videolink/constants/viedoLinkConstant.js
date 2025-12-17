@@ -9,6 +9,7 @@ export const DEFAULT_SEARCH_RQ = {
 
 // 검색 키워드 filter
 export const FILTER_OPTIONS = [
+  { value: "", label: "선택" },
   { value: "title", label: "영상제목" },
   { value: "channelTitle", label: "채널명" },
   { value: "titleChannelTitle", label: "제목+채널명" },

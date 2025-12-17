@@ -16,6 +16,7 @@ export default function PageBar({ pagination, onChange }) {
         count={pagination.totalPage || 1}
         page={pagination.pageNum || 1}
         onChange={(event, value) => onChange(value)}
+        onKeyDown={(event, value) => onChange(value)}
         shape="rounded"
         showFirstButton
         showLastButton

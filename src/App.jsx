@@ -13,6 +13,7 @@ import NewsPage from './pages/news/NewsPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
+import StocksChartPage from './pages/stocks/StocksChartPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
 import AdminStudyListPage from './pages/study/AdminStudyListPage'
@@ -29,6 +30,8 @@ import WordDetailPage from './pages/wordVoca/WordDetailPage'
 import AdminNoticeListPage from './pages/notice/AdminNoticeListPage'
 import NoticeListPage from './pages/notice/NoticeListPage'
 import NoticeDetailPage from './pages/notice/NoticeDetailPage'
+import { path } from 'd3'
+import MypageBookmarkPage from './pages/mypage/MypageBookmarkPage'
 
 
 
@@ -55,7 +58,7 @@ const nastedRoutes = [
   {
     path: '/news/*', // url : 뉴스
     children: [
-      { path: 'list', element: <NewsPage /> }, // 모두 공개
+      { path: 'list', element: <ProtectedRoute><NewsPage /></ProtectedRoute> }, // 모두 공개
     ]
   },
 
@@ -64,7 +67,7 @@ const nastedRoutes = [
     children: [
       // url : 관리자 공지사항
       { path: 'notices/', element: <ProtectedRoute allowedRoles="ADMIN"><AdminNoticeListPage /></ProtectedRoute> },
-      
+
       // url : 회원 목록
       { path: 'members', element: <ProtectedRoute allowedRoles="ADMIN"><MemberListPage /></ProtectedRoute> },
 
@@ -80,7 +83,7 @@ const nastedRoutes = [
     ]
   },
 
-    {
+  {
     path: '/notices/*',
     children: [
       // url : 공지사항 (모두 공개)
@@ -97,12 +100,13 @@ const nastedRoutes = [
       { path: ":studyId", element: <ProtectedRoute><StudyDetailPage /></ProtectedRoute> },
     ]
   },
-      
+
   {
     path: '/stocks/*', //url : 종목 +
     children: [
-      { path: '', element: <StocksListPage /> }, // 모두 공개
-      { path: 'detail/:code', element: <StocksDetailPage /> },
+      { path: '', element: <ProtectedRoute><StocksListPage /></ProtectedRoute> }, // 모두 공개
+      { path: 'detail/:code', element: <ProtectedRoute><StocksDetailPage /></ProtectedRoute> },
+      { path: 'chart', element: <ProtectedRoute><StocksChartPage /></ProtectedRoute> }
     ]
   },
 
@@ -119,6 +123,7 @@ const nastedRoutes = [
     path: '/mypage/*',
     children: [
       { path: '', element: <ProtectedRoute><MypageMemberPage /></ProtectedRoute> },
+      { path: 'bookmarks', element: <ProtectedRoute><MypageBookmarkPage /></ProtectedRoute> },
     ]
   },
 ];
@@ -132,11 +137,11 @@ export default function App() {
   } = useAuth()
 
   const { // 북마크 전역 상태를 관리하는 훅
-    loadBookmark, clearBookmark 
+    loadBookmark, clearBookmark
   } = useBookmark()
 
   const { // 진도 전역 상태를 관리하는 훅
-    loadStudyProgress, clearStudyProgress 
+    loadStudyProgress, clearStudyProgress
   } = useStudyProgress()
 
 

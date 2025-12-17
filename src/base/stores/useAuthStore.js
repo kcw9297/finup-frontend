@@ -3,7 +3,7 @@ import { create } from 'zustand'
 export const useAuthStore = create(set => ({
 
   isAuthenticated: false, // 전역 상태 : 로그인
-  loginMember: null,      // 전역 상태 : 로그인 회원 정보
+  loginMember: null,      // 전역 상태 : 로그인 회원 정보(인증 주체 정보만 저장 (memberId, email, role))
   loading: true,          // 인증 로딩 상태
 
   // 전역 로딩 상태 설정

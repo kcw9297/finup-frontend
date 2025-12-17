@@ -16,12 +16,12 @@ export default function CombinedChart({items}){
   useEffect(()=>{
     if(!localStorage.getItem("chart_tutorial_done")){
       setTimeout(()=>{
-        chartGuide()
-      },500)
-      localStorage.setItem("chart_tutorial_done","true")
+        chartGuide();
+        localStorage.setItem("chart_tutorial_done","true")
+      },300)
     }
     setShowGuideButton(true)
-  },[])
+  },[items])
   
   const showGuide = () => {
     chartGuide()
@@ -35,7 +35,7 @@ export default function CombinedChart({items}){
         onClick={showGuide} 
         sx={{position: "absolute", right: 10, top:10, zIndex: 10, background: "white"}}
       >
-        가이드 다시보기
+        가이드 보기
       </Button>
     )}
     <ChipBar 
@@ -48,7 +48,6 @@ export default function CombinedChart({items}){
       ma={{
         ma5: chipData?.ma5,
         ma20: chipData?.ma20,
-        ma60: chipData?.ma60,
       }}
     />
     <CandleChart 

@@ -8,8 +8,7 @@ export default function MypageSidebar() {
 
   const menus = [
     { label: "정보 수정", path: "/mypage" },
-    { label: "단어장", path: "/mypage/words" },
-    { label: "뉴스", path: "/mypage/news" },
+    { label: "북마크", path: "/mypage/bookmarks" },
   ];
 
   const isActive = (path) => {
@@ -45,8 +44,8 @@ export default function MypageSidebar() {
       {/* 메뉴 영역 */}
       <Stack spacing={0.5}>
         {menus.map(menu => {
-          // [1] 현재 URL과 메뉴 path 비교 -> active ㅏㄴ단
-          const isActive = location.pathname.startsWith(menu.path)
+          // [1] 현재 URL과 메뉴 path 비교 -> active 판단
+          const active = isActive(menu.path)
 
           return (
             <Button
@@ -57,9 +56,9 @@ export default function MypageSidebar() {
                 fontSize: "15px",
                 padding: "6px 12px",
                 borderRadius: "4px",
-                fontWeight: isActive ? 600 : 400,
-                backgroundColor: isActive ? "rgba(25, 118, 210, 0.08)" : "transparent",
-                color: isActive ? "#1976d2" : "#333",
+                fontWeight: active ? 600 : 400,
+                backgroundColor: active ? "rgba(25, 118, 210, 0.08)" : "transparent",
+                color: active ? "#1976d2" : "#333",
                 "&:hover": {
                   backgroundColor: "rgba(0, 0, 0, 0.04)",
                 },

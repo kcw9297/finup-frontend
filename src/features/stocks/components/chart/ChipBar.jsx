@@ -6,7 +6,7 @@ export default function ChipBar({ohlc, ma}){
   return(
     <Stack spacing={1} sx={{mb:1}}>
       {/* OHLC */}
-      <Stack direction="row" spacing={1}>
+      <Stack id="chipbar-ohlc" direction="row" spacing={1}>
         <StocksDetailTooltip textKey="open">
           <Chip label={`시가 ${ohlc.open?.toLocaleString("ko-KR") ?? "-"}`} variant="outlined"/>
         </StocksDetailTooltip>
@@ -22,7 +22,7 @@ export default function ChipBar({ohlc, ma}){
       </Stack>
 
       {/* MA */}
-      <Stack direction="row" spacing={1}>
+      <Stack id="ma-chips" direction="row" spacing={1}>
         <StocksDetailTooltip textKey="ma5">
           <Chip
             label={`MA5 ${ma.ma5?.toLocaleString("ko-KR") ?? "-"}`}
@@ -34,13 +34,6 @@ export default function ChipBar({ohlc, ma}){
           <Chip
             label={`MA20 ${ma.ma20?.toLocaleString("ko-KR") ?? "-"}`}
             sx={{ background: "#dbeafe", color: "#3b82f6" }}
-          />
-        </StocksDetailTooltip>
-
-        <StocksDetailTooltip textKey="ma60">
-          <Chip
-            label={`MA60 ${ma.ma60?.toLocaleString("ko-KR") ?? "-"}`}
-            sx={{ background: "#f3e8ff", color: "#9333ea" }}
           />
         </StocksDetailTooltip>
       </Stack>

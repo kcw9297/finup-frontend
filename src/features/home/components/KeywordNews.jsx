@@ -19,14 +19,14 @@ export default function KeywordNews({ newsList, originalKeywords, onItemClick })
           <Typography sx={{ color: "base.main", backgroundColor: "base.main" }}>
             &nbsp;
           </Typography>
-          <Typography>개념 키워드</Typography>
+          <Typography>기사 키워드</Typography>
         </Paper>
 
         <Paper sx={{ display: "flex", gap: "10px" }}>
           <Typography sx={{ color: "base.main", backgroundColor: "base.main" }}>
             &nbsp;
           </Typography>
-          <Typography>기사 원문</Typography>
+          <Typography>기사 목록</Typography>
         </Paper>
       </Box>
 

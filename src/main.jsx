@@ -5,7 +5,8 @@ import './index.css'
 import App from './App.jsx'
 import theme from './base/design/thema.js'; // 커스텀 테마
 import { SnackbarProvider } from './base/provider/SnackbarProvider.jsx';
-
+import "intro.js/introjs.css";
+import "./introjs-custom.css";
 createRoot(document.getElementById('root')).render(
   <ThemeProvider theme={theme}> {/* 커스텀 테마 적용 */}
     <CssBaseline /> {/* MUI 기본 스타일 초기화 (브라우저마다 다른 기본 스타일을 제거) */}
