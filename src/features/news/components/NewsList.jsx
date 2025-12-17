@@ -8,6 +8,9 @@ import { useNewsModal } from "../hooks/useNewsModal";
 import NewsScrollToTop from "./NewsScrollToTop";
 import useGenericNews from "../hooks/useGenericNews";
 import { useState } from "react";
+import { useAuth } from "../../../base/hooks/useAuth";
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
+import { navigate } from "../../../base/config/globalHookConfig";
 /**
  * 뉴스 페이지 컴포넌트
  */
@@ -16,7 +19,8 @@ export default function NewsList() {
     { label: "최신뉴스", value: "date" },
     { label: "주요뉴스", value: "sim" },
   ];
-
+  const {isAuthenticated} = useAuth();
+  const { showSnackbar } = useSnackbar();
   const [category, setCategory] = useState("date");
 
   const {
@@ -30,7 +34,13 @@ export default function NewsList() {
 
   const { news, loading, visibleCount, refreshNews, showTop, scrollToTop } =
     useGenericNews("/news/list", { category }, isModalOpen);
-
+  const handleOpenModal = (item) =>{
+    if(!isAuthenticated){
+      showSnackbar("뉴스 상세는 로그인 후 이용할 수 있어요.","info");
+      navigate("/login");
+      return;
+    }
+  }
   //(2)반환활 컴포넌트
   return (
     <Box sx={{ maxWidth: "900px", mx: "auto", mt: 4 }}>
@@ -57,7 +67,7 @@ export default function NewsList() {
       {/* 뉴스 리스트 */}
       <Box sx={{ mt: 2 }}>
         {news.slice(0, visibleCount).map((item, idx) => (
-          <NewsCard key={idx} {...item} onClick={() => openModal(item)} />
+          <NewsCard key={idx} {...item} onClick={() => handleOpenModal(item)} />
         ))}
 
         <NewsScrollToTop show={showTop && !open} onClick={scrollToTop} />
