@@ -1,0 +1,85 @@
+/* 말풍선 전체 */
+.introjs-tooltip {
+  background: #ffffff;
+  color: #000000;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  max-width: 320px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 화살표 */
+.introjs-arrow {
+  border-color: #ffffff;
+}
+
+/* 제목 (사용 시) */
+.introjs-tooltip-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+/* 하단 버튼 영역 */
+.introjs-tooltipbuttons {
+  border-top: none;
+  padding-top: 12px;
+}
+
+/* 버튼 공통 */
+.introjs-button {
+  background: #e6ecf9;
+  color: #003fbf;
+  border-radius: 8px;
+  border: 1px solid #d9e2f5;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* 이전 버튼 */
+.introjs-prevbutton {
+  background: #ffffff;
+  color: #003fbf;
+  border: 1px solid #E5E8EB; /* line.main */
+}
+
+/* 다음 버튼 강조 */
+.introjs-nextbutton {
+  background: #003fbf;
+  color: white;
+  border: none;
+}
+
+/* 비활성 버튼 */
+.introjs-disabled {
+  opacity: 0.4;
+}
+
+
+/* 강조 테두리 약하게 */
+.introjs-no-strong-highlight {
+  box-shadow: 0 0 0 2px rgba(0, 63, 191, 0.35) !important;
+  border-radius: 8px;
+}
+
+/* Intro.js 버튼 포커스 상태 제거 */
+.introjs-button:focus,
+.introjs-button:focus-visible,
+.introjs-button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.introjs-nextbutton,
+.introjs-nextbutton:hover,
+.introjs-nextbutton:active,
+.introjs-nextbutton:focus,
+.introjs-nextbutton:focus-visible {
+  background: #003fbf !important;   /* base.main */
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

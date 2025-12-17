@@ -4,9 +4,9 @@ import StocksDetailTooltip from "../StocksDetailTooptip";
 
 export default function ChipBar({ohlc, ma}){
   return(
-    <Stack id="chipbar-ohlc" spacing={1} sx={{mb:1}}>
+    <Stack spacing={1} sx={{mb:1}}>
       {/* OHLC */}
-      <Stack direction="row" spacing={1}>
+      <Stack id="chipbar-ohlc" direction="row" spacing={1}>
         <StocksDetailTooltip textKey="open">
           <Chip label={`시가 ${ohlc.open?.toLocaleString("ko-KR") ?? "-"}`} variant="outlined"/>
         </StocksDetailTooltip>
@@ -22,7 +22,7 @@ export default function ChipBar({ohlc, ma}){
       </Stack>
 
       {/* MA */}
-      <Stack direction="row" spacing={1}>
+      <Stack id="ma-chips" direction="row" spacing={1}>
         <StocksDetailTooltip textKey="ma5">
           <Chip
             label={`MA5 ${ma.ma5?.toLocaleString("ko-KR") ?? "-"}`}
