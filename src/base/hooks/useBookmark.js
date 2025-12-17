@@ -67,9 +67,20 @@ export function useBookmark() {
     clear()
   }
 
+  /* 마이페이지 전용 임시 훅 */
+
+
+  // 북마크 추가
+
+
+  // 북마크 삭제
+
+
+
   // [4] 반환
   return {
     loading, bookmarks,
-    loadBookmark, addBookmark, removeBookmark, clearBookmark
+    loadBookmark, addBookmark, removeBookmark, clearBookmark,
+
   }
 }

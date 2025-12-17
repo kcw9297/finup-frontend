@@ -4,7 +4,15 @@ export default function BookmarkEmpty() {
   return (
     <Box
       sx={{
-        py: 10,
+        width: '100%',
+        minHeight: 120,
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 2,
+        px: 3,
+        py: 8,
         textAlign: 'center',
         color: 'text.secondary',
       }}

@@ -1,18 +1,50 @@
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { useStudyProgress } from "../../../base/hooks/useStudyProgress";
 import { useNavigate } from "react-router-dom";
+import StudyStatusBox from "../../study/components/StudyStatusBox";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { useEffect, useState } from "react";
 
+export default function BookmarkCard({
+  row = {},
+  onRemove,
+  onAdd,
+  isBookmarked = false,
+}) {
 
-
-export default function BookmarkCard({ item, onRemove }) {
-
+  const [localBookmarked, setLocalBookmarked] = useState(isBookmarked)
   const navigate = useNavigate()
+
+  const handleBookmarkToggle = (e) => {
+    e.stopPropagation();
+
+    const target = {
+      targetId: row.studyId,
+      bookmarkTarget: "STUDY",
+    };
+
+    if (localBookmarked) {
+      // 👉 즉시 UI만 해제
+      setLocalBookmarked(false);
+      onRemove(target); // 서버 요청
+    } else {
+      setLocalBookmarked(true);
+      onAdd(target);
+    }
+  }
+
+
+  useEffect(() => {
+    setLocalBookmarked(isBookmarked);
+  }, [isBookmarked])
+
+
+
 
   return (
     <Box
       sx={{
-        mb: 2,
+        minHeight: 96,
         p: 2,
         display: 'flex',
         alignItems: 'center',
@@ -38,41 +70,43 @@ export default function BookmarkCard({ item, onRemove }) {
           flexShrink: 0,
         }}
       >
-        ★
+        {row.level}
       </Box>
 
       {/* 제목 + 요약 */}
       <Box
         sx={{ flex: 1, cursor: 'pointer' }}
-        onClick={() => navigate(`/studies/${item.studyId}`)}
+        onClick={() => navigate(`/studies/${row.studyId}`)}
       >
         <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-          {item.name}
+          {row.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {item.summary}
+        <Typography variant="body2" color="text.secondary"
+          sx={{
+            mb: 0.5,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}>
+          {row.summary}
         </Typography>
       </Box>
 
       {/* 우측 액션 (StudyStatusBox 자리) */}
-      <Box sx={{ flexShrink: 0 }}>
-        <IconButton
-          onClick={() =>
-            onRemove({
-              targetId: item.studyId,
-              bookmarkTarget: 'STUDY',
-            })
-          }
-          sx={{
-            color: 'text.secondary',
-            '&:hover': {
-              color: 'error.main',
-            },
-          }}
-        >
-          <BookmarkIcon />
-        </IconButton>
-      </Box>
+      {/* 우측 학습 진도 */}
+      {
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexShrink: 0 }}>
+          <StudyStatusBox studyId={row.studyId} />
+          <IconButton
+            onClick={handleBookmarkToggle}
+            sx={{
+              color: localBookmarked ? 'base.main' : 'grey.400'
+            }}
+          >
+            {localBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          </IconButton>
+        </Box>
+      }
     </Box>
   )
 }
