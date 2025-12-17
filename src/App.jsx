@@ -13,6 +13,7 @@ import NewsPage from './pages/news/NewsPage'
 import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
+import StocksChartPage from './pages/stocks/StocksChartPage'
 import MypageMemberPage from "./pages/mypage/MypageMemberPage";
 import AdminVideoLinkListPage from './pages/videolink/AdminVideoLinkListPage'
 import AdminStudyListPage from './pages/study/AdminStudyListPage'
