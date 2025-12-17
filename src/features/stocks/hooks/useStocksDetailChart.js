@@ -11,7 +11,6 @@ export function useStocksDetailChart(code){
     try{
         const res = await api.get("/stocks/chart",{
           params:{ code, candleType },
-          public: true,
         })
         console.log(res.data.output);
         setItems(res.data.output);

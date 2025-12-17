@@ -13,7 +13,10 @@ export function useStockList(){
   // [4] REST API 요청 함수 정의 
   useEffect(()=>{   
     async function fetchStockRow() {
-      const rp = await api.get(`/stocks/market-cap-ranking`, { public: true });        
+      const rp = await api.get(
+        `/stocks/market-cap-ranking`, 
+        // { public: true }
+      );        
       setStockList(rp.data);
       setLoading(false);
     }
