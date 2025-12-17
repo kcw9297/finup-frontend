@@ -15,7 +15,6 @@ export function useStocksDetailChartAi(code, candleType) {
         setAiError(null);
 
         const res = await api.get("/stocks/chart/ai", {
-          public: true,
           params: { code, candleType },
         });
 

@@ -2,9 +2,9 @@ import { Box, Chip, Paper, Typography } from "@mui/material";
 
 export default function StocksDetailChartAi({ai}){
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1.5 }}>
 
-      {/* 📝 종합 요약 */}
+      {/* 종합 요약 */}
       <Paper
         elevation={0}
         sx={{
@@ -31,7 +31,7 @@ export default function StocksDetailChartAi({ai}){
         </Typography>
       </Paper>
 
-      {/* 📈 추세 분석 */}
+      {/* 추세 분석 */}
       <Paper
         elevation={0}
         sx={{
@@ -47,7 +47,7 @@ export default function StocksDetailChartAi({ai}){
         </Typography>
       </Paper>
 
-      {/* 🎢 변동성 분석 */}
+      {/* 변동성 분석 */}
       <Paper
         elevation={0}
         sx={{
@@ -63,7 +63,7 @@ export default function StocksDetailChartAi({ai}){
         </Typography>
       </Paper>
 
-      {/* 🔍 거래량 해석 */}
+      {/* 거래량 해석 */}
       <Paper
         elevation={0}
         sx={{

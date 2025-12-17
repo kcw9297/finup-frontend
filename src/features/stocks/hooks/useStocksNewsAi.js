@@ -10,7 +10,7 @@ export function useStocksNewsAi() {
       const res = await api.post(
         "/stocks/news/ai",
         {
-          public: true,
+          // public: true,
         },
         {
           link: article.link,

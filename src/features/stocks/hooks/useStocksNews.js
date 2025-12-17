@@ -25,7 +25,7 @@ export function useStocksNews(stockName){
     try {
       const res = await api.get("/stocks/news", {
         params: { stockName }, 
-        public: true,
+        // public: true,
       });
       if (lastRequestRef.current != requestId) {
         return;
