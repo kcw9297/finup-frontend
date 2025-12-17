@@ -48,7 +48,6 @@ export default function CombinedChart({items}){
       ma={{
         ma5: chipData?.ma5,
         ma20: chipData?.ma20,
-        ma60: chipData?.ma60,
       }}
     />
     <CandleChart 

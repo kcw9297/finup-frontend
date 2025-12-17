@@ -36,13 +36,6 @@ export default function ChipBar({ohlc, ma}){
             sx={{ background: "#dbeafe", color: "#3b82f6" }}
           />
         </StocksDetailTooltip>
-
-        <StocksDetailTooltip textKey="ma60">
-          <Chip
-            label={`MA60 ${ma.ma60?.toLocaleString("ko-KR") ?? "-"}`}
-            sx={{ background: "#f3e8ff", color: "#9333ea" }}
-          />
-        </StocksDetailTooltip>
       </Stack>
 
     </Stack>

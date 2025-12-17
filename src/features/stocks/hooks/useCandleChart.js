@@ -7,7 +7,6 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
   const candleSeriesRef = useRef(null);
   const ma5Ref = useRef(null);
   const ma20Ref = useRef(null);
-  const ma60Ref = useRef(null);
 
   // Chart 생성 + 시리즈 생성
   useEffect(() => {
@@ -56,14 +55,11 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
     });
 
     ma5Ref.current = chart.addLineSeries({ 
-      color: "#16a34a", //초록
+      color: "#ef4444", //빨강
       lineWidth: 1 ,
     });
     ma20Ref.current = chart.addLineSeries({ 
-      color: "#ef5350", lineWidth: 1 //빨강
-    });
-    ma60Ref.current = chart.addLineSeries({ 
-      color: "#BB6BD9", lineWidth: 1 //보라
+      color: "#3b82f6", lineWidth: 1 //파랑
     });
 
     // 리사이즈 핸들링
@@ -115,13 +111,6 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
       }))
     );
 
-    ma60Ref.current.setData(
-      items.filter((i) => i.ma60).map((i) => ({
-        time: mapDate(i.stck_bsop_date),
-        value: Number(i.ma60),
-      }))
-    );
-
     chartRef.current.timeScale().fitContent();
   }, [items]);
 
@@ -138,8 +127,6 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
       const price = param.seriesPrices.get(candleSeriesRef.current);
       const ma5 = param.seriesPrices.get(ma5Ref.current);
       const ma20 = param.seriesPrices.get(ma20Ref.current);
-      const ma60 = param.seriesPrices.get(ma60Ref.current);
-      
       onCrosshairDataChange?.({
         open:price.open,
         high: price.high,
@@ -147,7 +134,6 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
         close: price.close,
         ma5,
         ma20,
-        ma60,
       })
     });
   }, []);
