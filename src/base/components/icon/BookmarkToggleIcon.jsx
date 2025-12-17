@@ -21,8 +21,8 @@ export default function BookmarkToggleIcon({ target }) {
 
   // [2] 필요 함수 선언
   // 북마크 상태
-  const isBookmarked = bookmarks.some(bookmark => 
-    Number(bookmark.targetId) === Number(target.targetId) && 
+  const isBookmarked = bookmarks.some(bookmark =>
+    Number(bookmark.targetId) === Number(target.targetId) &&
     bookmark.bookmarkTarget === target.bookmarkTarget
   )
 
@@ -35,10 +35,10 @@ export default function BookmarkToggleIcon({ target }) {
   // [3] 컴포넌트 반환
   return (
     <Tooltip title="북마크">
-      <IconButton 
+      <IconButton
         onClick={handleToggle}
         disabled={loading}
-        sx={{ 
+        sx={{
           padding: '1px',
           color: isBookmarked ? 'base.main' : 'grey.400',
         }}
