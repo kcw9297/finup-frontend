@@ -23,8 +23,6 @@ export function useAdminStudyList() {
   // [2] 필요 함수 선언 
   // Object 생성 함수 (파라미터로부터 직접 뽑아옴)
   const getSearchParams = () => ({
-    filter: searchParams.get('filter') || '',
-    keyword: searchParams.get('keyword') || '',
     order: searchParams.get('order') || DEFAULT_SEARCH_RQ_ADMIN.order,
     pageNum: Number(searchParams.get('pageNum')) || DEFAULT_SEARCH_RQ_ADMIN.pageNum,
   })
@@ -46,17 +44,6 @@ export function useAdminStudyList() {
 
     // 검색 수행
     setSearchParams(searchRq)
-  }
-
-  // 필터링 함수
-  const handleFilter = filter => {
-
-    // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...searchRq, keyword: searchRq.keyword, filter };
-    if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
-    
-    // 검색 수행
-    setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
 
 
@@ -129,7 +116,7 @@ export function useAdminStudyList() {
   useEffect(() => {
     
     // 최초 접근이면 수행하지 않음
-    if (reloading == 0) return
+    if (reloading === 0) return
 
     // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
     const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ_ADMIN);
@@ -143,6 +130,7 @@ export function useAdminStudyList() {
   // 검색의 경우, 페이지 입장 시 초기 값이 필요하므로, useEffect 사용
   useEffect(() => {
     setLoading(true)
+    console.log("forceReload ", forceReload);
     api.get('/studies/search', { params: searchRq, onSuccess, onError, onFinally, admin: true })
   }, [searchParams, forceReload])
   
@@ -150,7 +138,7 @@ export function useAdminStudyList() {
   // [5] 반환
   return {
     searchRq, searchRp, loading,
-    handleSearch, handleFilter, handlePage, handleOrder,
+    handleSearch, handlePage, handleOrder,
     handleAfterEdit, handleAfterRemove
   }
 }

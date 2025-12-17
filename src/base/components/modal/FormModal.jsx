@@ -51,7 +51,7 @@ export default function FormModal({ modalProps }) {
 
     // 입력 시 해당 필드 에러 제거
     const fieldName = Object.keys(changeRq)[0];
-    if (errors[fieldName]) {
+    if (errors?.[fieldName]) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[fieldName];
@@ -64,7 +64,7 @@ export default function FormModal({ modalProps }) {
   const getHelperText = (field) => {
 
     // 에러가 있으면 에러 메시지 우선
-    if (errors[field.name]) {
+    if (errors?.[field.name]) {
       return errors[field.name];
     }
     
@@ -79,7 +79,7 @@ export default function FormModal({ modalProps }) {
   // 모달 초기화 함수
   const init = () => {
     setRq(initialValues || {});
-    setErrors({});
+    setErrors(null);
     setLoading(false);
   }
 
@@ -190,7 +190,7 @@ export default function FormModal({ modalProps }) {
               onChange={(e) => handleChangeRq({[field.name] : e.target.value})}
               multiline={field.multiline} // TextArea 이용 시
               rows={field.multiline ? (field.rows || 4) : undefined} // multiline 적용 시에만
-              error={!!errors[field.name]} // 오류 여부 (true - 활성화)
+              error={!!errors?.[field?.name]} // 오류 여부 (true - 활성화)
               helperText={getHelperText(field)} // 안내 메세지 (오류 발생 시엔 오류 메세지로 대체)
               disabled={loading} // 로딩 중에는 비활성화
               fullWidth
@@ -199,7 +199,8 @@ export default function FormModal({ modalProps }) {
                 // helperText 왼쪽 마진 조정
                 '& .MuiFormHelperText-root': {
                   marginLeft: 1,
-                  marginTop: '4px'
+                  marginTop: '4px',
+                  whiteSpace: 'pre-line'
                 }
               }}
               slotProps={{
@@ -252,7 +253,7 @@ export default function FormModal({ modalProps }) {
         <Button 
           onClick={handleSubmit}
           variant="contained"
-          disabled={loading} // 로딩 중에는 비활성화
+          disabled={loading || (errors && Object.keys(errors).length !== 0)} // 로딩 중에는 비활성화
           sx={{ 
             minWidth: 100,
             bgcolor: 'base.main',

@@ -47,7 +47,7 @@ export default function VideoLinkFormModal({ modalProps }) {
   // 입력 변경 처리 함수
   const handleChangeRq = (newUrl) => {
     setVideoUrl(newUrl)
-    setError('') // 입력 시 에러 제거
+    setError(null) // 입력 시 에러 제거
     setVerified(false) // URL 변경 시 검증 상태 초기화
   };
 
@@ -89,11 +89,12 @@ export default function VideoLinkFormModal({ modalProps }) {
     try {
       // 검증 중 활성화
       setVerifying(true)
+      setError(null)
 
       // 검증 로직호출
       const json = await modalSubmit.handleVerify(videoUrl)
       if (!json.success) {
-        setError(json.inputErrors?.videoUrl|| '올바른 URL을 입력해 주세요.') // 유효성 검사 오류 시 (필드 하나만 검증)
+        setError(json.inputErrors?.videoUrl || '올바른 URL을 입력해 주세요.') // 유효성 검사 오류 시 (필드 하나만 검증)
         setPreview(null)
         return
       }
@@ -207,7 +208,7 @@ export default function VideoLinkFormModal({ modalProps }) {
             <Button
               variant="contained"
               onClick={handleVerify}
-              disabled={!videoUrl || loading || verifying || verified}
+              disabled={!videoUrl || loading || verifying || verified || error}
               sx={{
                 minWidth: 100,
                 height: 56,
@@ -260,7 +261,7 @@ export default function VideoLinkFormModal({ modalProps }) {
         <Button 
           onClick={handleSubmit}
           variant="contained"
-          disabled={loading} // 로딩 중에는 비활성화
+          disabled={loading || error} // 로딩 중에는 비활성화
           sx={{ 
             minWidth: 100,
             bgcolor: 'base.main',

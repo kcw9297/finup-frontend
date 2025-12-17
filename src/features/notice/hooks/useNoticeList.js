@@ -50,7 +50,7 @@ export function useNoticeList({ admin = false }) {
     e.preventDefault()
 
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...searchRq, keyword: curKeyword }; // 키워드 반영
+    const nextRq = { ...searchRq, keyword: curKeyword || '', pageNum: DEFAULT_SEARCH_RQ.pageNum }; // 키워드 반영
     if (isSameRq(nextRq)) return
   
     // 검색 수행
@@ -65,7 +65,7 @@ export function useNoticeList({ admin = false }) {
     if (!curKeyword || curKeyword === '') return
 
     // 다음 요청
-    const nextRq = { ...searchRq, filter: curFilter, keyword: curKeyword };
+    const nextRq = { ...searchRq, filter, keyword: curKeyword, pageNum: DEFAULT_SEARCH_RQ.pageNum };
 
     // 현재 파라미터와 동일한 경우 수행하지 않음
     if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
@@ -155,7 +155,7 @@ export function useNoticeList({ admin = false }) {
   useEffect(() => {
     
     // 최초 접근이면 수행하지 않음
-    if (reloading == 0) return
+    if (reloading === 0) return
 
     // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
     const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ);
