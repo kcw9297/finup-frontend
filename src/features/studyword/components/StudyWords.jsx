@@ -1,12 +1,13 @@
-import { 
+import {
   Box, Typography, Paper, Button, IconButton,
-  Tooltip, 
+  Tooltip,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WordCard from '../../../base/components/card/WordCard';
+import { useRecommendWordHook } from '../hooks/useRecommendWordHook';
 
 
 /**
@@ -15,26 +16,29 @@ import WordCard from '../../../base/components/card/WordCard';
  * @since 2025-12-09
  */
 
-export default function StudyWords({ words = [], admin = false }) {
+export default function StudyWords({ words = [] }) {
 
-  // 페이지 상태 (words 여기서 가져올 것)
+  // [1] 페이지 상태 (words 여기서 가져올 것)
   const [currentPage, setCurrentPage] = useState(0);
   const pageCount = Math.max(1, Math.ceil(words.length / 4));
 
+  const { recommendRp, recommend, retryRecommend, loading, } = useRecommendWordHook()
+
+  // [2] 최초 진입 시 추천 호출
+  useEffect(() => {
+    recommend()
+  }, [])
   // 렌더링
   return (
     <>
+      {/* ===== 헤더 영역 (항상 표시) ===== */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
 
-        {/* 말머리 + 재추천(refresh) 버튼 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-
-          {/* 말머리 */}
           <Typography
             variant="h6"
             sx={{
               fontWeight: 600,
-              color: 'text.main',
               position: 'relative',
               pl: 2,
               '&::before': {
@@ -53,10 +57,10 @@ export default function StudyWords({ words = [], admin = false }) {
             추천 개념 용어
           </Typography>
 
-          {/* AI 추천 리로드 버튼 */}
           <Tooltip title="재추천">
             <IconButton
               size="small"
+              disabled={loading}
               sx={{
                 border: '1px solid',
                 borderColor: 'line.dark',
@@ -65,53 +69,73 @@ export default function StudyWords({ words = [], admin = false }) {
                 height: 32
               }}
               onClick={() => {
-                alert('재추천 기능')
+                setCurrentPage(0)
+                retryRecommend()
               }}
             >
               <RefreshIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-
         </Box>
 
-        {/* 페이지 네비게이션 버튼 */}
         <Box sx={{ display: 'flex', gap: 1 }}>
           <IconButton
-            onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
-            disabled={currentPage === 0}
             size="small"
+            disabled={currentPage === 0 || loading}
+            onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
           >
             <ArrowBackIosIcon fontSize="small" />
           </IconButton>
+
           <IconButton
-            onClick={() => setCurrentPage(Math.min(pageCount - 1, currentPage + 1))}
-            disabled={currentPage === pageCount - 1}
             size="small"
+            disabled={currentPage === pageCount - 1 || loading}
+            onClick={() => setCurrentPage(p => Math.min(pageCount - 1, p + 1))}
           >
             <ArrowForwardIosIcon fontSize="small" />
           </IconButton>
         </Box>
       </Box>
 
-      {/* 단어 그리드 (4개씩) */}
-      {/* 관리자가 아니고, 단어가 없으면 빈 메세지 */}
-      {!admin && words.length === 0 ? (
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 350, maxHeight: 350 }}>
-          <Typography variant="body2" color="text.secondary">
-            추천된 단어가 없습니다.
-          </Typography>
-        </Box>
-      ) : (
+      {/* ===== 콘텐츠 영역 (상태별 분기) ===== */}
+      <Box sx={{ minHeight: 350 }}>
 
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+        {/* 1. 로딩 */}
+        {loading && (
+          <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="body2" color="text.secondary">
+              추천 단어를 불러오는 중입니다...
+            </Typography>
+          </Box>
+        )}
 
-          {/* 단어 카드들 */}
-          {words.slice(currentPage * 3, currentPage * 3 + 3).map((word) => (
-            <WordCard key={word.id} word={word} />
-          ))}
+        {/* 2. 빈 결과 */}
+        {!loading && recommendRp?.length === 0 && (
+          <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="body2" color="text.secondary">
+              추천된 단어가 없습니다.
+            </Typography>
+          </Box>
+        )}
 
-        </Box>
-      )}
+        {/* 3. 정상 렌더링 */}
+        {!loading && recommendRp?.length > 0 && (
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 2
+            }}
+          >
+            {recommendRp
+              .slice(currentPage * 3, currentPage * 3 + 3)
+              .map(word => (
+                <WordCard key={word.id} word={word} />
+              ))}
+          </Box>
+        )}
+      </Box>
     </>
   )
+
 }

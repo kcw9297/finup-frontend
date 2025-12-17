@@ -12,7 +12,7 @@ import StudyWords from '../../studyword/components/StudyWords';
 import BookmarkToggleIcon from '../../../base/components/icon/BookmarkToggleIcon';
 import StudyProgressCompleteIcon from '../../../base/components/icon/StudyProgressCompleteIcon';
 import StudyProgressInitialzeIcon from '../../../base/components/icon/StudyProgressInitialzeIcon';
-import StudyVideos from '../../studyword/components/StudyVideos';
+import StudyVideos from './../../videolink/components/StudyVideos';
 
 
 /**
