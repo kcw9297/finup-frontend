@@ -15,30 +15,28 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 export default function NewsDetailModal({ open, onClose, article, loading }) {
   if (!article) return null;
-  const hasDeepAi = 
-  article?.ai?.type === "DEEP" &&
-  typeof article?.ai?.summary === "string" &&
-  article.ai.summary.length > 0;
 
-  const hasLightAi =
-    article?.ai?.type === "LIGHT" &&
-    !!article?.summary &&
-    typeof article?.summary?.summary === "string" &&
-    article.summary.summary.length > 0;
+   const aiData =
+    article?.ai?.summary
+      ? article.ai
+      : article?.summary?.summary
+        ? article.summary
+        : null;
 
-  const showLightSection = loading || hasDeepAi || hasLightAi;
-
+  const isDeep = !!aiData?.insight;
+  const isLight = !!aiData && !isDeep;
+  const isDeepCandidate = article?.ai !== null;
   const formattedDate = moment(article.publishedAt).format("YYYY-MM-DD HH:mm");
   const sparkle = keyframes`
     0% { opacity: 0.4; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.15); }
     100% { opacity: 0.4; transform: scale(1); }
   `;
-  console.log("summary raw =", article.summary);
-  console.log("hasLightAi =", hasLightAi);
-  console.log("ai raw =", article.ai);
-  console.log("hasDeepAi =", hasDeepAi);
-  console.log("raw =", article);
+  console.log("article =", article);
+  console.log("aiData =", aiData);
+  console.log("isDeep =", isDeep);
+  console.log("isLight =", isLight);
+
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -87,11 +85,11 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
           </Box>
 
           {/* IMAGE */}
-          <Box sx={{ mb: 3 }}>
+          <Box sx={{ mb: 3, display:"flex", justifyContent:"center" }}>
             <img
               src={article?.thumbnail}
               alt="뉴스 이미지"
-              style={{ width: "100%", borderRadius: "10px" }}
+              style={{ width: "70%", borderRadius: "10px" }}
             />
           </Box>
           {loading && (
@@ -117,7 +115,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
             </Box>
           )}
           {/* 요약 */}
-          {showLightSection && (
+          {(loading || aiData) && (
             <Box sx={{ mb: 10 }}>
               <Box
                 sx={{
@@ -141,7 +139,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                   원문 보기 →
                 </a>
               </Box>
-              {loading ? (
+              {loading && !aiData ? (
                 <Skeleton
                   variant="rectangular"
                   height={80}
@@ -149,81 +147,82 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                 />
               ) : (
                 <p>
-                  {hasDeepAi ? article.ai.summary : article.summary.summary}
+                  {aiData?.summary}
                 </p>
               )}
             </Box>
           )}
 
           {/* AI 해설 */}
-          {hasDeepAi && (
-            <Box sx={{ mb: 10 }}>
-              <Box sx={{ mb: 1 }}>
-                <h3>AI 해설</h3>
-              </Box>
-              {loading ? (
-                <>
-                  <Skeleton height={20} width="90%" />
-                  <Skeleton height={20} width="95%" />
-                  <Skeleton height={20} width="80%" />
-                </>
-              ) : (
-                <p>{article?.ai?.insight}</p>
-              )}
+          <Box sx={{ mb: 10 }}>
+            <Box sx={{ mb: 1 }}>
+              <h3>AI 해설</h3>
             </Box>
-          )}
+            {loading ? (
+              <>
+                <Skeleton height={20} width="90%" />
+                <Skeleton height={20} width="95%" />
+                <Skeleton height={20} width="80%" />
+              </>
+            ) : isDeep? (
+              <p>{aiData.insight}</p>
+            ) : (
+              <Typography color="text.secondary" fontSize={14}>
+                이 뉴스는 AI 해설이 제공되지 않습니다.
+              </Typography>
+            )}
+          </Box>
 
           {/* 필수 개념 */}
-          {(hasDeepAi || showLightSection) && (
-            <Box sx={{ mb: 10 }}>
-              <h3>필수 개념</h3>
-              {loading ? (
-                <>
-                  <Skeleton height={30} width="60%" />
-                  <Skeleton height={30} width="50%" />
-                  <Skeleton height={30} width="70%" />
-                </>
-              ) : (
-                (hasDeepAi
-                  ? article.ai.keywords
-                  : article.summary.keywords
-                )?.map((item, idx) => (
-                  <Box
-                    key={idx}
-                    sx={{mb:2}}
-                  >
-                    <Box 
+          <Box sx={{ mb: 10 }}>
+            <h3>필수 개념</h3>
+          {loading ? (
+            <>
+              <Skeleton height={30} width="60%" />
+              <Skeleton height={30} width="50%" />
+              <Skeleton height={30} width="70%" />
+            </>
+          ): aiData?.keywords?.length > 0 ? (
+            aiData.keywords?.map((item, idx) => (
+              <Box
+                key={idx}
+                sx={{mb:2}}
+              >
+                <Box 
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 0.5,
+                    mb: 0.5,
+                  }}
+                >
+                  <Chip
+                    icon={<BookmarkBorderIcon
                       sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 0.5,
-                        mb: 0.5,
+                        fontSize: 18,
+                        color: "#bbb",
+                        transition: "color 0.3s ease",
+                        "&:hover": { color: thema.palette.base.dark },
                       }}
-                    >
-                      <Chip
-                        icon={<BookmarkBorderIcon
-                          sx={{
-                            fontSize: 18,
-                            color: "#bbb",
-                            transition: "color 0.3s ease",
-                            "&:hover": { color: thema.palette.base.dark },
-                          }}
-                        />}
-                        label={item.term}
-                        color="primary"
-                        variant="outlined"
-                        size="small"
-                      />
-                    </Box>
-                    <Box sx={{ fontSize: 14, lineHeight: 1.4 }}>
-                      {item.definition}
-                    </Box>
-                  </Box>
-                ))
-              )}
-            </Box>
+                    />}
+                    label={item.term}
+                    color="primary"
+                    variant="outlined"
+                    size="small"
+                  />
+                </Box>
+                <Box sx={{ fontSize: 14, lineHeight: 1.4 }}>
+                  {item.definition}
+                </Box>
+              </Box>
+            ))
+          ):(
+            <Typography color="text.secondary" fontSize={14}>
+              추가로 설명할 금융개념이 없는 기사입니다.
+            </Typography>
           )}
         </Box>
+      </Box>
       </Box>
     </Modal>
   );
