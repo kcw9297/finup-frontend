@@ -2,11 +2,12 @@
  * 뉴스 카드 컴포넌트
  */
 
-import { Box, Card, CardMedia, IconButton, Typography } from "@mui/material";
+import { Box, Card, CardMedia, IconButton, Typography, Chip } from "@mui/material";
 import { useNewsCard } from "../hooks/useNewsCard";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import thema from "../../../base/design/thema.js";
+import thema from "../../../base/design/thema.js"
 import { Iron } from "@mui/icons-material";
+import theme from "../../../base/design/thema.js";
 
 export default function NewsCard({
   title,
@@ -16,6 +17,7 @@ export default function NewsCard({
   publishedAt,
   link,
   onClick,
+  ai
 }) {
   const { detailDate } = useNewsCard();
   return (
@@ -49,6 +51,13 @@ export default function NewsCard({
         <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: 600 }}>
           {title}
         </Typography>
+        {ai?.insight && (
+          <Chip 
+            label="AI해설"
+            size="small"
+            sx={{height:20, fontSize:11, fontWeight:500, backgroundColor:theme.palette.light, color:"white"}}
+          />
+        )}
 
         <Typography
           variant="body2"
