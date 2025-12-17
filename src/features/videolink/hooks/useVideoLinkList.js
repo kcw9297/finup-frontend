@@ -49,7 +49,7 @@ export function useVideoLinkList({ admin = false }) {
     e.preventDefault()
 
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
-    const nextRq = { ...searchRq, pageNum: DEFAULT_SEARCH_RQ.pageNum, keyword: curKeyword }; // 키워드 반영
+    const nextRq = { ...searchRq, keyword: curKeyword || '', pageNum: DEFAULT_SEARCH_RQ.pageNum }; // 키워드 반영
     if (isSameRq(nextRq)) return
   
     // 검색 수행
@@ -147,7 +147,7 @@ const handleAfterRemove = () => {
   useEffect(() => {
 
     // 최초 접근이면 수행하지 않음
-    if (reloading == 0) return
+    if (reloading === 0) return
 
     // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
     const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ);

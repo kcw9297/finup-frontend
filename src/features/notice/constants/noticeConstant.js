@@ -10,6 +10,7 @@ export const DEFAULT_SEARCH_RQ = {
 
 // 필터 옵션 filter
 export const FILTER_OPTIONS = [
+  { value: "", label: "선택" },
   { value: "title", label: "제목" },
   { value: "content", label: "내용" },
   { value: "titleContent", label: "제목+내용" },
