@@ -11,22 +11,21 @@ export default function BookmarkList({ list, onRemove }) {
 
   const { bookmarks, addBookmark, removeBookmark, } = useBookmark();
   // const { searchRp } = useStudyList(); => 꼬임... 결국 searchRp랑
-  const { rows, loading } = useBookmarkBridge()
+  const { rows, loading, markUnbookmarked, markBookmarked } = useBookmarkBridge()
   // const raw = searchRp?.data;
   // const studyRows = Array.isArray(raw) ? raw : (raw ? [raw] : []);
 
 
   // 성공/콜백 시 상태 전환
-  const handleRemove = (target) => {
-    removeBookmark(target);   // 서버 성공까지 기다림
+  const handleRemove = (target, studyId) => {
+    markUnbookmarked(studyId)
+    removeBookmark(target)   // 서버 성공까지 기다림
   };
 
-  const handleAdd = (target) => {
+  const handleAdd = (target, studyId) => {
+    markBookmarked(studyId)
     addBookmark(target)
   };
-  const bookmarkStudyIds = bookmarks
-    .filter(b => b.bookmarkTarget === 'STUDY')
-    .map(b => b.targetId)
 
   return (
     <Box sx={{
@@ -59,17 +58,15 @@ export default function BookmarkList({ list, onRemove }) {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {rows.map(row => {
 
-              const isBookmarked = bookmarks.some(b =>
-                b.bookmarkTarget === 'STUDY' &&
-                Number(b.targetId) === Number(row.studyId)
-              );
+              const isBookmarked = row.isBookmarked
+
               return (
                 <BookmarkCard
                   key={row.studyId}
                   row={row}
                   isBookmarked={isBookmarked}
-                  onAdd={handleAdd}
-                  onRemove={handleRemove}
+                  onAdd={(target) => handleAdd(target, row.studyId)}
+                  onRemove={(target) => handleRemove(target, row.studyId)}
                 />
               )
             })}

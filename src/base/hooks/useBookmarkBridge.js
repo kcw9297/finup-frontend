@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../utils/fetchUtils";
 import { useBookmark } from "./useBookmark";
 
@@ -16,6 +16,11 @@ export function useBookmarkBridge() {
   const { bookmarks, loadBookmark } = useBookmark()
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
+  const [unbookmarkedIds, setUnbookmarkedIds] = useState([])
+
+
+  // 최초 로딩 여부 (재조회 방지)
+  const initializedRef = useRef(false)
 
   // [2] 북마크 로딩
   useEffect(() => {
@@ -24,6 +29,10 @@ export function useBookmarkBridge() {
 
   // [3] 북마크 → Study 상세 조회
   useEffect(() => {
+    // 최초 1회만 Study 상세 조회
+    if (initializedRef.current) return
+
+    if (!bookmarks) return
 
     // STUDY 북마크 ID만 추출
     const studyIds = (bookmarks ?? [])
@@ -55,13 +64,40 @@ export function useBookmarkBridge() {
       const validRows = results.filter(Boolean)
       setRows(validRows)
       setLoading(false)
+      initializedRef.current = true
     })
 
   }, [bookmarks])
 
-  // [4] 반환
+
+  // [4] UI 전용 언북마크 처리
+  const markUnbookmarked = (studyId) => {
+    setUnbookmarkedIds(prev =>
+      prev.includes(studyId) ? prev : [...prev, studyId]
+    )
+  }
+
+  // [4-1] UI 전용 북마크 재등록 처리
+  const markBookmarked = (studyId) => {
+    setUnbookmarkedIds(prev =>
+      prev.filter(id => id !== studyId)
+    )
+  }
+
+
+  // [5] 화면에 보여줄 rows (언북마크 상태 포함)
+  const visibleRows = rows.map(row => ({
+    ...row,
+    isBookmarked: !unbookmarkedIds.includes(row.studyId),
+  }))
+
+
+
+  // [6] 반환
   return {
-    rows,
+    rows: visibleRows,
     loading,
+    markUnbookmarked,
+    markBookmarked,
   }
 }
