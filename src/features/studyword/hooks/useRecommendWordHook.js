@@ -23,7 +23,7 @@ export function useRecommendWordHook() {
     setLoading(true);
 
     api.get(
-      "/study-words/recommend",   // ⚠️ 단어 추천 API 경로
+      "/study-words/recommend/study",   // 단어 추천 API 경로
       {
         params: {
           studyId: Number(studyId),
