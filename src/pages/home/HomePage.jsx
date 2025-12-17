@@ -17,6 +17,7 @@ import { useRecommendedVideo } from "../../features/home/hooks/useRecommendedVid
 import { useStockFirm } from "../../features/home/hooks/useStockFirm";
 import { useHomeNoticeList } from "../../features/notice/hooks/useHomeNoticeList";
 import { useAuth } from "../../base/hooks/useAuth";
+import { navigate, showSnackbar } from "../../base/config/globalHookConfig";
 
 export default function HomePage() {
   // 공지 데이터 (custom hook)
@@ -34,10 +35,16 @@ export default function HomePage() {
 
 
   // 뉴스 모달 상태
+  const {isAuthenticated} = useAuth();
   const [open, setOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   const openModal = (article) => {
+    if(!isAuthenticated){
+      showSnackbar("로그인 후 이용할 수 있어요","info");
+      // navigate("/login")
+      return;
+    }
     setSelectedArticle(article);
     setOpen(true);
   };
