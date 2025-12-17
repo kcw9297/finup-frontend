@@ -15,7 +15,7 @@ export default function Banner () {
         <img src={banner} alt="배너" style={{height:300, borderRadius:20}}/>
       </Box>
 
-      <QuizModal open={open} onClose={() => setOpen(false)} />
+      {open && <QuizModal open={open} onClose={() => setOpen(false)} />}
     </>
   )
 }
