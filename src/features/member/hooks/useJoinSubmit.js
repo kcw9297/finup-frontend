@@ -54,7 +54,7 @@ export function useJoinSubmit({
   const submitJoin = async ({ email, password }) => {
     setJoinStatus("loading");
     return await api.post(
-      "/members",
+      "/members/join",
       { onSuccess: onSignupSuccess, onError: onSignupError, public: true },
       { email, password }
     );

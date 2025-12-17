@@ -7,7 +7,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useEffect, useState } from "react";
 import WordCard from '../../../base/components/card/WordCard';
-import { useRecommendWordHook } from '../hooks/useRecommendWordHook';
+import { useRecommendVideoLinkHook } from '../hooks/useRecommendVideoLinkHook';
+import VideoCard from '../../../base/components/card/VideoCard';
 
 
 /**
@@ -16,19 +17,23 @@ import { useRecommendWordHook } from '../hooks/useRecommendWordHook';
  * @since 2025-12-09
  */
 
-export default function StudyWords({ words = [] }) {
+export default function StudyVideos({ admin = false }) {
 
-  // [1] 페이지 상태 (words 여기서 가져올 것)
+  // [1] 페이지 상태
   const [currentPage, setCurrentPage] = useState(0);
-  const pageCount = Math.max(1, Math.ceil(words.length / 4));
 
-  const { recommendRp, recommend, retryRecommend, loading, } = useRecommendWordHook()
 
-  // [2] 최초 진입 시 추천 호출
+  // [2] 추천 영상 훅
+  const { recommendRp, recommend, retryRecommend, loading, } = useRecommendVideoLinkHook()
+
+  const pageSize = 4
+  const pageCount = Math.max(1, Math.ceil((recommendRp?.length ?? 0) / pageSize))
+
+  // [3] 최초 진입 시 추천 호출
   useEffect(() => {
     recommend()
   }, [])
-  // 렌더링
+
   return (
     <>
       {/* ===== 헤더 영역 (항상 표시) ===== */}
@@ -54,7 +59,7 @@ export default function StudyWords({ words = [] }) {
               }
             }}
           >
-            추천 개념 용어
+            추천 개념 영상
           </Typography>
 
           <Tooltip title="재추천">
@@ -100,25 +105,22 @@ export default function StudyWords({ words = [] }) {
       {/* ===== 콘텐츠 영역 (상태별 분기) ===== */}
       <Box sx={{ minHeight: 350 }}>
 
-        {/* 1. 로딩 */}
         {loading && (
           <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              추천 단어를 불러오는 중입니다...
+              추천 영상을 불러오는 중입니다...
             </Typography>
           </Box>
         )}
 
-        {/* 2. 빈 결과 */}
         {!loading && recommendRp?.length === 0 && (
           <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              추천된 단어가 없습니다.
+              추천된 영상이 없습니다.
             </Typography>
           </Box>
         )}
 
-        {/* 3. 정상 렌더링 */}
         {!loading && recommendRp?.length > 0 && (
           <Box
             sx={{
@@ -128,9 +130,9 @@ export default function StudyWords({ words = [] }) {
             }}
           >
             {recommendRp
-              .slice(currentPage * 3, currentPage * 3 + 3)
-              .map(word => (
-                <WordCard key={word.id} word={word} />
+              .slice(currentPage * pageSize, currentPage * pageSize + pageSize)
+              .map(video => (
+                <VideoCard key={video.videoLinkId} video={video} />
               ))}
           </Box>
         )}

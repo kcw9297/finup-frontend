@@ -6,6 +6,7 @@ import {
   Button,
   LinearProgress,
   CircularProgress,
+  Pagination,
 } from '@mui/material';
 import StduyListBox from './StduyListBox';
 import OrderBar from '../../../base/components/bar/OrderBar'
@@ -16,6 +17,7 @@ import { useStudyProgressStartModal } from '../../studyprogress/hooks/useStudyPr
 import ConfirmModal from '../../../base/components/modal/ConfirmModal';
 import { navigate } from './../../../base/config/globalHookConfig';
 import { useNavigate } from 'react-router-dom';
+import PageBar from '../../../base/components/bar/PageBar';
 
 /**
  * 학습 리스트 컴포넌트
@@ -27,8 +29,7 @@ export default function StudyList({ admin = false }) {
 
   // [1] 사용 Hook
   const {
-    searchRq, searchRp, loading,
-    handleScroll, handleOrder,
+    rows, loading, order, handleOrder
   } = useStudyList()
 
   // 북마크 이동
@@ -40,13 +41,14 @@ export default function StudyList({ admin = false }) {
   // 완료된 진도 개수
   const completedCount = studyProgresses.filter((progress) => progress.studyStatus === 'COMPLETED').length
 
-  // 무한 스크롤을 위한 바닥 참조 값
-  const bottomRef = useRef(null);
 
   // 사용 데이터
-  const rows = searchRp?.data ?? []
-  const pagination = searchRp?.pagination ?? {}
-  const percentage = Math.round((completedCount / pagination.dataCount) * 100)
+  // const pagination = searchRp?.pagination ?? {}
+  const totalCount = rows.length
+  const percentage = totalCount === 0
+    ? 0
+    : Math.round((completedCount / totalCount) * 100)
+
 
   // 학습 메세지
   const getProcessMessage = () => {
@@ -57,20 +59,6 @@ export default function StudyList({ admin = false }) {
     return '아직 완료한 학습이 없습니다'
   }
 
-  // 스크롤이 하단에 도달했는지 감지하는 Observer
-  useEffect(() => {
-
-    if (!bottomRef.current) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting && !loading) handleScroll() },
-      { threshold: 0.7, }
-    );
-
-    observer.observe(bottomRef.current);
-
-    return () => observer.disconnect()
-  }, [loading, handleScroll]);
 
 
   return (
@@ -92,7 +80,7 @@ export default function StudyList({ admin = false }) {
         alignItems: 'center',
         mb: 2   // 하단 마진
       }}>
-        <OrderBar options={SORT_OPTIONS} selected={searchRq.order} onChange={handleOrder} />
+        <OrderBar options={SORT_OPTIONS} selected={order} onChange={handleOrder} />
       </Box>
 
       {/* 메인 콘텐츠 */}
@@ -145,8 +133,21 @@ export default function StudyList({ admin = false }) {
               (rows.map(row => (<StduyListBox key={row.studyId} admin={admin} row={row} />)))
             }
 
-            {/* 무한스크롤 트리거 */}
-            <Box ref={bottomRef} sx={{ height: 1 }} />
+            {loading && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+                <CircularProgress size={20} />
+              </Box>
+            )}
+
+            {/* {searchRp?.pagination?.totalPage > 0 && (
+              <PageBar
+                pagination={pagination}
+                onChange={handlePageChange}
+              />
+            )} */}
+
+            {/* 스크롤 바닥 감지용 */}
+            {/* <Box ref={bottomRef} sx={{ height: 1 }} /> */}
           </List>
         </Box>
 
@@ -195,7 +196,7 @@ export default function StudyList({ admin = false }) {
                 mb: 1
               }}
             >
-              {completedCount} / {pagination.dataCount}
+              {completedCount} / {totalCount}
             </Typography>
             <Typography
               variant="body2"
