@@ -58,7 +58,7 @@ const nastedRoutes = [
   {
     path: '/news/*', // url : 뉴스
     children: [
-      { path: 'list', element: <ProtectedRoute><NewsPage /></ProtectedRoute> }, // 모두 공개
+      { path: 'list', element: <NewsPage /> }, // 모두 공개
     ]
   },
 

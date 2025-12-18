@@ -30,7 +30,7 @@ export default function useGenericNews(fetchUrl, params = {}, isModalOpen = fals
 
       const res = await api.get(fetchUrl, {
         params: { ...params },
-        public: false,
+        public: true,
       });
 
       // 최신 요청만 반영
