@@ -55,37 +55,11 @@ export default function QuizModal ({ open, onClose }) {
     onClose();
   };
 
-  // 퀴즈 영역 렌더링 분기
-  const renderQuiz = () => {
-    if (loading) return <QuizLoading />
-
-    if (!quiz?.length) {
-      return (
-        <QuizQuestion
-          title='문제가 없습니다.'
-          onClose={handleClose}
-          questions={[]}
-          onSubmit={() => {}}
-        />
-      )
-    }
-
-    return (
-      <QuizQuestion
-        title={`개념 확인 (총 ${quiz.length}문항)`}
-        onClose={handleClose}
-        questions={quiz}
-        onSubmit={handleSubmit}
-      />
-    )
-  }
-
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
         sx={{
           width: 800,
-          minHeight: '60vh',
           margin: '120px auto',
           backgroundColor: 'background.base',
           border: 5,
@@ -93,10 +67,20 @@ export default function QuizModal ({ open, onClose }) {
           borderRadius: '20px',
           outline: 'none',
         }}
-      >
-        {step === 'intro' && (<QuizIntro onStart={handleStart} onClose={onClose} />)}
-        {step === 'quiz' && renderQuiz()}
-        {step === 'result' && (<QuizResult score={score} onClose={handleClose} />)}
+      >        
+      <>
+        {step === "intro" && <QuizIntro onStart={handleStart} onClose={onClose} />}
+        {step === "quiz" && (
+          <>
+            {loading && <QuizLoading />}
+            {!loading && !quiz?.length && <div>문제가 없습니다.</div>}
+            {!loading && quiz?.length > 0 && (
+            <QuizQuestion onClose={handleClose} questions={quiz} onSubmit={handleSubmit}/>
+            )}
+          </>
+        )}
+        {step === "result" && (<QuizResult score={score} onClose={handleClose}/>)}
+      </>
       </Box>
     </Modal>
   )
