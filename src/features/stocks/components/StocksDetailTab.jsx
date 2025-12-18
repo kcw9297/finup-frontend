@@ -18,7 +18,6 @@ export default function StocksDetailTab() {
       onChange={handleChange}
       sx={{
       background: (theme) => theme.palette.background.light,
-      //p: 0.5,
       borderRadius: 1,
       "& .MuiToggleButton-root": {
         width: 90,

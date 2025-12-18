@@ -32,24 +32,3 @@ export function useStockDetailStockAi(code){
   // [5] 반환
   return { detailStockAi, detailStockYoutube, loadingAi };
 }
-
- // setDetailStockAi({
-    //   summary: stockAi.summary,
-    //   investmentPoint: stockAi.investmentPoint,   
-    //   price: stockAi.price,         
-    //   valuation: stockAi.valuation,
-    //   flow: stockAi.flow,
-    //   risk: stockAi.risk,
-    //   youtubeKeywords: stockAi.youtubeKeywords,            
-    //   description: stockAi.description,        
-    // })
-
-    /*
-    "youtube": [
-      private String keyword;       // 키워드
-        private String videoId;       // 비디오ID
-        private String title;         // 제목
-        private String channelTitle;  // 채널명
-        private String thumbnailUrl;  // 썸네일
-    ]
-      */
