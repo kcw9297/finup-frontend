@@ -8,6 +8,7 @@ frontend:
         - node --version
         - rm -rf node_modules
         - npm install
+        - npm rebuild @swc/core
     build:
       commands:
         - npm run build
