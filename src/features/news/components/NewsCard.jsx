@@ -8,7 +8,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import thema from "../../../base/design/thema.js"
 import { Iron } from "@mui/icons-material";
 import theme from "../../../base/design/thema.js";
-import defaultNews from "@/assets/default_news.jpg";
+import defaultNews from "../../../assets/default_news.jpg";
 
 export default function NewsCard({
   title,
