@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Box, Card, CardMedia, CardContent, Typography, Paper, IconButton } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import VideoCard from './../../../base/components/card/VideoCard';
 import { useHomeVideoList } from "../../videolink/hooks/useHomeVideoList";
+import HomeVideoCard from "./HomeVideoCard";
 
 export default function RecommendedVideo() {
 
@@ -44,7 +44,7 @@ export default function RecommendedVideo() {
 
       <Box
         sx={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 0.6,
           "& .MuiTypography-root": { fontSize: 22, fontWeight: 600 }
         }}
       >
@@ -88,7 +88,7 @@ export default function RecommendedVideo() {
       {/* 영상 리스트 */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
         {visibleVideos.map((video) => (
-          <VideoCard key={video.videoLinkId} video={video} />
+          <HomeVideoCard key={video.videoLinkId} video={video} />
         ))}
       </Box>
     </Box>

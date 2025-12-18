@@ -67,7 +67,7 @@ export default function WordBookContent() {
             <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="삭제">
                 <IconButton
-                  size="small"
+                  size="medium"
                   onClick={() => removeWord(word.termId)}
                   sx={{
                     color: "text.secondary",
