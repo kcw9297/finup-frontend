@@ -1,13 +1,16 @@
 import { Paper, Box, Typography, IconButton, CircularProgress } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import { useNavigate } from "react-router-dom";
 
 // 공지사항
 
 export default function Notice({ noticeList, noticeCurrent, fade, showNext, loading }) {
-  
+
   // 아직 렌더링되지 않은 경우 빈 객체
   const currentNotice = noticeList[noticeCurrent] || {}
+
+  const navigate = useNavigate()
 
   return (
     <Paper
@@ -25,8 +28,7 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext, load
 
       {/* 왼쪽: 공지사항 텍스트 그룹 */}
       <Box
-        component="a"
-        href="#"
+        onClick={() => navigate(`/notices/detail/${currentNotice.noticeId}`)}
         style={{ textDecoration: "none" }}
         sx={{
           display: 'flex',
@@ -48,10 +50,10 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext, load
         <Typography className="title">|</Typography>
 
         {loading ? (
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
               alignItems: 'center',
               mx: 2
             }}
