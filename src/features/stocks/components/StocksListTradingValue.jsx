@@ -50,7 +50,8 @@ export default function StocksListTradingValue() {
 
   const getChangeSymbol = (sign) => {
     if (sign === '2') return '+'; // 상승
-    if (sign === '5') return ''; // 하락    
+    if (sign === '5') return ''; // 하락  
+    return '';  
   };
   
   return (

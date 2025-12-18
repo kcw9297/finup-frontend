@@ -24,8 +24,6 @@ export function useStockDetail(code) {
   }, [code]);
 
   const fetchDetail = async () => {
-    // const res = await axios.get(`http://localhost:8080/public/api/stocks/detail/${code}`)
-    //const detail = res.data.data;
     try{     
       const rp = await api.get(`/stocks/detail/${code}`);
       

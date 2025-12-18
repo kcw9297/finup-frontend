@@ -10,11 +10,12 @@ import { useAuthStore } from "../../../../base/stores/useAuthStore";
  * @author khj
  */
 
-export function useYoutubeList(searchRq) {
-  // [1] 필요 데이터 선언
-  const [loading, setLoding] = useState(true)
+export function useYoutubeLinkList(searchRq) {
+
+  // [1] 필요 데이터 선언(상태)
+  const [loading, setLoading] = useState(true)
   const [pagination, setPagination] = useState(null)
-  const [youtubeList, setYoutubeList] = useState([])
+  const [videoList, setVideoList] = useState([])
 
   const { showSnackbar } = useSnackbar()
 
@@ -22,29 +23,20 @@ export function useYoutubeList(searchRq) {
 
   // [2] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
-    setYoutubeList(rp.data ?? [])
+    setVideoList(rp.data ?? [])
     setPagination(rp.pagination ?? null)
   }
 
   const onError = (rp) => {
     showSnackbar(rp.message, "error")
   }
-  const onFinally = () => { }
+  const onFinally = () => {
+    setLoading(false)
+  }
 
-  // [3] URL 수동 조합
-  const query = new URLSearchParams({
-    ownerId: adminId,
-    videoLinkOwner: "STUDY",
-    keyword: searchRq.keyword,
-    filter: searchRq.filter,
-    pageNum: searchRq.pageNum,
-    size: searchRq.size,
-  }).toString()
-
-
-  // [4] API 요청 함수 정의
-  const fetchYoutubeList = () => {
-    api.get(`/video-links`,
+  // [3] API 요청 함수 정의
+  const fetchVideoList = () => {
+    api.get(`/video-links/recommend/home`,
       {
         onSuccess, onError, onFinally,
         params: {
@@ -55,23 +47,21 @@ export function useYoutubeList(searchRq) {
           pageNum: searchRq.pageNum,
           size: searchRq.size,
         },
-        admin: true
       }
     )
   }
 
   // [5] 목록 자동 호출
   useEffect(() => {
-    if (!adminId) return
-    fetchYoutubeList()
+    fetchVideoList()
   }, [adminId, searchRq.pageNum, searchRq.keyword, searchRq.filter])
 
   // [6] 반환
   return {
-    youtubeList,
+    videoList,
     pagination,
     loading,
 
-    fetchYoutubeList,
+    fetchVideoList,
   }
 }
