@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useNoticeDetail } from "../hooks/useNoticeDetail"
 import { Button, Typography, Box, Paper, Divider, Chip } from "@mui/material"
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
@@ -14,30 +14,37 @@ import { formatDetailDate } from "../constants/noticeConstant"
 export default function NoticeDetail({ admin = false }) {
 
   // [1] 사용 Hook
-  const { noticeId, detailRp, loading } = useNoticeDetail({admin})
+  const { noticeId, detailRp, loading } = useNoticeDetail({ admin })
   const navigate = useNavigate()
+
+  const location = useLocation()
+
+  const backConfig = admin
+    ? { text: '목록으로', path: '/admin/notices' }
+    : { text: '홈으로', path: '/' }
+
 
   // 사용 데이터
   const detail = detailRp?.data ?? {}
 
   // [2] 컴포넌트 반환
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       py: 6,
       px: { xs: 2, sm: 4 }
     }}>
-      
+
       {/* 최대 너비 컨테이너 */}
       <Box sx={{ maxWidth: '1200px', mx: 'auto', pt: 5, pb: 5, bgcolor: 'background.light' }}>
-        <Box sx={{ maxWidth: '1000px', mx: 'auto'  }}>
-        
+        <Box sx={{ maxWidth: '1000px', mx: 'auto' }}>
+
           {/* 헤더 영역 */}
           <Box sx={{ mb: 4 }}>
-            <Typography 
-              variant="h4" 
+            <Typography
+              variant="h4"
               fontWeight={700}
-              sx={{ 
+              sx={{
                 color: '#1a1a1a',
                 mb: 3,
                 fontSize: { xs: '1.75rem', sm: '2.125rem' }
@@ -47,39 +54,39 @@ export default function NoticeDetail({ admin = false }) {
             </Typography>
 
             {/* 메타 정보 */}
-            <Box sx={{ 
-              display: 'flex', 
+            <Box sx={{
+              display: 'flex',
               flexWrap: 'wrap',
               gap: 1,
               alignItems: 'center'
             }}>
-              <Chip 
+              <Chip
                 icon={<PersonIcon sx={{ fontSize: 18 }} />}
                 label="관리자"
                 size="medium"
-                sx={{ 
+                sx={{
                   bgcolor: 'white',
                   border: '1px solid #e0e0e0',
                   fontWeight: 500,
                   p: 1
                 }}
               />
-              <Chip 
+              <Chip
                 icon={<CalendarTodayIcon sx={{ fontSize: 18 }} />}
                 label={formatDetailDate(detail.cdate)}
                 size="medium"
-                sx={{ 
+                sx={{
                   bgcolor: 'white',
                   border: '1px solid #e0e0e0',
                   fontWeight: 500,
                   p: 1
                 }}
               />
-              <Chip 
+              <Chip
                 icon={<VisibilityIcon sx={{ fontSize: 18 }} />}
                 label={`조회수 ${Number(detail.viewCount || 0).toLocaleString('ko-KR')}`}
                 size="medium"
-                sx={{ 
+                sx={{
                   bgcolor: 'white',
                   border: '1px solid #e0e0e0',
                   fontWeight: 500,
@@ -90,9 +97,9 @@ export default function NoticeDetail({ admin = false }) {
           </Box>
 
           {/* 내용 영역 */}
-          <Paper 
-            elevation={0} 
-            sx={{ 
+          <Paper
+            elevation={0}
+            sx={{
               p: 4,
               bgcolor: 'white',
               borderRadius: 2,
@@ -103,7 +110,7 @@ export default function NoticeDetail({ admin = false }) {
           >
             <Typography
               variant="body1"
-              sx={{ 
+              sx={{
                 whiteSpace: 'pre-line',
                 lineHeight: 2,
                 color: '#333',
@@ -124,20 +131,37 @@ export default function NoticeDetail({ admin = false }) {
               mt: 5
             }}
           >
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => navigate(-1)}
-              sx={{
-                minWidth: 150,
-                bgcolor: 'base.main',
-                '&:hover': {
-                  bgcolor: 'base.dark'
-                }
-              }}
-            >
-              목록으로
-            </Button>
+            {admin ? (
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate('/admin/notices')}
+                sx={{
+                  minWidth: 150,
+                  bgcolor: 'base.main',
+                  '&:hover': {
+                    bgcolor: 'base.dark'
+                  }
+                }}
+              >
+                목록으로
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate('/')}
+                sx={{
+                  minWidth: 150,
+                  bgcolor: 'base.main',
+                  '&:hover': {
+                    bgcolor: 'base.dark'
+                  }
+                }}
+              >
+                홈으로
+              </Button>
+            )}
           </Box>
 
         </Box>
