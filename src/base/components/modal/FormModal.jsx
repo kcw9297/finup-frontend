@@ -44,8 +44,8 @@ export default function FormModal({ modalProps }) {
   const [errors, setErrors] = useState({}) // 유효성 검사 오류 상태
   const [loading, setLoading] = useState(false) // 로딩 상태
 
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [globalError, setGlobalError] = useState(null);
+  //const [fieldErrors, setFieldErrors] = useState({});
+  //const [globalError, setGlobalError] = useState(null);
 
 
   // [2] 필요 함수 선언
@@ -56,17 +56,17 @@ export default function FormModal({ modalProps }) {
     // 입력 시 해당 필드 에러 제거
     const fieldName = Object.keys(changeRq)[0]
 
-    if (fieldErrors?.[fieldName]) {
-      setFieldErrors(prev => {
+    if (errors?.[fieldName]) {
+      setErrors(prev => {
         const copy = { ...prev };
         delete copy[fieldName];
         return copy;
       });
     }
 
-    if (globalError) {
-      setGlobalError(null);
-    }
+    //if (globalError) {
+    //  setGlobalError(null);
+    //}
   };
 
   // helperText 생성
@@ -146,20 +146,12 @@ export default function FormModal({ modalProps }) {
       if (!json.success) {
 
         // 🔹 필드 유효성 오류
-        if (json.inputErrors && !json.inputErrors.global) {
-          setFieldErrors(json.inputErrors);
-        }
-
-        // 🔹 비즈니스 메시지 (수정된 정보 없음 등)
-        if (json.inputErrors?.global || json.message) {
-          setGlobalError(json.inputErrors?.global || json.message);
-        }
-
+        if (json.inputErrors) setErrors(json.inputErrors);
         return;
       }
 
-      setGlobalError(null);
-      setFieldErrors({});
+      setErrors(null);
+
       // 모달 닫기
       setOpen(false)
 
@@ -260,9 +252,9 @@ export default function FormModal({ modalProps }) {
         px: 3,
         py: 1
       }}>
-        {globalError && (
+        {errors?.global && (
           <Box sx={{ color: 'error.main', fontSize: '14px' }}>
-            {globalError}
+            {errors.global}
           </Box>
         )}
       </Box>
@@ -280,7 +272,7 @@ export default function FormModal({ modalProps }) {
         <Button
           onClick={handleSubmit}
           variant="contained"
-          disabled={loading || Object.keys(fieldErrors).length !== 0} // 로딩 중에는 비활성화
+          disabled={loading || (errors && Object.keys(errors).length > 0)} // 로딩 중에는 비활성화
           sx={{
             minWidth: 100,
             bgcolor: 'base.main',
