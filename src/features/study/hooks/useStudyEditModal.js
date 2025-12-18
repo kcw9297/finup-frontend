@@ -37,6 +37,7 @@ export function useStudyEditModal({ handleAfterEdit = () => { }, admin = false }
 
     const onError = (rp) => {
       showSnackbar(rp.message ?? '수정에 실패했습니다.', 'warning')
+      throw new Error(rp.message)
     }
 
     return await api.put(`/studies/${studyId}`, { onSuccess, onError, admin }, rq);

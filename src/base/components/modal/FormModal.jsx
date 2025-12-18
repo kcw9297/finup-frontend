@@ -1,6 +1,6 @@
-import { 
-  Dialog, DialogTitle, DialogContent, DialogActions, 
-  TextField, Button, IconButton, Box, 
+import {
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  TextField, Button, IconButton, Box,
   MenuItem,
   CircularProgress
 } from '@mui/material';
@@ -14,7 +14,7 @@ import { showSnackbar } from '../../config/globalHookConfig';
  * @author kcw
  */
 export default function FormModal({ modalProps }) {
-  
+
   /*
     modalProps 내 내용
     open - 모달 열림 상태
@@ -25,7 +25,7 @@ export default function FormModal({ modalProps }) {
     submitText - 제출 버튼 텍스트 (기본 텍스트 : "등록")
     submit - 제출 시 처리하는 REST API 요청 정보를 담는 객체
   */
-  const { open, setOpen, title, initialValues = [], fields = [], submitText = "등록", submit = {}} = modalProps;
+  const { open, setOpen, title, initialValues = [], fields = [], submitText = "등록", submit = {} } = modalProps;
 
   // Ref 추가
   const dialogContentRef = useRef(null);
@@ -44,19 +44,28 @@ export default function FormModal({ modalProps }) {
   const [errors, setErrors] = useState({}) // 유효성 검사 오류 상태
   const [loading, setLoading] = useState(false) // 로딩 상태
 
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [globalError, setGlobalError] = useState(null);
+
+
   // [2] 필요 함수 선언
   // 입력 변경 처리 함수
   const handleChangeRq = (changeRq) => {
     setRq(prev => ({ ...prev, ...changeRq }));
 
     // 입력 시 해당 필드 에러 제거
-    const fieldName = Object.keys(changeRq)[0];
-    if (errors?.[fieldName]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[fieldName];
-        return newErrors;
+    const fieldName = Object.keys(changeRq)[0]
+
+    if (fieldErrors?.[fieldName]) {
+      setFieldErrors(prev => {
+        const copy = { ...prev };
+        delete copy[fieldName];
+        return copy;
       });
+    }
+
+    if (globalError) {
+      setGlobalError(null);
     }
   };
 
@@ -67,12 +76,12 @@ export default function FormModal({ modalProps }) {
     if (errors?.[field.name]) {
       return errors[field.name];
     }
-    
+
     // 에러가 없으면 안내 메시지
     if (field.helperText) {
       return field.helperText;
     }
-    
+
     return '';
   };
 
@@ -82,6 +91,15 @@ export default function FormModal({ modalProps }) {
     setErrors(null);
     setLoading(false);
   }
+  const isEdited = () => {
+    if (!initialValues) return true;
+
+    return Object.keys(initialValues).some(key => {
+      const init = initialValues[key] ?? '';
+      const curr = rq[key] ?? '';
+      return String(init) !== String(curr);
+    });
+  };
 
   // 모달 닫기 처리 함수
   const handleClose = () => {
@@ -97,7 +115,7 @@ export default function FormModal({ modalProps }) {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
-    
+
     // DialogContent에 포커스를 주어 TextField의 포커스 제거
     if (dialogContentRef.current) {
       dialogContentRef.current.focus();
@@ -113,6 +131,11 @@ export default function FormModal({ modalProps }) {
   // 폼 제출 처리 
   const handleSubmit = async () => {
 
+    if (!isEdited()) {
+      setGlobalError('변경된 내용이 없습니다.');
+      return;
+    }
+
     // 제출 수행
     try {
 
@@ -122,17 +145,26 @@ export default function FormModal({ modalProps }) {
         return acc;
       }, {});
 
-      // 로딩 활성화
-      setLoading(true)
-
       // 제출 수행
       const json = await modalSubmit.handleSubmit(cleanedRq)
-      if(!json.success) {
-        if (json.inputErrors) setErrors(json.inputErrors) // 유효성 검사 오류 시
-        else showSnackbar(json.message) // 비즈니스 오류 외 그 외 오류 발생 시 
-        return
+
+      if (!json.success) {
+
+        // 🔹 필드 유효성 오류
+        if (json.inputErrors && !json.inputErrors.global) {
+          setFieldErrors(json.inputErrors);
+        }
+
+        // 🔹 비즈니스 메시지 (수정된 정보 없음 등)
+        if (json.inputErrors?.global || json.message) {
+          setGlobalError(json.inputErrors?.global || json.message);
+        }
+
+        return;
       }
 
+      setGlobalError(null);
+      setFieldErrors({});
       // 모달 닫기
       setOpen(false)
 
@@ -142,8 +174,8 @@ export default function FormModal({ modalProps }) {
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={handleClose}
       maxWidth="sm"
       disableRestoreFocus  // 포커스 복원 비활성화
@@ -151,9 +183,9 @@ export default function FormModal({ modalProps }) {
       fullWidth
     >
       {/* 제목 + 닫기 버튼 */}
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+      <DialogTitle sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         fontWeight: 700,
         fontSize: '26px',
@@ -168,17 +200,17 @@ export default function FormModal({ modalProps }) {
       </DialogTitle>
 
       {/* 내용 */}
-      <DialogContent 
-        ref={dialogContentRef} 
-        tabIndex={-1} 
-        sx={{ 
+      <DialogContent
+        ref={dialogContentRef}
+        tabIndex={-1}
+        sx={{
           px: 5,
           '&:focus': {
             outline: 'none' // 포커스 시 outline 제거
           }
         }}
       >
-        
+
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
           {fields.map(field => (
             <TextField
@@ -187,7 +219,7 @@ export default function FormModal({ modalProps }) {
               select={field.select} // select 여부
               label={field.label}
               value={rq[field.name] || ''}
-              onChange={(e) => handleChangeRq({[field.name] : e.target.value})}
+              onChange={(e) => handleChangeRq({ [field.name]: e.target.value })}
               multiline={field.multiline} // TextArea 이용 시
               rows={field.multiline ? (field.rows || 4) : undefined} // multiline 적용 시에만
               error={!!errors?.[field?.name]} // 오류 여부 (true - 활성화)
@@ -225,24 +257,24 @@ export default function FormModal({ modalProps }) {
       </DialogContent>
 
       {/* 전역 오류 메시지 영역 */}
-      <Box sx={{ 
+      <Box sx={{
         minHeight: '32px', // 고정 높이
-        display: 'flex', 
-        justifyContent: 'center', 
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
         px: 3,
         py: 1
       }}>
-        {errors && (
+        {globalError && (
           <Box sx={{ color: 'error.main', fontSize: '14px' }}>
-            {errors.global}
+            {globalError}
           </Box>
         )}
       </Box>
 
       {/* 버튼 */}
       <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
-        <Button 
+        <Button
           onClick={handleClose}
           variant="outlined"
           disabled={loading} // 로딩 중에는 비활성화
@@ -250,11 +282,11 @@ export default function FormModal({ modalProps }) {
         >
           취소
         </Button>
-        <Button 
+        <Button
           onClick={handleSubmit}
           variant="contained"
-          disabled={loading || (errors && Object.keys(errors).length !== 0)} // 로딩 중에는 비활성화
-          sx={{ 
+          disabled={loading || Object.keys(fieldErrors).length !== 0} // 로딩 중에는 비활성화
+          sx={{
             minWidth: 100,
             bgcolor: 'base.main',
             '&:hover': { bgcolor: 'base.dark' }
