@@ -40,6 +40,7 @@ export default function NewsList() {
       navigate("/login");
       return;
     }
+    openModal(item);
   }
   //(2)반환활 컴포넌트
   return (
