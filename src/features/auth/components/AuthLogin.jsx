@@ -91,21 +91,13 @@ export default function AuthLogin() {
         </Button>
 
         <Typography
-          component={Link} to="/join"
-          sx={{ display: 'flex', flexDirection: 'row-reverse', fontSize: '12px', textDecorationLine: 'underline !important' }}
+          component={Link} to="/join" justifyContent="center"
+          sx={{ mt:2, mb:5, display: 'flex', flexDirection: 'row-reverse', fontSize: '12px', textDecorationLine: 'underline !important' }}
           disabled={loading} // 로딩 중에는 비활성화
         >
           회원가입
         </Typography>
       </Box>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', }}>
-        <Box sx={{ flex: 1, height: '1px', backgroundColor: 'line.dark' }} />
-        <Typography sx={{ color: 'text.light', fontSize: 12 }}>간편 로그인</Typography>
-        <Box sx={{ flex: 1, height: '1px', backgroundColor: 'line.dark' }} />
-      </Box>
-
-      <AuthSocialBtn icon={<GoogleIcon />} text="구글 계정으로 로그인" onClick={() => alert('구글 로그인')} />
 
     </Paper>
   );
