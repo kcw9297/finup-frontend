@@ -26,7 +26,7 @@ export default function StudyVideos({ admin = false }) {
   // [2] 추천 영상 훅
   const { recommendRp, recommend, retryRecommend, loading, } = useRecommendVideoLinkHook()
 
-  const pageSize = 4
+  const pageSize = 3
   const pageCount = Math.max(1, Math.ceil((recommendRp?.length ?? 0) / pageSize))
 
   // [3] 최초 진입 시 추천 호출
