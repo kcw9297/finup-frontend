@@ -34,10 +34,11 @@ export default function NewsList() {
 
   const { news, loading, visibleCount, refreshNews, showTop, scrollToTop } =
     useGenericNews("/news/list", { category }, isModalOpen);
-  const handleOpenModal = (item) =>{
+  
+    const handleOpenModal = (item) =>{
     if(!isAuthenticated){
       showSnackbar("뉴스 상세는 로그인 후 이용할 수 있어요.","info");
-      navigate("/login");
+      navigate("/login?returnUrl=%2Fnews/list");
       return;
     }
     openModal(item);
