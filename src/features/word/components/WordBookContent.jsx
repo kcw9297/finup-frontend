@@ -1,6 +1,7 @@
-import { Box, Typography, TextField, IconButton, Stack, Paper } from "@mui/material";
+import { Box, Typography, TextField, Tooltip, IconButton, Stack, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useWordbook } from "../../wordbook/hooks/useWordbook";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 export default function WordBookContent() {
 
@@ -64,19 +65,23 @@ export default function WordBookContent() {
 
             {/* 오른쪽: 액션 */}
             <Box sx={{ flexShrink: 0 }}>
-              <Typography
-                sx={{
-                  fontSize: 13,
-                  color: "text.secondary",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  "&:hover": { color: "error.main" },
-                }}
-                onClick={() => removeWord(word.termId)}
-              >
-                삭제
-              </Typography>
+              <Tooltip title="삭제">
+                <IconButton
+                  size="small"
+                  onClick={() => removeWord(word.termId)}
+                  sx={{
+                    color: "text.secondary",
+                    "&:hover": {
+                      color: "error.main",
+                      backgroundColor: "rgba(211, 47, 47, 0.08)",
+                    },
+                  }}
+                >
+                  <DeleteOutlineIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
             </Box>
+
           </Paper>
         ))}
       </Stack>
