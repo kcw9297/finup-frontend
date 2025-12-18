@@ -35,13 +35,13 @@ export default function HomePage() {
 
 
   // 뉴스 모달 상태
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   const openModal = (article) => {
-    if(!isAuthenticated){
-      showSnackbar("로그인 후 이용할 수 있어요","info");
+    if (!isAuthenticated) {
+      showSnackbar("로그인 후 이용할 수 있어요", "info");
       // navigate("/login")
       return;
     }
@@ -59,34 +59,41 @@ export default function HomePage() {
       <MainLayout>
 
         {/* Top */}
-        <Box sx={{display:'flex', flexDirection:'column', gap:'20px',}}>
-          <Banner/>
-            <Notice
-              noticeList={listRows}
-              noticeCurrent={current}
-              fade={fade}
-              showNext={showNext}
-              loading={loadingNotice}
-            />
-          <Box sx={{display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:5}}>
-            {quotation.map((item, i) => (<ExchangeRate key={`fx-${i}`} data={item}/>))}
-            {indexes.map((item, i) => (<ExchangeRate key={`idx-${i}`} data={item}/>))}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px', }}>
+          <Banner />
+          <Notice
+            noticeList={listRows}
+            noticeCurrent={current}
+            fade={fade}
+            showNext={showNext}
+            loading={loadingNotice}
+          />
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 5 }}>
+            {quotation.map((item, i) => (<ExchangeRate key={`fx-${i}`} data={item} />))}
+            {indexes.map((item, i) => (<ExchangeRate key={`idx-${i}`} data={item} />))}
           </Box>
         </Box>
 
         {/* 간격 띄우는 용도 */}
-        <Box sx={{height:'30px'}}/>
+        <Box sx={{ height: '30px' }} />
 
         {/* Buttom */}
-        <Box sx={{display:'flex', flexDirection:'column', gap:'50px'}}>
-          <KeywordNews {...keywordNews} onItemClick={openModal}/>
-          <RecommendedVideo videoList={videoList}/>
-          <StockFirm brokerList={brokerList}/>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
+          <KeywordNews {...keywordNews} onItemClick={openModal} />
+          <RecommendedVideo
+            searchOption={{
+              keyword: '',
+              filter: '',
+              pageNum: 0,
+              size: 20,
+            }}
+            videoList={videoList} />
+          <StockFirm brokerList={brokerList} />
         </Box>
 
         {/* 간격 띄우는 용도 */}
-        <Box sx={{height:'30px'}}/>
-        
+        <Box sx={{ height: '30px' }} />
+
       </MainLayout>
 
       <NewsDetailModal

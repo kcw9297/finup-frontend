@@ -1,8 +1,10 @@
-import { Box, Typography, Divider, Button } from '@mui/material';
+import { Box, Typography, Divider, Button, Tooltip, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useWordDetail } from '../hooks/useWordDetail';
 import { useMemberWordbook } from './../../wordbook/hooks/useMemberWordbook';
 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
 export default function WordDetail() {
@@ -45,29 +47,21 @@ export default function WordDetail() {
         }}
       >
         {/* ========== 상단 영역 ========== */}
-        <Box sx={{ mb: 4 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            mb: 1,
+          }}
+        >
           <Typography
             variant="h5"
-            sx={{
-              fontWeight: 700,
-              mb: 1,
-              textAlign: 'left'     // ★★★ 왼쪽 정렬
-            }}
+            sx={{ fontWeight: 700, flex: 1 }}
           >
             {data.title}
           </Typography>
-
-          <Typography
-            variant="body2"
-            sx={{
-              color: 'text.secondary',
-              textAlign: 'left'      // ★ 왼쪽 정렬
-            }}
-            onClick={added ? remove : add}
-          >
-            {data.category} | {added ? '단어장에 저장됨' : '스크랩하기'}
-          </Typography>
         </Box>
+
 
         <Divider sx={{ mb: 4 }} />
 
@@ -107,6 +101,31 @@ export default function WordDetail() {
         >
           {data.aiSummary}
         </Typography>
+      </Box>
+      <Box
+        sx={{
+          mt: 7,
+          mb: 3,
+          p: 3,
+          borderRadius: 2,
+          textAlign: 'center',
+        }}
+      >
+        <Typography
+          variant="body2"
+          sx={{ color: 'text.secondary', mb: 1 }}
+        >
+          이 단어를 단어장에 저장해두세요
+        </Typography>
+
+        <Button
+          variant="contained"
+          startIcon={added ? <CheckCircleIcon /> : <AddCircleOutlineIcon />}
+          onClick={added ? remove : add}
+          sx={{ borderRadius: '999px', px: 3 }}
+        >
+          {added ? '저장됨' : '단어장에 저장'}
+        </Button>
       </Box>
 
       {/* ========== 목록 버튼 ========== */}

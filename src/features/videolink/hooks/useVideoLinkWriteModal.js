@@ -15,7 +15,7 @@ export function useVideoLinkWriteModal({ handleVerify, admin = false }) {
   const [open, setOpen] = useState(false)
   const { reload } = useReloadStore()
   const { showSnackbar } = useSnackbar()
-  
+
   // [2] 모달 열기/닫기 함수
   const openWriteModal = () => {
     setOpen(true)
@@ -27,11 +27,11 @@ export function useVideoLinkWriteModal({ handleVerify, admin = false }) {
     reload()
     setOpen(false)
   }
-  
-  
+
+
   // [4] REST API 요청 함수 생성
   const handleWrite = async (rq) => {
-    return await api.post(`/video-links`, { onSuccess, admin, printMessage: false }, rq)
+    return await api.post(`/video-links`, { onSuccess, admin: true, printMessage: false }, rq)
   }
 
   // [5] 모달 프롭스 설정

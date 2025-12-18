@@ -31,7 +31,7 @@ export default function StudyDetail({ admin = false }) {
 
   // 사용 데이터
   const data = detailRp?.data ?? {}
-  const { name, summary, description, level } = data
+  const { name, summary, detail, level } = data
 
   // 렌더링
   return (
@@ -124,7 +124,7 @@ export default function StudyDetail({ admin = false }) {
           {loading ? (
             <CircularProgress size={22} />
           ) : (
-            <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>{description}</Typography>
+            <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>{detail}</Typography>
           )}
         </Box>
       </Box>

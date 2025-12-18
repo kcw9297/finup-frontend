@@ -10,16 +10,16 @@ import { DEFAULT_SEARCH_RQ, FILTER_OPTIONS } from "../constants/viedoLinkConstan
  * @author kcw
  */
 
-export function useVideoLinkList({ admin = false }) {
+export function useAdminVideoLinkList() {
 
   // [1] 필요 데이터 선언
-  const [ searchRp, setSearchRp ] = useState(null) // 검색 결과
-  const [ loading, setLoading ] = useState(false) // 로딩 상태
-  const [ curKeyword, setCurKeyword ] = useState('') // 검색어 상태 (검색어는 입력해도 바로 검색하지 않음)
-  const [ curFilter, setCurFilter ] = useState('') // 필터 상태 (검색어가 입력되지 않으면 검색하지 않음)
-  const [ searchParams, setSearchParams ] = useSearchParams() // 검색 파라미터
+  const [searchRp, setSearchRp] = useState(null) // 검색 결과
+  const [loading, setLoading] = useState(false) // 로딩 상태
+  const [curKeyword, setCurKeyword] = useState('') // 검색어 상태 (검색어는 입력해도 바로 검색하지 않음)
+  const [curFilter, setCurFilter] = useState('') // 필터 상태 (검색어가 입력되지 않으면 검색하지 않음)
+  const [searchParams, setSearchParams] = useSearchParams() // 검색 파라미터
   const { reloading } = useReloadStore() // 리로딩 감지
-  const [ forceReload, setForceReload ] = useState(0) // 같은 파라미터여도 리로딩 처리
+  const [forceReload, setForceReload] = useState(0) // 같은 파라미터여도 리로딩 처리
 
 
   // [2] 필요 함수 선언 
@@ -51,7 +51,7 @@ export function useVideoLinkList({ admin = false }) {
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
     const nextRq = { ...searchRq, keyword: curKeyword || '', pageNum: DEFAULT_SEARCH_RQ.pageNum }; // 키워드 반영
     if (isSameRq(nextRq)) return
-  
+
     // 검색 수행
     setSearchParams(nextRq)
   }
@@ -68,7 +68,7 @@ export function useVideoLinkList({ admin = false }) {
 
     // 현재 파라미터와 동일한 경우 수행하지 않음
     if (isSameRq(nextRq)) return // 필터 변경 시, 같은 필터거나, 키워드가 없으면 검색 미수행
-    
+
     // 검색 수행
     setSearchParams(nextRq) // 새로운 파라미터 삽입 (URL 변경 유도)
   }
@@ -86,7 +86,7 @@ export function useVideoLinkList({ admin = false }) {
 
   // 정렬 함수
   const handleOrder = order => {
-    
+
     // 검증 : 현재 파라미터와 동일한 경우 수행하지 않음
     const nextRq = { ...searchRq, order, pageNum: DEFAULT_SEARCH_RQ.pageNum };
     if (isSameRq(nextRq)) return
@@ -97,12 +97,12 @@ export function useVideoLinkList({ admin = false }) {
 
   // 검색 데이터 (검색 바 props)
   const searchProps = {
-    keyword : curKeyword || '', // 키워드는 검색 버튼을 누르기 전 까지, 최신상태가 아님 (상태 값을 줘야 함)
-    filter : curFilter || '',
-    onKeywordChange : handleKeyword,
-    onFilterChange : handleFilter,
-    onSubmit : handleSearch,
-    filterOptions : FILTER_OPTIONS,
+    keyword: curKeyword || '', // 키워드는 검색 버튼을 누르기 전 까지, 최신상태가 아님 (상태 값을 줘야 함)
+    filter: curFilter || '',
+    onKeywordChange: handleKeyword,
+    onFilterChange: handleFilter,
+    onSubmit: handleSearch,
+    filterOptions: FILTER_OPTIONS,
   }
 
   // 단어 업데이트 처리
@@ -110,24 +110,24 @@ export function useVideoLinkList({ admin = false }) {
     // 서버에서 받아온 새로운 데이터로 대체
 
     setSearchRp(prev => ({
-      ...prev, 
+      ...prev,
       data: prev.data.map(video => video.videoLinkId === newData.videoLinkId ? newData : video)
     }))
   };
 
   // 단어 삭제 처리
-const handleAfterRemove = () => {
+  const handleAfterRemove = () => {
 
-  // 삭제 후 현재 페이지에 데이터가 없고, 1페이지이면, 전 페이지로 리로드
-  const pagination = searchRp.pagination
-  const data = searchRp.data
+    // 삭제 후 현재 페이지에 데이터가 없고, 1페이지이면, 전 페이지로 리로드
+    const pagination = searchRp.pagination
+    const data = searchRp.data
 
-  if (data.length - 1 === 0 && pagination.pageNum > 1) {
-    setSearchParams({ ...searchRq, pageNum: searchRq.pageNum - 1});
-  } else {
-    setForceReload(prev => prev + 1)
-  }
-};
+    if (data.length - 1 === 0 && pagination.pageNum > 1) {
+      setSearchParams({ ...searchRq, pageNum: searchRq.pageNum - 1 });
+    } else {
+      setForceReload(prev => prev + 1)
+    }
+  };
 
   // [3] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
@@ -151,23 +151,23 @@ const handleAfterRemove = () => {
 
     // 파라미터 비교 (현재 URL이 기본 검색 파라미터인가?)
     const isDefaultParams = isSameRq(DEFAULT_SEARCH_RQ);
-  
+
     // 이미 같은 파라미터이면, 강제 리로드 번호만 올림
     if (isDefaultParams) setForceReload(prev => prev + 1)
     else setSearchParams(DEFAULT_SEARCH_RQ)
-  
+
   }, [reloading]);
 
   // 파라미터 변동 시 검색
   useEffect(() => {
     setLoading(true)
-    api.get('/video-links/search', { params: searchRq, onSuccess, onError, onFinally, admin })
+    api.get('/video-links/search', { params: searchRq, onSuccess, onError, onFinally, admin: true })
   }, [searchParams, forceReload])
 
   // [5] 반환
   return {
-    searchRq, searchRp, loading, searchProps, 
-    handleKeyword, handleSearch, handleFilter, handlePage, handleOrder, 
+    searchRq, searchRp, loading, searchProps,
+    handleKeyword, handleSearch, handleFilter, handlePage, handleOrder,
     handleAfterEdit, handleAfterRemove
   }
 }

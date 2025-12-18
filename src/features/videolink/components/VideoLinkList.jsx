@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete'
 import { SORT_OPTIONS } from "../constants/viedoLinkConstant";
-import { useVideoLinkList } from "../hooks/useVideoLinkList";
+import { useAdminVideoLinkList } from "../hooks/useAdminVideoLinkList";
 import SearchBar from "../../../base/components/bar/SearchBar";
 import OrderBar from "../../../base/components/bar/OrderBar";
 import PageBar from "../../../base/components/bar/PageBar";
@@ -39,7 +39,7 @@ export default function VideoLinkList({ admin = false }) {
     searchRq, searchRp, loading, searchProps,
     handlePage, handleOrder,
     handleAfterEdit, handleAfterRemove
-  } = useVideoLinkList({ admin })
+  } = useAdminVideoLinkList({ admin })
 
   // 비디오 검증
   const { handleVerify } = useVideoVerify({ admin })
@@ -69,7 +69,7 @@ export default function VideoLinkList({ admin = false }) {
           mx: "auto"
         }}>
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            개념 영상 관리
+            영상 관리
           </Typography>
         </Box>
 
