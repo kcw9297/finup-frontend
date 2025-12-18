@@ -6,11 +6,6 @@ export function useNewsModal() {
   const [loading, setLoading] = useState(false);
 
   const openModal = (basicInfo) => {
-    //  if (!sessionStorage.getItem("jwt")) {
-    //   alert("로그인이 필요한 기능입니다.");
-    //   navigate("/login");
-    //   return;
-    // }
     setArticle(basicInfo);
     setOpen(true);
   };
