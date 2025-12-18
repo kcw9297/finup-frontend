@@ -2,16 +2,25 @@ import { useState } from "react";
 import { Box, Card, CardMedia, CardContent, Typography, Paper, IconButton } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useHomeVideoList } from "../../videolink/hooks/useHomeVideoList";
+import HomeVideoCard from "./HomeVideoCard";
 
-export default function GoodVideo ({ videoList }) {
+export default function RecommendedVideo() {
+
+  const { videoList = [], loading } = useHomeVideoList({
+    size: 20
+  })
 
   // 페이지 상태 + 계산 (4개씩 보여주기)
   const [page, setPage] = useState(0);
   const itemsPerPage = 4;
 
-  const maxPage = Math.ceil(videoList.length / itemsPerPage) - 1;
-
+  const maxPage = Math.max(
+    Math.ceil(videoList.length / itemsPerPage) - 1,
+    0
+  )
   const start = page * itemsPerPage;
+
   const visibleVideos = videoList.slice(start, start + itemsPerPage);
 
   // 버튼 활성 조건
@@ -26,14 +35,17 @@ export default function GoodVideo ({ videoList }) {
   const handleNext = () => {
     if (isNextDisabled) return;
     setPage((prev) => prev + 1);
-  };
+  }
+
+
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
-      <Box 
-        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        "& .MuiTypography-root": { fontSize: 22, fontWeight: 600 }
+      <Box
+        sx={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 0.6,
+          "& .MuiTypography-root": { fontSize: 22, fontWeight: 600 }
         }}
       >
 
@@ -49,22 +61,42 @@ export default function GoodVideo ({ videoList }) {
             onClick={handlePrev}
             sx={{ cursor: isPrevDisabled ? 'default' : 'pointer', pointerEvents: isPrevDisabled ? 'none' : 'auto' }}
           >
-            <ArrowBackIosNewIcon sx={{ color: isPrevDisabled ? 'text.light' : 'text.main' }}/>
+            <ArrowBackIosNewIcon sx={{ color: isPrevDisabled ? 'text.light' : 'text.main' }} />
           </IconButton>
 
           <IconButton
             onClick={handleNext}
             sx={{ cursor: isNextDisabled ? "default" : "pointer", pointerEvents: isNextDisabled ? "none" : "auto" }}
           >
-            <ArrowForwardIosIcon sx={{ color: isNextDisabled ? 'text.light' : 'text.main' }}/>
+            <ArrowForwardIosIcon sx={{ color: isNextDisabled ? 'text.light' : 'text.main' }} />
           </IconButton>
         </Box>
       </Box>
+      {/* ✅ 내용 영역만 분기 */}
+      {loading && (
+        <Box sx={{ py: 6, textAlign: 'center', color: 'text.light' }}>
+          추천 영상을 불러오는 중입니다.
+        </Box>
+      )}
+
+      {!loading && !videoList.length && (
+        <Box sx={{ py: 6, textAlign: 'center', color: 'text.light' }}>
+          추천 영상이 없습니다.
+        </Box>
+      )}
 
       {/* 영상 리스트 */}
-      <Box sx={{display: 'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'20px'}}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
         {visibleVideos.map((video) => (
-          <Card
+          <HomeVideoCard key={video.videoLinkId} video={video} />
+        ))}
+      </Box>
+    </Box>
+  );
+
+
+}
+/*<Card
             key={video.id}
             sx={{
               cursor: 'pointer', border: 1, borderColor: 'line.main',
@@ -79,20 +111,16 @@ export default function GoodVideo ({ videoList }) {
               alt={video.title}
             />
             <CardContent
-              sx={{ display: 'flex', flexDirection: 'column', gap: 1,
+              sx={{
+                display: 'flex', flexDirection: 'column', gap: 1,
                 "& .MuiTypography-root": { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
               }}
             >
-              <Typography sx={{fontSize: 18, fontWeight: 600}}>
+              <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
                 {video.title}
               </Typography>
-              <Typography sx={{color: 'text.light'}}>
+              <Typography sx={{ color: 'text.light' }}>
                 {video.channelTitle}
               </Typography>
             </CardContent>
-          </Card>
-        ))}
-      </Box>
-    </Box>
-  );
-}
+          </Card>*/
