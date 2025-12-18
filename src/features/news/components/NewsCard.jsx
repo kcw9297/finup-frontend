@@ -8,6 +8,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import thema from "../../../base/design/thema.js"
 import { Iron } from "@mui/icons-material";
 import theme from "../../../base/design/thema.js";
+import defaultNews from "../../../assets/default_news.jpg";
 
 export default function NewsCard({
   title,
@@ -41,8 +42,8 @@ export default function NewsCard({
         sx={{ width: 100, height: 100, borderRadius: 1, objectFit: "cover" }}
         image={thumbnail}
         onError={(e) => {
-          if (e.target.src.includes("/default-news.png")) return;
-          e.target.src = "/default-news.png";
+          if (e.target.src === defaultNews) return;
+          e.target.src = defaultNews;
         }}
       />
 

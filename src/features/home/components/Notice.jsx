@@ -28,13 +28,13 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext, load
 
       {/* 왼쪽: 공지사항 텍스트 그룹 */}
       <Box
-        onClick={() => navigate(`/notices/detail/${currentNotice.noticeId}`)}
+        
         style={{ textDecoration: "none" }}
         sx={{
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
-          cursor: 'pointer',
+          
           "& .title": {
             fontSize: 16,
             fontWeight: 500,
@@ -48,7 +48,10 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext, load
 
         <Typography className="title">공지사항</Typography>
         <Typography className="title">|</Typography>
-
+        <Box 
+          onClick={() => navigate(`/notices/detail/${currentNotice.noticeId}`)}
+          sx={{cursor: 'pointer',}}
+        >
         {loading ? (
           <Box
             sx={{
@@ -71,7 +74,7 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext, load
             {currentNotice.title}
           </Typography>
         )}
-
+        </Box>
       </Box>
 
       {/* 오른쪽 이동 버튼 */}

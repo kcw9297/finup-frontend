@@ -10,14 +10,14 @@ import { MODAL_FIELDS } from "../constants/studyConstant";
  * @author kcw
  */
 
-export function useStudyEditModal({ handleAfterEdit, admin = false }) {
+export function useStudyEditModal({ handleAfterEdit = () => { }, admin = false }) {
 
   // [1] 모달 상태
-  const [ open, setOpen ] = useState(false)
-  const [ initialValues, setInitialValues ] = useState(null)
-  const [ studyId, setStudyId ] = useState(null)
+  const [open, setOpen] = useState(false)
+  const [initialValues, setInitialValues] = useState(null)
+  const [studyId, setStudyId] = useState(null)
   const { showSnackbar } = useSnackbar()
-  
+
   // [2] 모달 열기/닫기 함수
   const openEditModal = (initialValues) => {
     setInitialValues(initialValues);
@@ -35,7 +35,12 @@ export function useStudyEditModal({ handleAfterEdit, admin = false }) {
       setOpen(false);
     }
 
-    return await api.put(`/studies/${studyId}`, { onSuccess, admin }, rq);
+    const onError = (rp) => {
+      showSnackbar(rp.message ?? '수정에 실패했습니다.', 'warning')
+      throw new Error(rp.message)
+    }
+
+    return await api.put(`/studies/${studyId}`, { onSuccess, onError, admin }, rq);
   }
 
   // [4] 모달 프롭스 설정
