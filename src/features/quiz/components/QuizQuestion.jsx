@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 // 문제 제출
 
-export default function QuizQuestion ({ onClose, questions, onSubmit }) {
+export default function QuizQuestion ({ onClose, questions, onSubmit, title }) {
   // 배열 생성 + 제출 버튼 활성화
   const [answers, setAnswers] = useState(Array(questions.length).fill(null))
   const isAllAnswered = answers.every((a) => a !== null);
@@ -32,7 +32,7 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
         }}
       >
         <Typography sx={{ fontSize: 18, fontWeight: 600, color: 'text.contrastText' }}>
-          개념 확인 (총 10문항)
+          {title}
         </Typography>
         <IconButton
           onClick={onClose}
@@ -60,50 +60,69 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
           <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
             {idx + 1}. {q.question} 
           </Typography>
-          <RadioGroup value={answers[idx]} onChange={(e) => handleSelect(idx, e.target.value)}>
-            {q.choices.map((opt, i) => (
+          <RadioGroup
+            value={answers[idx]}
+            onChange={(e) => handleSelect(idx, e.target.value)}
+          >
+            {q.options?.map((opt, i) => (
               <FormControlLabel
                 key={i}
                 value={i}
-                control={<Radio sx={{opacity: 0, padding: 0, margin: '4px 2px'}}/>}
+                control={
+                  <Radio
+                    sx={{ opacity: 0, padding: 0, margin: '4px 2px' }}
+                  />
+                }
                 label={opt}
                 sx={{
-                  '& .MuiTypography-root': { fontSize: '16px', color: answers[idx] === null ? 'text.main' : answers[idx] === i ? 'base.main' : 'text.light' },
-                  '&:hover .MuiTypography-root': { color: 'base.main' },
+                  '& .MuiTypography-root': {
+                    fontSize: 16,
+                    color:
+                      answers[idx] === null
+                        ? 'text.main'
+                        : answers[idx] === i
+                        ? 'base.main'
+                        : 'text.light',
+                  },
+                  '&:hover .MuiTypography-root': {
+                    color: 'base.main',
+                  },
                 }}
               />
             ))}
           </RadioGroup>
         </Box>
         ))}
-        <Button
-          variant='contained'
-          onClick={finish}
-          disabled={!isAllAnswered}
-          sx={{
-            width: 'fit-content',
-            alignSelf: 'center',
-            backgroundColor: 'background.base',
-            color: 'base.dark',
-            padding: '10px 20px',
-            border: 2,
-            borderColor: 'base.dark',
-            borderRadius: '10px',
-            fontWeight: 600,
-            fontSize: 16,
-            '&.Mui-disabled': {
+        {questions.length > 0 && (
+          <Button
+            variant='contained'
+            onClick={finish}
+            disabled={!isAllAnswered}
+            sx={{
+              width: 'fit-content',
+              alignSelf: 'center',
               backgroundColor: 'background.base',
-              color: 'text.light',
-              borderColor: 'line.dark',
-            },
-            '&:hover': {
-              backgroundColor: 'base.dark',
-              color: 'text.contrastText',
-            }
-          }}
-        >
-          제출하기
-        </Button>
+              color: 'base.dark',
+              padding: '10px 20px',
+              border: 2,
+              borderColor: 'base.dark',
+              borderRadius: '10px',
+              fontWeight: 600,
+              fontSize: 16,
+              '&.Mui-disabled': {
+                backgroundColor: 'background.base',
+                color: 'text.light',
+                borderColor: 'line.dark',
+              },
+              '&:hover': {
+                backgroundColor: 'base.dark',
+                color: 'text.contrastText',
+              }
+            }}
+          >
+            제출하기
+          </Button>
+        )}
       </Box>
     </>
   )
