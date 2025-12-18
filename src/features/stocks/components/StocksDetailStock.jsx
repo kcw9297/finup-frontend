@@ -7,16 +7,11 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
 import StocksDetailTooltip from "./StocksDetailTooptip.jsx";
-//import { useStockDetail } from "../hooks/useStocksDetailStock.js";
-//import { useStockDetail } from "../hooks/useStocksDetail.js";
-
 import {useRecommendedVideo} from "../../home/hooks/useRecommendedVideo.js"
 import { useStockDetailStockAi } from "../hooks/useStocksDetailStockAi.js";
 
 export default function StocksDetailStock(){
   const { code } = useParams();
-  // const { headInfo, basic, price, valuation, flow, risk, loading} = useStockDetail(code);
-  //const { nameCard, detailStock, loading, error } = useStockDetail(code);
   const { detailStock, loading } = useContext(StockDetailContext);
   const { detailStockAi, detailStockYoutube, loadingAi } = useStockDetailStockAi(code);
   const { videoList } = useRecommendedVideo();
