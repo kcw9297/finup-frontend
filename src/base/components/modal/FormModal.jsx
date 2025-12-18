@@ -131,11 +131,6 @@ export default function FormModal({ modalProps }) {
   // 폼 제출 처리 
   const handleSubmit = async () => {
 
-    if (!isEdited()) {
-      setGlobalError('변경된 내용이 없습니다.');
-      return;
-    }
-
     // 제출 수행
     try {
 
