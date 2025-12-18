@@ -69,7 +69,7 @@ export default function VideoLinkList({ admin = false }) {
           mx: "auto"
         }}>
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            개념 영상 관리
+            영상 관리
           </Typography>
         </Box>
 
