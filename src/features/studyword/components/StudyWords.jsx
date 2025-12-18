@@ -15,25 +15,23 @@ import { useRecommendWordHook } from '../hooks/useRecommendWordHook';
  * @author kcw
  * @since 2025-12-09
  */
-
 export default function StudyWords({ words = [] }) {
 
-  // [1] 페이지 상태 (words 여기서 가져올 것)
   const [currentPage, setCurrentPage] = useState(0);
-  const pageCount = Math.max(1, Math.ceil(words.length / 4));
+  const { recommendRp, recommend, retryRecommend, loading } = useRecommendWordHook()
 
-  const { recommendRp, recommend, retryRecommend, loading, } = useRecommendWordHook()
+  // 페이지당 3개
+  const itemsPerPage = 3;
+  const pageCount = Math.max(1, Math.ceil((recommendRp?.length || 0) / itemsPerPage));
 
-  // [2] 최초 진입 시 추천 호출
   useEffect(() => {
     recommend()
   }, [])
-  // 렌더링
+
   return (
     <>
-      {/* ===== 헤더 영역 (항상 표시) ===== */}
+      {/* 헤더 영역 */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography
             variant="h6"
@@ -97,9 +95,8 @@ export default function StudyWords({ words = [] }) {
         </Box>
       </Box>
 
-      {/* ===== 콘텐츠 영역 (상태별 분기) ===== */}
+      {/* 콘텐츠 영역 */}
       <Box sx={{ minHeight: 350 }}>
-
         {/* 1. 로딩 */}
         {loading && (
           <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -123,19 +120,21 @@ export default function StudyWords({ words = [] }) {
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: 'repeat(3, 1fr)',  // 3열 그리드
               gap: 2
             }}
           >
             {recommendRp
-              .slice(currentPage * 3, currentPage * 3 + 3)
+              .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
               .map(word => (
-                <WordCard key={word.id} word={word} />
+                <WordCard 
+                  key={word.videoLinkId}
+                  word={word} 
+                />
               ))}
           </Box>
         )}
       </Box>
     </>
   )
-
 }

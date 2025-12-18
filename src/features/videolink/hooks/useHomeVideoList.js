@@ -16,13 +16,22 @@ export function useHomeVideoList({ size = 20 } = {}) {
 
   const fetchRecommended = () => {
     setLoading(true);
-    api.get('/video-links/home', {
+    api.get('/video-links/recommend/home', {
       public: true,
-      params: { size },
+      params: { retry: false },
       onSuccess,
       onFinally
     })
+  }
 
+  const retryRecommendation = () => {
+    setLoading(true);
+    api.get('/video-links/recommend/home', {
+      public: true,
+      params: { retry: true },
+      onSuccess,
+      onFinally
+    })
   }
 
 
@@ -30,5 +39,5 @@ export function useHomeVideoList({ size = 20 } = {}) {
     fetchRecommended();
   }, [size]);
 
-  return { videoList, loading };
+  return { videoList, loading, retryRecommendation };
 }

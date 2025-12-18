@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { Box, Card, CardMedia, CardContent, Typography, Paper, IconButton } from "@mui/material";
+import { Box, Card, CardMedia, CardContent, Typography, Paper, IconButton, Tooltip } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { useHomeVideoList } from "../../videolink/hooks/useHomeVideoList";
 import HomeVideoCard from "./HomeVideoCard";
+import { useAuth } from "../../../base/hooks/useAuth";
 
 export default function RecommendedVideo() {
 
-  const { videoList = [], loading } = useHomeVideoList({
+  const { videoList = [], loading, retryRecommendation } = useHomeVideoList({
     size: 20
   })
+
+  const { isAuthenticated } = useAuth()
 
   // 페이지 상태 + 계산 (4개씩 보여주기)
   const [page, setPage] = useState(0);
@@ -53,6 +57,29 @@ export default function RecommendedVideo() {
         <Paper sx={{ display: 'flex', gap: '10px', alignItems: 'center', paddingRight: 1 }}>
           <Typography sx={{ color: 'base.main', backgroundColor: 'base.main' }}>&nbsp;</Typography>
           <Typography>추천 영상</Typography>
+
+          {isAuthenticated &&
+            <Tooltip title="재추천">
+              <IconButton
+                size="small"
+                disabled={loading}
+                sx={{
+                  border: '1px solid',
+                  borderColor: 'line.dark',
+                  borderRadius: 1,
+                  width: 32,
+                  height: 32
+                }}
+                onClick={() => {
+                  setPage(0)
+                  retryRecommendation()
+                }}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          }
+          
         </Paper>
 
         {/* < > 버튼 */}
