@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
+import { useAuth } from "../../../base/hooks/useAuth";
 
-export function useHomeVideoList({ size = 20 } = {}) {
+export function useHomeVideoList() {
 
+  const { isAuthenticated } = useAuth()
   const [videoList, setVideoList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -14,10 +16,18 @@ export function useHomeVideoList({ size = 20 } = {}) {
     setLoading(false);
   };
 
-  const fetchRecommended = () => {
+  const fetchLogoutRecommended = () => {
     setLoading(true);
     api.get('/video-links/recommend/home', {
       public: true,
+      onSuccess,
+      onFinally
+    })
+  }
+
+  const fetchRecommended = () => {
+    setLoading(true);
+    api.get('/video-links/recommend/home', {
       params: { retry: false },
       onSuccess,
       onFinally
@@ -27,7 +37,6 @@ export function useHomeVideoList({ size = 20 } = {}) {
   const retryRecommendation = () => {
     setLoading(true);
     api.get('/video-links/recommend/home', {
-      public: true,
       params: { retry: true },
       onSuccess,
       onFinally
@@ -36,8 +45,9 @@ export function useHomeVideoList({ size = 20 } = {}) {
 
 
   useEffect(() => {
-    fetchRecommended();
-  }, [size]);
+    if (isAuthenticated) fetchRecommended()
+    else fetchLogoutRecommended()
+  }, [isAuthenticated]);
 
   return { videoList, loading, retryRecommendation };
 }

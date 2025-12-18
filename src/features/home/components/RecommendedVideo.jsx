@@ -42,7 +42,6 @@ export default function RecommendedVideo() {
   }
 
 
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
