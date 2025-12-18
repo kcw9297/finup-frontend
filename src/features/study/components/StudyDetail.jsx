@@ -13,6 +13,7 @@ import BookmarkToggleIcon from '../../../base/components/icon/BookmarkToggleIcon
 import StudyProgressCompleteIcon from '../../../base/components/icon/StudyProgressCompleteIcon';
 import StudyProgressInitialzeIcon from '../../../base/components/icon/StudyProgressInitialzeIcon';
 import StudyVideos from './../../videolink/components/StudyVideos';
+import { useReloadStore } from '../../../base/stores/useReloadStore';
 
 
 /**
@@ -23,8 +24,14 @@ import StudyVideos from './../../videolink/components/StudyVideos';
 
 export default function StudyDetail({ admin = false }) {
 
+  const { reload } = useReloadStore()
   // 사용 상태
-  const { openEditModal, editProps } = useStudyEditModal({ admin })
+  const { openEditModal, editProps } = useStudyEditModal({
+    admin: true,
+    handleAfterEdit: () => {
+      reload()
+    }
+  })
   const { detailRp, loading } = useStudyDetail({ admin })
   const { studyId } = useParams()
   const navigate = useNavigate()
@@ -129,12 +136,12 @@ export default function StudyDetail({ admin = false }) {
         </Box>
       </Box>
 
-      {/* 추천 학습 용어 */}
+      {/* 추천 개념 용어 */}
       <Box sx={{ mb: 4 }}>
         <StudyWords admin={admin} />
       </Box>
 
-      {/* 추천 학습 영상 */}
+      {/* 추천 개념 영상 */}
       <Box sx={{ mb: 4 }}>
         <StudyVideos admin={admin} />
       </Box>

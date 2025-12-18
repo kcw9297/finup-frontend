@@ -1,4 +1,4 @@
-import { Box, Chip, Paper, ToggleButton, Tooltip, Typography } from "@mui/material";
+import { Box, Chip, Paper, Skeleton, ToggleButton, Tooltip, Typography } from "@mui/material";
 import thema from "../../../base/design/thema.js"
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import CandleTypeTabs from "./chart/CandleTypeTabs.jsx";
@@ -16,7 +16,7 @@ export default function StocksDetailChart(){
   const {items, candleType, setCandleType, loading, error} = useStocksDetailChart(nameCard.code); //nameCard.code
   const { ai, loadingAi, aiError } = useStocksDetailChartAi(nameCard.code, candleType);
   return(
-    <Box sx={{backgroundColor: thema.palette.background.base}}>
+    <Box sx={{backgroundColor: thema.palette.background.base, minHeight:"100vh", width:"100%"}}>
       <Box sx={{py:3}}>
         <StocksDetailInfoTooltipIcon text={"차트에 마우스를 올리면 쉬운 설명을 볼 수 있어요!"} />
       </Box>
@@ -36,9 +36,27 @@ export default function StocksDetailChart(){
                 </StocksDetailTooltip>
             )} />
           </Box>
-          <Box sx={{ flexBasis:"70%", flexShrink: 0, background: "#ffffff", p: 2, borderRadius: 2, border:1, borderColor:'line.main' , height:700, mb:2, marginLeft:"16px"}}>
-            {items.length > 0 && (
+          <Box sx={{ flexBasis:"70%", 
+            flexShrink: 0, 
+            background: "#ffffff", 
+            p: 2, 
+            borderRadius: 2, 
+            border:1, 
+            borderColor:'line.main' , 
+            height:700, 
+            mb:2, 
+            marginLeft:"16px",
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center"
+            }}>
+            {!loading && items.length > 0 && (
               <CombinedChart items={items} />
+            )}
+            {!loading && items.length === 0 && (
+              <Typography color="text.secondary">
+                차트 데이터가 없습니다.
+              </Typography>
             )}
           </Box>
         </Box>
