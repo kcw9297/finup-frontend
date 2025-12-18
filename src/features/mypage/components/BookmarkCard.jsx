@@ -12,7 +12,6 @@ export default function BookmarkCard({
   isBookmarked = false,
 }) {
 
-  const [localBookmarked, setLocalBookmarked] = useState(isBookmarked)
   const navigate = useNavigate()
 
   const handleBookmarkToggle = (e) => {
@@ -23,21 +22,12 @@ export default function BookmarkCard({
       bookmarkTarget: "STUDY",
     };
 
-    if (localBookmarked) {
-      // 👉 즉시 UI만 해제
-      setLocalBookmarked(false);
-      onRemove(target); // 서버 요청
+    if (isBookmarked) {
+      onRemove(target);
     } else {
-      setLocalBookmarked(true);
       onAdd(target);
     }
-  }
-
-
-  useEffect(() => {
-    setLocalBookmarked(isBookmarked);
-  }, [isBookmarked])
-
+  };
 
 
 
@@ -100,10 +90,10 @@ export default function BookmarkCard({
           <IconButton
             onClick={handleBookmarkToggle}
             sx={{
-              color: localBookmarked ? 'base.main' : 'grey.400'
+              color: isBookmarked ? 'base.main' : 'grey.400'
             }}
           >
-            {localBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+            {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
           </IconButton>
         </Box>
       }
