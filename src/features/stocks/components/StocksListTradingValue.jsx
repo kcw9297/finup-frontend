@@ -1,5 +1,3 @@
-//import './StocksListTable.css';
-import data from "./test/StocksTestData.js";
 import { useState } from 'react';
 import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Avatar } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";

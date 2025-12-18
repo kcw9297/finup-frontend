@@ -1,5 +1,3 @@
-//import './StocksListTable.css';
-import data from "./test/StocksTestData.js";
 import { useState } from 'react';
 import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";
@@ -43,6 +41,7 @@ export default function StocksListMarketCap() {
   const getChangeSymbol = (sign) => {
     if (sign === '2') return '+'; // 상승
     if (sign === '5') return ''; // 하락    
+    return '';
   };
   
   return (
