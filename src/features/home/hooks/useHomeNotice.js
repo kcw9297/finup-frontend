@@ -6,9 +6,15 @@ export function useHomeNotice(noticeList, delay = 4000) {
   const [fade, setFade] = useState(true);
   const intervalRef = useRef(null)
 
+  const clearTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
   // 자동 슬라이드 타이머 초기화
   const resetInterval = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+    clearTimer();
 
     intervalRef.current = setInterval(() => {
       showNext(false); // 자동 이동 시 resetInterval 호출 방지
@@ -17,6 +23,7 @@ export function useHomeNotice(noticeList, delay = 4000) {
 
   // 다음 공지로 이동
   const showNext = (shouldReset = true) => {
+    if(!noticeList.length) return;
     setFade(false); // 페이드아웃
 
     setTimeout(() => {
@@ -29,9 +36,11 @@ export function useHomeNotice(noticeList, delay = 4000) {
 
   // 최초 실행 + 언마운트 클린업
   useEffect(() => {
+    if (!noticeList.length) return;
+    setCurrent(0);
     resetInterval();
-    return () => clearInterval(intervalRef.current);
-  }, []);
+    return clearTimer;
+  }, [noticeList]);
 
   return { current, fade, showNext };
 }
