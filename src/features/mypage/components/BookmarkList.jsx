@@ -4,72 +4,28 @@ import BookmarkEmpty from "./BookmarkEmpty";
 import { Box, Typography } from "@mui/material";
 import { useBookmark } from "../../../base/hooks/useBookmark";
 import { useStudyList } from "../../study/hooks/useStudyList";
+import { useBookmarkBridge } from "../../../base/hooks/useBookmarkBridge";
 
-export default function BookmarkList({ list, loading, onRemove }) {
+export default function BookmarkList({ list, onRemove }) {
 
 
   const { bookmarks, addBookmark, removeBookmark, } = useBookmark();
-  const { searchRp } = useStudyList();
-  const raw = searchRp?.data;
-  const studyRows = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+  // const { searchRp } = useStudyList(); => 꼬임... 결국 searchRp랑
+  const { rows, loading, markUnbookmarked, markBookmarked } = useBookmarkBridge()
+  // const raw = searchRp?.data;
+  // const studyRows = Array.isArray(raw) ? raw : (raw ? [raw] : []);
 
-
-  const [renderRows, setRenderRows] = useState([])
-  const [initialized, setInitialized] = useState(false)
-
-  useEffect(() => {
-    if (initialized) return
-    if (studyRows.length === 0) return;
-    if (bookmarks.length === 0) {
-      setRenderRows([]);        // ← 새로고침 시 비어야 함
-      return;
-    }
-
-    const initialRows = studyRows.filter(row =>
-      bookmarks.some(b =>
-        b.bookmarkTarget === 'STUDY' &&
-        Number(b.targetId) === Number(row.studyId)
-      )
-    )
-
-    setRenderRows(initialRows)
-    setInitialized(true)
-  }, [studyRows, bookmarks, initialized]);
-
-
-  // [1] 북마크 훅
-
-
-  // 카드별 북마크 상태
-  // const [bookmarkMap, setBookmarkMap] = useState({})
-
-  // [2] 최초 진입 시 북마크 로딩
-  // useEffect(() => {
-  //   console.log('🔥 loadBookmark 실행')
-  //   loadBookmark()
-  // }, [])
 
   // 성공/콜백 시 상태 전환
-  const handleRemove = (target) => {
-    removeBookmark(target);   // 서버 성공까지 기다림
-
-    // setBookmarkMap(prev => ({
-    //   ...prev,
-    //   [target.targetId]: false
-    // }));
+  const handleRemove = (target, studyId) => {
+    markUnbookmarked(studyId)
+    removeBookmark(target)   // 서버 성공까지 기다림
   };
 
-  const handleAdd = (target) => {
-    addBookmark(target);
-
-    // setBookmarkMap(prev => ({
-    //   ...prev,
-    //   [target.targetId]: true
-    // }));
+  const handleAdd = (target, studyId) => {
+    markBookmarked(studyId)
+    addBookmark(target)
   };
-  const bookmarkStudyIds = bookmarks
-    .filter(b => b.bookmarkTarget === 'STUDY')
-    .map(b => b.targetId);
 
   return (
     <Box sx={{
@@ -93,26 +49,24 @@ export default function BookmarkList({ list, loading, onRemove }) {
         }}
       >
         {/* Empty */}
-        {!loading && renderRows.length === 0 && (
+        {!loading && rows.length === 0 && (
           <BookmarkEmpty />
         )}
 
         {/* List */}
-        {!loading && renderRows.length > 0 && (
+        {!loading && rows.length > 0 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {renderRows.map(row => {
+            {rows.map(row => {
 
-              const isBookmarked = bookmarks.some(b =>
-                b.bookmarkTarget === 'STUDY' &&
-                Number(b.targetId) === Number(row.studyId)
-              );
+              const isBookmarked = row.isBookmarked
+
               return (
                 <BookmarkCard
                   key={row.studyId}
                   row={row}
                   isBookmarked={isBookmarked}
-                  onAdd={handleAdd}
-                  onRemove={handleRemove}
+                  onAdd={(target) => handleAdd(target, row.studyId)}
+                  onRemove={(target) => handleRemove(target, row.studyId)}
                 />
               )
             })}

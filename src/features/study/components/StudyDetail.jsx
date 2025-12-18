@@ -1,4 +1,4 @@
-import { 
+import {
   Box, Typography, Paper, Button, Chip,
   CircularProgress,
   Tooltip,
@@ -12,6 +12,7 @@ import StudyWords from '../../studyword/components/StudyWords';
 import BookmarkToggleIcon from '../../../base/components/icon/BookmarkToggleIcon';
 import StudyProgressCompleteIcon from '../../../base/components/icon/StudyProgressCompleteIcon';
 import StudyProgressInitialzeIcon from '../../../base/components/icon/StudyProgressInitialzeIcon';
+import StudyVideos from './../../videolink/components/StudyVideos';
 
 
 /**
@@ -21,13 +22,13 @@ import StudyProgressInitialzeIcon from '../../../base/components/icon/StudyProgr
  */
 
 export default function StudyDetail({ admin = false }) {
-  
+
   // 사용 상태
-  const { openEditModal, editProps } = useStudyEditModal({admin})
-  const { detailRp, loading } = useStudyDetail({admin})
+  const { openEditModal, editProps } = useStudyEditModal({ admin })
+  const { detailRp, loading } = useStudyDetail({ admin })
   const { studyId } = useParams()
   const navigate = useNavigate()
-  
+
   // 사용 데이터
   const data = detailRp?.data ?? {}
   const { name, summary, description, level } = data
@@ -35,53 +36,53 @@ export default function StudyDetail({ admin = false }) {
   // 렌더링
   return (
     <Box sx={{ width: '100%', maxWidth: 1000, mx: 'auto', p: 4 }}>
-  
+
       {/* 제목 */}
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        mb: 3, 
-        pb: 2, 
+        mb: 3,
+        pb: 2,
       }}>
         {/* 말머리 + 제목 + 레벨 칩 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Chip 
-              label={`레벨 ${level}`} 
-              sx={{ 
-                bgcolor: 'base.main', 
-                color: 'white',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: 500,
-                height: 40,
-                width: 70,
-              }} 
+          <Chip
+            label={`레벨 ${level}`}
+            sx={{
+              bgcolor: 'base.main',
+              color: 'white',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: 500,
+              height: 40,
+              width: 70,
+            }}
           />
-            <Box sx={{ height: 40, display: 'flex', alignItems: 'center' }}>
-              {loading ? (
-                <CircularProgress size={22} />
-              ) : (
-                <Typography 
-                  variant="h5" 
-                  sx={{ fontSize: '25px', fontWeight: 700, color: 'text.main', position: 'relative', ml: 0.5}}>{name}
-                </Typography>
-              )}
-            </Box>
+          <Box sx={{ height: 40, display: 'flex', alignItems: 'center' }}>
+            {loading ? (
+              <CircularProgress size={22} />
+            ) : (
+              <Typography
+                variant="h5"
+                sx={{ fontSize: '25px', fontWeight: 700, color: 'text.main', position: 'relative', ml: 0.5 }}>{name}
+              </Typography>
+            )}
+          </Box>
         </Box>
 
         {/* 수정 버튼 (관리자) / 북마크 & 학습 완료 및 초기화 버튼 (일반 사용자) */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-  
+
           {admin && (
             <Button
-            variant="contained"
-            startIcon={<EditIcon />}
-            onClick={() => openEditModal(data)}
-            sx={{
-              bgcolor: 'base.main',
-              '&:hover': { bgcolor: 'base.dark' }
-            }}>수정</Button>
+              variant="contained"
+              startIcon={<EditIcon />}
+              onClick={() => openEditModal(data)}
+              sx={{
+                bgcolor: 'base.main',
+                '&:hover': { bgcolor: 'base.dark' }
+              }}>수정</Button>
           )}
 
           {!admin && (
@@ -123,7 +124,7 @@ export default function StudyDetail({ admin = false }) {
           {loading ? (
             <CircularProgress size={22} />
           ) : (
-            <Typography variant="body1" sx={{whiteSpace: 'pre-wrap'}}>{description}</Typography>
+            <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>{description}</Typography>
           )}
         </Box>
       </Box>
@@ -135,7 +136,7 @@ export default function StudyDetail({ admin = false }) {
 
       {/* 추천 학습 영상 */}
       <Box sx={{ mb: 4 }}>
-        <StudyWords admin={admin} />
+        <StudyVideos admin={admin} />
       </Box>
 
       {/* 하단 버튼 */}

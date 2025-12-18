@@ -36,18 +36,18 @@ export default function VideoLinkList({ admin = false }) {
 
   // [1] 검색 요청 상태
   const {
-    searchRq, searchRp, loading, searchProps, 
-    handlePage, handleOrder, 
+    searchRq, searchRp, loading, searchProps,
+    handlePage, handleOrder,
     handleAfterEdit, handleAfterRemove
-  } = useVideoLinkList({admin})
+  } = useVideoLinkList({ admin })
 
   // 비디오 검증
-  const { handleVerify } = useVideoVerify({admin})
+  const { handleVerify } = useVideoVerify({ admin })
 
   // 사용 모달
-  const { openWriteModal, writeProps } = useVideoLinkWriteModal({handleVerify, admin})
-  const { openEditModal, editProps } = useVideoLinkEditModal({handleVerify, handleAfterEdit, admin})
-  const { openRemoveModal, removeProps } = useVideoLinkRemoveModal({handleAfterRemove, admin})
+  const { openWriteModal, writeProps } = useVideoLinkWriteModal({ handleVerify, admin })
+  const { openEditModal, editProps } = useVideoLinkEditModal({ handleVerify, handleAfterEdit, admin })
+  const { openRemoveModal, removeProps } = useVideoLinkRemoveModal({ handleAfterRemove, admin })
 
   // [2] 필요 데이터
   const rows = searchRp?.data ?? []
@@ -69,18 +69,18 @@ export default function VideoLinkList({ admin = false }) {
           mx: "auto"
         }}>
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            개념 단어 관리
+            개념 영상 관리
           </Typography>
         </Box>
 
         {/* 검색 바 */}
-        <Box sx={{p: 1}}>
+        <Box sx={{ p: 1 }}>
           <SearchBar searchProps={searchProps} />
         </Box>
 
         {/* 정렬 바와 버튼 */}
-        <Box sx={{ 
-          display: 'flex', 
+        <Box sx={{
+          display: 'flex',
           justifyContent: 'space-between', // 양 끝 정렬
           alignItems: 'center', // 수직 중앙 정렬
           mb: 4,
@@ -95,7 +95,7 @@ export default function VideoLinkList({ admin = false }) {
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={openWriteModal}
-                sx={{ 
+                sx={{
                   bgcolor: 'base.main',
                   '&:hover': { bgcolor: 'base.dark' }
                 }}
@@ -104,7 +104,7 @@ export default function VideoLinkList({ admin = false }) {
               </Button>
             )}
           </Box>
-          
+
           {/* 우측 정렬 바 */}
           <OrderBar options={SORT_OPTIONS} selected={searchRq.order} onChange={handleOrder} />
 
@@ -113,7 +113,7 @@ export default function VideoLinkList({ admin = false }) {
         {/* 이미지 카드 리스트 (4 * 4) */}
         {loading ? (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 350 }}>
-              <CircularProgress size={24} sx={{ color: 'white' }} />
+            <CircularProgress size={24} sx={{ color: 'white' }} />
           </Box>
         ) : rows.length === 0 ? (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 350 }}>
@@ -125,10 +125,10 @@ export default function VideoLinkList({ admin = false }) {
           <Grid container spacing={3} sx={{ maxWidth: '980px', mx: 'auto' }}>
             {rows.map((row) => (
               <Grid key={row.videoLinkId}>
-                <VideoCard 
-                  video={{ ...row, id: row.videoLinkId }} 
+                <VideoCard
+                  video={{ ...row, id: row.videoLinkId }}
                   admin={admin}
-                  functions={{ 
+                  functions={{
                     onClickEdit: () => openEditModal(row.videoLinkId),
                     onClickRemove: () => openRemoveModal(row.videoLinkId),
                   }}
@@ -139,16 +139,16 @@ export default function VideoLinkList({ admin = false }) {
         )}
 
         {/* 페이징 바 */}
-        <PageBar pagination={pagination} onChange={handlePage}/>
-        <Box sx={{mt: 5}}>
-          
+        <PageBar pagination={pagination} onChange={handlePage} />
+        <Box sx={{ mt: 5 }}>
+
         </Box>
       </Box>
 
-        {/* 모달 영역 */}
-        <VideoLinkFormModal modalProps={writeProps} />
-        <VideoLinkFormModal modalProps={editProps} />
-        <ConfirmModal modalProps={removeProps} />
+      {/* 모달 영역 */}
+      <VideoLinkFormModal modalProps={writeProps} />
+      <VideoLinkFormModal modalProps={editProps} />
+      <ConfirmModal modalProps={removeProps} />
     </Box>
   );
 }

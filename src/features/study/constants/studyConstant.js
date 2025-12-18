@@ -24,8 +24,8 @@ export const SORT_OPTIONS = [
 
 // 모달 필드
 export const MODAL_FIELDS = [
-  { name: 'name', label: '학습명', helperText: '5자 이상 30자 이내 제목 입력' },
-  { name: 'summary', label: '요약', helperText: '5자 이상 30자 이내 제목 입력' },
+  { name: 'name', label: '학습명', helperText: '2자 이상 30자 이내 제목 입력' },
+  { name: 'summary', label: '요약', helperText: '5자 이상 40자 이내 요약 입력' },
   { 
     name: 'level', 
     label: '레벨', 
