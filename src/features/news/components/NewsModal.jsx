@@ -6,37 +6,36 @@ import {
   Skeleton,
   keyframes,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import thema from "../../../base/design/thema.js";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import { useNewsModalAi } from "../hooks/useNewsModalAi.js";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useEffect } from "react";
+
 
 export default function NewsDetailModal({ open, onClose, article, loading }) {
-  if (!article) return null;
 
-   const aiData =
-    article?.ai?.summary
-      ? article.ai
-      : article?.summary?.summary
-        ? article.summary
-        : null;
+  // 뉴스 내 AI 분석 요청
+  const { analyzeRp, loading: loadingAnalyze, setNewsId, setOpen, retryAnalyze } = useNewsModalAi()
+  // 모달이 열릴 때 AI 분석 실행
+  useEffect(() => {
+    if (article?.newsId) setNewsId(article.newsId);
+    setOpen(open)
+  }, [open, article?.newsId]);
 
-  const isDeep = !!aiData?.insight;
-  const isLight = !!aiData && !isDeep;
-  const isDeepCandidate = article?.ai !== null;
-  const formattedDate = moment(article.publishedAt).format("YYYY-MM-DD HH:mm");
+
+
+  const formattedDate = moment(article?.publishedAt).format("YYYY-MM-DD HH:mm");
   const sparkle = keyframes`
     0% { opacity: 0.4; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.15); }
     100% { opacity: 0.4; transform: scale(1); }
   `;
-  console.log("article =", article);
-  console.log("aiData =", aiData);
-  console.log("isDeep =", isDeep);
-  console.log("isLight =", isLight);
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -92,13 +91,16 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
               style={{ width: "70%", borderRadius: "10px" }}
             />
           </Box>
-          {loading && (
+          
+
+          {/* AI 분석 중 표시 */}
+          {loadingAnalyze && (
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                mb: 1,
+                mb: 3,
               }}
             >
               <AutoAwesomeIcon
@@ -114,114 +116,95 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
               </Typography>
             </Box>
           )}
-          {/* 요약 */}
-          {(loading || aiData) && (
-            <Box sx={{ mb: 10 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 1,
-                }}
-              >
-                <h3>요약</h3>
-                <a
-                  href={article?.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: "14px",
-                    color: "#3B5BDB",
-                    textDecoration: "none",
-                  }}
-                >
-                  원문 보기 →
-                </a>
-              </Box>
-              {loading && !aiData ? (
-                <Skeleton
-                  variant="rectangular"
-                  height={80}
-                  sx={{ borderRadius: 2 }}
-                />
-              ) : (
-                <p>
-                  {aiData?.summary}
-                </p>
-              )}
-            </Box>
-          )}
 
           {/* AI 해설 */}
-          <Box sx={{ mb: 10 }}>
-            <Box sx={{ mb: 1 }}>
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{  
+              gap: 2,
+              display: 'flex', 
+              alignItems: 'center' 
+            }}>
               <h3>AI 해설</h3>
+              
+              <Tooltip title="재추천">
+                <IconButton
+                  size="small"
+                  disabled={loadingAnalyze}
+                  sx={{
+                    border: '1px solid',
+                    borderColor: 'line.dark',
+                    borderRadius: 1,
+                    width: 32,
+                    height: 32
+                  }}
+                  onClick={() => {
+                    retryAnalyze()
+                  }}
+                >
+                  <RefreshIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
             </Box>
-            {loading ? (
+            
+            {loadingAnalyze ? (
               <>
                 <Skeleton height={20} width="90%" />
                 <Skeleton height={20} width="95%" />
                 <Skeleton height={20} width="80%" />
               </>
-            ) : isDeep? (
-              <p>{aiData.insight}</p>
             ) : (
               <Typography color="text.secondary" fontSize={14}>
-                이 뉴스는 AI 해설이 제공되지 않습니다.
+                {analyzeRp || "AI 해설이 제공되지 않았습니다." }
               </Typography>
             )}
           </Box>
 
-          {/* 필수 개념 */}
+
+          {/* 본문 */}
           <Box sx={{ mb: 10 }}>
-            <h3>필수 개념</h3>
-          {loading ? (
-            <>
-              <Skeleton height={30} width="60%" />
-              <Skeleton height={30} width="50%" />
-              <Skeleton height={30} width="70%" />
-            </>
-          ): aiData?.keywords?.length > 0 ? (
-            aiData.keywords?.map((item, idx) => (
-              <Box
-                key={idx}
-                sx={{mb:2}}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <h3>본문</h3>
+              <a
+                href={article?.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: "14px",
+                  color: "#3B5BDB",
+                  textDecoration: "none",
+                }}
               >
-                <Box 
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 0.5,
-                    mb: 0.5,
-                  }}
-                >
-                  <Chip
-                    icon={<BookmarkBorderIcon
-                      sx={{
-                        fontSize: 18,
-                        color: "#bbb",
-                        transition: "color 0.3s ease",
-                        "&:hover": { color: thema.palette.base.dark },
-                      }}
-                    />}
-                    label={item.term}
-                    color="primary"
-                    variant="outlined"
-                    size="small"
-                  />
-                </Box>
-                <Box sx={{ fontSize: 14, lineHeight: 1.4 }}>
-                  {item.definition}
-                </Box>
-              </Box>
-            ))
-          ):(
-            <Typography color="text.secondary" fontSize={14}>
-              추가로 설명할 금융개념이 없는 기사입니다.
-            </Typography>
-          )}
-        </Box>
+                원문 보기 →
+              </a>
+            </Box>
+            {loading ? (
+              <>
+                <Skeleton height={20} width="100%" sx={{ mb: 1 }} />
+                <Skeleton height={20} width="95%" sx={{ mb: 1 }} />
+                <Skeleton height={20} width="98%" sx={{ mb: 1 }} />
+                <Skeleton height={20} width="90%" />
+              </>
+            ) : (
+              <Typography 
+                sx={{ 
+                  lineHeight: 1.8, 
+                  whiteSpace: "pre-line",
+                  fontSize: "15px",
+                  color: "#333"
+                }}
+              >
+                {article?.description || article?.summary || "본문 내용이 없습니다."}
+              </Typography>
+            )}
+          </Box>
+
       </Box>
       </Box>
     </Modal>

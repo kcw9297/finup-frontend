@@ -42,7 +42,7 @@ export default function HomePage() {
   const openModal = (article) => {
     if (!isAuthenticated) {
       showSnackbar("로그인 후 이용할 수 있어요", "info");
-      // navigate("/login")
+      navigate("/login")
       return;
     }
     setSelectedArticle(article);

@@ -5,7 +5,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 // 환율, 코스피, 코스닥
 
 export default function ExchangeRate ({data}) {
-  const { title, today, diff, rate, isUp } = data;
+  const { indexName, todayValue, todayFluctuationRate, updatedAt, isUp } = data;
 
   const Icon = isUp ? ArrowUpwardIcon : ArrowDownwardIcon;
   const color = isUp ? "stock.rise" : "stock.fall";
@@ -37,11 +37,11 @@ export default function ExchangeRate ({data}) {
 
       <Paper sx={{display: "flex", flexDirection: "column"}}>
         {/* 제목 */}
-        <Typography sx={{fontSize:15}}>{title}</Typography>
+        <Typography sx={{fontSize:15}}>{indexName}</Typography>
         {/* 시세, 증가폭 */}
         <Paper sx={{display: "flex", flexDirection: "row", gap:1, alignItems: 'center'}}>
-          <Typography sx={{fontSize:20, fontWeight:600}}>{formatNumber(today)}</Typography>
-          <Typography sx={{fontSize:16, color}}>{sign}{formatNumber(diff)} ({sign}{formatNumber(rate)}%)</Typography>
+          <Typography sx={{fontSize:20, fontWeight:600}}>{formatNumber(todayValue)}</Typography>
+          <Typography sx={{fontSize:16, color}}>{sign}({formatNumber(todayFluctuationRate)}%)</Typography>
         </Paper>
       </Paper>
 

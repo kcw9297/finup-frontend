@@ -98,13 +98,7 @@ export default function RecommendedVideo() {
           </IconButton>
         </Box>
       </Box>
-      {/* ✅ 내용 영역만 분기 */}
-      {loading && (
-        <Box sx={{ py: 6, textAlign: 'center', color: 'text.light' }}>
-          추천 영상을 불러오는 중입니다.
-        </Box>
-      )}
-
+      {/* 내용 영역만 분기 */}
       {!loading && !videoList.length && (
         <Box sx={{ py: 6, textAlign: 'center', color: 'text.light' }}>
           추천 영상이 없습니다.
