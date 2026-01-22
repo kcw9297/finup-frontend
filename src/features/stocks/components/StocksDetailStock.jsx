@@ -1,25 +1,29 @@
 import React, { useContext } from "react";
-import { StockDetailContext } from "../context/StockDetailContext";
 import { useParams } from "react-router-dom";
 import thema from "../../../base/design/thema.js"
-import { Box, Grid, Typography, Stack, Divider, Card, CardContent, CardMedia, keyframes, Chip } from "@mui/material";
+import { Box, Grid, Typography, Stack, Divider, Card, CardContent, CardMedia, keyframes, Chip, Skeleton, Tooltip, IconButton, CircularProgress } from "@mui/material";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import InfoIcon from "@mui/icons-material/Info"; // i 아이콘
 import StocksDetailTooltip from "./StocksDetailTooptip.jsx";
 import {useRecommendedVideo} from "../../home/hooks/useRecommendedVideo.js"
 import { useStockDetailStockAi } from "../hooks/useStocksDetailStockAi.js";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useStockDetailRecommendVideo } from "../hooks/useStockDetailRecommendVideo.js";
 
-export default function StocksDetailStock(){
+
+export default function StocksDetailStock({ stockDetail }){
+
   const { code } = useParams();
-  const { detailStock, loading } = useContext(StockDetailContext);
-  const { detailStockAi, detailStockYoutube, loadingAi } = useStockDetailStockAi(code);
-  const { videoList } = useRecommendedVideo();
+  const { detailStockAi, loadingAi, retryAnalyze } = useStockDetailStockAi(code);
+  const { videos, loadingVideo, retryRecommend } = useStockDetailRecommendVideo(code);
+
   const sparkle = keyframes`
     0% { opacity: 0.4; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.15); }
     100% { opacity: 0.4; transform: scale(1); }
   `;
+  
 
   return (
     // <Box>
@@ -40,16 +44,16 @@ export default function StocksDetailStock(){
             alignItems: "flex-end", // 세로 기준 아래 정렬          
           }}>           
             <Typography variant="h5" fontWeight={600} >
-              {detailStock?.basicHead?.stockName ?? "종목명 "}{loading && "로딩중..."}
+              {stockDetail?.basicHead?.stockName || "종목명 "}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               국내   
             </Typography>                    
             <Typography variant="body1" color="text.secondary">
-              { detailStock?.basicHead?.code ?? "종목코드 "}{loading && "로딩중..."}
+              { stockDetail?.basicHead?.code ?? "종목코드 "}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              { detailStock?.basicHead?.marketName ?? "코스피/코스닥 정보 "}{loading && "로딩중..."}
+              { stockDetail?.basicHead?.marketName ?? "코스피/코스닥 정보 "}
             </Typography>          
           </Box>
 
@@ -64,7 +68,7 @@ export default function StocksDetailStock(){
             }}
           >
             <Grid container sx={{ justifyContent: "space-between" }}>              
-              {(detailStock.basic ?? Array(4).fill({
+              {(stockDetail?.basic ?? Array(4).fill({
                   label: "항목",
                   value: "데이터",
                   tooltip: "설명"
@@ -101,15 +105,15 @@ export default function StocksDetailStock(){
         <Box sx={{display: "flex", flexDirection: "column", gap: 3 }}>
           <Box sx={{display: "flex"}}>
             <Typography variant="h5" fontWeight={600}>
-              투자지표 {loading && "로딩중..."}
+              투자지표
             </Typography>
           </Box>
           
           <Box sx={{ display: "flex", gap: 3, overflow: "hidden" }}>
-            <InfoCard title="가격" rows={ detailStock.price } />
-            <InfoCard title="가치평가" rows={ detailStock.valuation } />
-            <InfoCard title="수급·거래" rows={ detailStock.flow } />
-            <InfoCard title="리스크·상태" rows={ detailStock.risk } />
+            <InfoCard title="가격" rows={ stockDetail?.price } />
+            <InfoCard title="가치평가" rows={ stockDetail?.valuation } />
+            <InfoCard title="수급·거래" rows={ stockDetail?.flow } />
+            <InfoCard title="리스크·상태" rows={ stockDetail?.risk } />
           </Box>
         </Box>
 
@@ -117,10 +121,29 @@ export default function StocksDetailStock(){
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 3}}>
       
           {/* 제목 */}
-          <Box sx={{display: "flex"}}>
+          <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
             <Typography variant="h5" fontWeight={600}>
               AI 분석
             </Typography>
+
+            <Tooltip title="재추천">
+              <IconButton
+                size="small"
+                disabled={loadingAi}
+                sx={{
+                  border: '1px solid',
+                  borderColor: 'line.dark',
+                  borderRadius: 1,
+                  width: 32,
+                  height: 32
+                }}
+                onClick={() => {
+                  retryAnalyze()
+                }}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </Box>
           
           {/* 내용 카드 */}
@@ -145,35 +168,59 @@ export default function StocksDetailStock(){
                 </Box>
               )}
               
+              {/* AI 해설 영역 */}
               <Box
-                sx={{ display: 'grid', gridTemplateColumns: '100px 1fr', rowGap: 2, alignItems: 'center', 
-                  "& .MuiChip-root": { justifySelf: 'start', },
+                sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '100px 1fr', 
+                  rowGap: 2, 
+                  columnGap: 2,
+                  alignItems: 'center',
+                  "& .MuiChip-root": { justifySelf: 'start' },
                   "& .MuiTypography-root": { fontSize: 15, lineHeight: 1.6 }
                 }}
               >
-                {/* 종합 요약 */}
-                <Chip label="종합 요약" color="secondary" variant="outlined" />
-                <Typography>{detailStockAi.summary}</Typography>
+                {loadingAi ? (
+                  <>
+                    {/* 스켈레톤 6개 영역 */}
+                    {[1, 2, 3, 4, 5, 6].map((item) => (
+                      <React.Fragment key={item}>
+                        <Skeleton variant="rounded" width={100} height={32} />
+                        <Skeleton variant="text" sx={{ fontSize: 15 }} />
+                      </React.Fragment>
+                    ))}
+                  </>
+                ) : detailStockAi ? (
+                  <>
+                    {/* 종합 요약 */}
+                    <Chip label="종합 요약" color="secondary" variant="outlined" />
+                    <Typography>{detailStockAi.summary}</Typography>
 
-                {/* 투자 포인트 */}
-                <Chip label="투자 포인트" color="primary" variant="outlined" />
-                <Typography>{detailStockAi.investmentPoint}</Typography>
+                    {/* 투자 포인트 */}
+                    <Chip label="투자 포인트" color="primary" variant="outlined" />
+                    <Typography>{detailStockAi.investmentPoint}</Typography>
 
-                {/* 가격 */}
-                <Chip label="가격" color="success" variant="outlined" />
-                <Typography>{detailStockAi.price}</Typography>
+                    {/* 가격 */}
+                    <Chip label="가격" color="success" variant="outlined" />
+                    <Typography>{detailStockAi.price}</Typography>
 
-                {/* 가치평가 */}
-                <Chip label="가치평가" color="info" variant="outlined" />
-                <Typography>{detailStockAi.valuation}</Typography>
+                    {/* 가치평가 */}
+                    <Chip label="가치평가" color="info" variant="outlined" />
+                    <Typography>{detailStockAi.valuation}</Typography>
 
-                {/* 수급·거래 */}
-                <Chip label="수급·거래" color="warning" variant="outlined" />
-                <Typography>{detailStockAi.flow}</Typography>
+                    {/* 수급·거래 */}
+                    <Chip label="수급·거래" color="warning" variant="outlined" />
+                    <Typography>{detailStockAi.flow}</Typography>
 
-                {/* 리스크·상태 */}
-                <Chip label="리스크·상태" color="error" variant="outlined" />
-                <Typography>{detailStockAi.risk}</Typography>
+                    {/* 리스크·상태 */}
+                    <Chip label="리스크·상태" color="error" variant="outlined" />
+                    <Typography>{detailStockAi.risk}</Typography>
+                  </>
+                ) : (
+                  <Typography sx={{ gridColumn: '1 / -1', textAlign: 'center', py: 3 }}>
+                    분석된 내용이 없습니다.
+                  </Typography>
+                )}
               </Box>
             </CardContent>
           </Card>
@@ -181,46 +228,69 @@ export default function StocksDetailStock(){
 
         {/* 추천 영상 */}       
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 3 }}>          
-        
+
           {/* 제목 */}
-          <Box sx={{display: "flex"}}>
+          <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
             <Typography variant="h5" fontWeight={600}>
               추천 영상 
             </Typography>
-          </Box>
 
-          {/* <Typography variant="body1" sx={{ textAlign: "left", whiteSpace: "pre-line" }}>              
-                {detailStockAi.description}                
-              </Typography> */}
+            <Tooltip title="재추천">
+              <IconButton
+                size="small"
+                disabled={loadingVideo}
+                sx={{
+                  border: '1px solid',
+                  borderColor: 'line.dark',
+                  borderRadius: 1,
+                  width: 32,
+                  height: 32
+                }}
+                onClick={() => {
+                  retryRecommend()
+                }}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
           
           {/* 내용 카드 */}
-          <Box sx={{display: 'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'20px'}}>
-            {detailStockYoutube.map((video) => (
-              <Card
-                key={video.id}
-                sx={{ cursor: "pointer", border:1, borderColor:'line.main' }}
-                onClick={() => window.open(`https://www.youtube.com/watch?v=${video.videoId}`, "_blank")}
-              >
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
-                  alt={video.title}
-                />
-                <CardContent
-                  sx={{ display: 'flex', flexDirection:'column', gap: 1,
-                    "& .MuiTypography-root": { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}}>
-                  <Typography sx={{fontSize:18, fontWeight:600}}>
-                    {video.title}
-                  </Typography>
-                  <Typography sx={{color:'text.light'}}>
-                    {video.channelTitle}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
+          <Box sx={{ minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {loadingVideo ? (
+              <CircularProgress />
+            ) : videos && videos.length > 0 ? (
+              <Box sx={{width: '100%', display: 'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'20px', overflowX: 'auto' }}>
+                {videos.map((video) => (
+                  <Card
+                    key={video.id}
+                    sx={{ cursor: "pointer", border:1, borderColor:'line.main' }}
+                    onClick={() => window.open(`https://www.youtube.com/watch?v=${video.videoId}`, "_blank")}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="180"
+                      image={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
+                      alt={video.title}
+                    />
+                    <CardContent
+                      sx={{ display: 'flex', flexDirection:'column', gap: 1,
+                        "& .MuiTypography-root": { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}}>
+                      <Typography sx={{fontSize:18, fontWeight:600}}>
+                        {video.title}
+                      </Typography>
+                      <Typography sx={{color:'text.light'}}>
+                        {video.channelTitle}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            ) : (
+              <Typography>추천된 영상이 없습니다.</Typography>
+            )}
           </Box>
-        </Box> 
+        </Box>
 
       </Box>
     </Box>

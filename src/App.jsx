@@ -47,15 +47,6 @@ const simpleRoutes = [
 const nastedRoutes = [
 
   {
-    path: '/reboard/*', // url : 게시판
-    children: [
-      { path: 'search', element: <ReboardSearchPage /> }, // 모두 공개
-      { path: 'detail/:idx', element: <AuthLoginPage /> }, // 모두 공개
-      { path: 'write', element: <ProtectedRoute><AuthLoginPage /></ProtectedRoute> }, // 회원 공개
-      { path: 'edit/:idx', element: <ProtectedRoute><AuthLoginPage /></ProtectedRoute> }, // 회원 공개 (작성자 검증은 Page 컴포넌트 내에서)
-    ]
-  },
-  {
     path: '/news/*', // url : 뉴스
     children: [
       { path: 'list', element: <NewsPage /> }, // 모두 공개
@@ -104,7 +95,7 @@ const nastedRoutes = [
   {
     path: '/stocks/*', //url : 종목 +
     children: [
-      { path: '', element: <ProtectedRoute><StocksListPage /></ProtectedRoute> }, // 모두 공개
+      { path: '', element: <StocksListPage /> }, // 모두 공개
       { path: 'detail/:code', element: <ProtectedRoute><StocksDetailPage /></ProtectedRoute> },
       { path: 'chart', element: <ProtectedRoute><StocksChartPage /></ProtectedRoute> }
     ]

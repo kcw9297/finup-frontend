@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar } from '@mui/material';
+import { Table,Box, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar, Typography } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";
 import theme from "../../../base/design/thema.js";
 import { useStockList } from "../hooks/useStocksMarketCapList.js";
@@ -34,13 +34,13 @@ export default function StocksListMarketCap() {
 
   //상승 하락 색
   const getChangeColor = (sign) => {
-    if (sign === '2') return theme.palette.stock.rise; // 상승
-    if (sign === '5') return theme.palette.stock.fall; // 하락    
+    if (sign === 2) return theme.palette.stock.rise; // 상승
+    if (sign === 5) return theme.palette.stock.fall; // 하락    
   };
 
   const getChangeSymbol = (sign) => {
-    if (sign === '2') return '+'; // 상승
-    if (sign === '5') return ''; // 하락    
+    if (sign === 2) return '+'; // 상승
+    if (sign === 5) return ''; // 하락    
     return '';
   };
   
@@ -61,29 +61,34 @@ export default function StocksListMarketCap() {
             {stockList.map((row) => {                    
               return(
                 <TableRow
-                  key={row.dataRank} 
+                  key={row.stockCode} 
                   hover 
                   sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/stocks/detail/${row.mkscShrnIscd}`)}                 
+                  onClick={() => navigate(`/stocks/detail/${row.stockCode}`)}                 
                 > 
                   <TableCell sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     {row.dataRank}
                     <Avatar sx={{ width: 40, height: 40 }}>
                       <img
-                        src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${row.mkscShrnIscd}.png`}
+                        src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${row.stockCode}.png`}
                         onError={(e) => { e.currentTarget.src = defaultImg }}
                         style={{ width: '100%', height: '100%' }}
-                        alt={row.htsKorIsnm}
+                        alt={row.stockCode}
                       />
                     </Avatar>
-                    {row.htsKorIsnm} 
+                    {row.stockName} 
                   </TableCell> 
-                  <TableCell align="right">{Number(row.stckPrpr).toLocaleString()}원</TableCell>
-                  <TableCell align="right" sx={{ color: getChangeColor(row.prdyVrssSign) }}>
-                    {`${getChangeSymbol(row.prdyVrssSign)}${row.prdyCtrt}%`}
+                  <TableCell align="right">{Number(row.currentPrice).toLocaleString()}원</TableCell>
+                  <TableCell align="right" sx={{ color: getChangeColor(row.priceChangeSign) }}>
+                    <Box sx={{ fontSize: '0.925rem', opacity: 1.0 }}>
+                      {`${getChangeSymbol(row.priceChangeSign)}${row.changeRate}%`}
+                    </Box>
+                    <Box sx={{ fontSize: '0.775rem' }}>
+                      {`${getChangeSymbol(row.priceChangeSign)}${Number(row.priceChange).toLocaleString()}원`}
+                    </Box>
                   </TableCell> 
-                  <TableCell align="right">{formatMarketCap(row.stckAvls)}</TableCell> 
-                  <TableCell align="right">{row.mrktWholAvlsRlim}%</TableCell> 
+                  <TableCell align="right">{formatMarketCap(row.marketCap)}</TableCell> 
+                  <TableCell align="right">{row.marketCapRatio}%</TableCell> 
                 </TableRow>
               );
             })} 

@@ -1,22 +1,19 @@
 import React, { useMemo } from "react";
 import StocksDetailTab from "./StocksDetailTab"
 import StocksDetailNameCard from "./StocksDetailNameCard";
+import { useStockDetail } from "../hooks/useStocksDetail";
 import { useParams } from "react-router-dom";
-import { useStockDetail } from "../hooks/useStocksDetail.js";
-import { StockDetailContext } from "../context/StockDetailContext.js";
+import { Box, CircularProgress } from "@mui/material";
 
 export default function StocksDetail() {
-  const { code } = useParams();
-  const { nameCard, detailStock } = useStockDetail(code);
-  const value = useMemo(() => ({
-    nameCard,
-    detailStock
-  }), [nameCard, detailStock]);
+
+  const { code } = useParams()
+  const { nameCard, stockDetail, loading: loadingDetail } = useStockDetail(code)
 
   return (
-    <StockDetailContext.Provider value={ value }>    
-      <StocksDetailNameCard />
-      <StocksDetailTab />         
-    </StockDetailContext.Provider>
+    <>
+      <StocksDetailNameCard nameCard={nameCard} loadingDetail={loadingDetail} />
+      <StocksDetailTab stockDetail={stockDetail} loadingDetail={loadingDetail} />         
+    </>
   );
 }

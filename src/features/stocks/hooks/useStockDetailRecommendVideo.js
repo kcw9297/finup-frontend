@@ -1,38 +1,36 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 
-export function useStockDetailStockAi(code){
+export function useStockDetailRecommendVideo(code){
   // [1] 필요 데이터 선언 
-  const [detailStockAi, setDetailStockAi] = useState(null);
-  const [loadingAi, setLoadingAi] = useState(true);
+  const [videos, setVideos] = useState(null);
+  const [loadingVideo, setLoadingVideo] = useState(true);
 
 
   // [2] 필요 함수 선언 //없음 생략
 
   // [3] 성공/실패 콜백 함수 정의
   const onSuccess = rp => {
-    setDetailStockAi(rp.data); 
+    setVideos(rp.data); 
   }
 
   const onFinally = rp => {
-    setLoadingAi(false); 
+    setLoadingVideo(false); 
   }
 
-  const analyze = async () => {
+  const analyze = () => {
     doAnalyze(false)
   }
 
-  const retryAnalyze = async () => {
+  const retryRecommend = () => {
     doAnalyze(true)
   }
 
   async function doAnalyze(retry) {
-    setLoadingAi(true)
-    setDetailStockAi(null)
-    await api.get(`/stocks/${code}/analysis/detail`, { onSuccess, onFinally, params : { retry } })
+    setLoadingVideo(true)
+    setVideos(null)
+    await api.get(`/stocks/${code}/recommendation/youtube`, { onSuccess, onFinally, params : { retry } })
   }
-
-
 
   // [4] REST API 요청 함수 정의 
   useEffect(() => {
@@ -42,5 +40,5 @@ export function useStockDetailStockAi(code){
 
 
   // [5] 반환
-  return { detailStockAi, loadingAi, retryAnalyze };
+  return { videos, loadingVideo, retryRecommend };
 }

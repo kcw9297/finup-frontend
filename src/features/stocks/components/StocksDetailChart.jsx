@@ -4,17 +4,29 @@ import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon";
 import CandleTypeTabs from "./chart/CandleTypeTabs.jsx";
 import { useStocksDetailChart } from "../hooks/useStocksDetailChart.js";
 import {chartToolTipText} from "../constants/stocksToolTipText.js";
-import { useContext } from "react";
-import { StockDetailContext } from "../context/StockDetailContext.js";
+import { useContext, useState } from "react";
 import CombinedChart from "./chart/CombinedChart.jsx";
 import StocksDetailTooltip from "./StocksDetailTooptip.jsx";
 import StocksDetailChartAi from "./StocksDetailChartAi.jsx";
 import { useStocksDetailChartAi } from "../hooks/useStocksDetailChartAi.js";
+import { useParams } from "react-router-dom";
 
 export default function StocksDetailChart(){
-  const { nameCard } = useContext(StockDetailContext); 
-  const {items, candleType, setCandleType, loading, error} = useStocksDetailChart(nameCard.code); //nameCard.code
-  const { ai, loadingAi, aiError } = useStocksDetailChartAi(nameCard.code, candleType);
+
+  const { code } = useParams()
+  const [ candleType, setCandleType ] = useState("DAY")
+  const { items, loading } = useStocksDetailChart(code)
+  const { ai, loadingAi, aiError } = useStocksDetailChartAi(code, candleType);
+  
+  const dayCandles = items?.dayCandles || []
+  const weekCandles = items?.weekCandles || []
+  const monthCandles = items?.monthCandles || []
+
+  const candles = candleType === "DAY" ? dayCandles : 
+                  candleType === "WEEK" ? weekCandles : 
+                  candleType === "MONTH" ? monthCandles : []
+  
+
   return(
     <Box sx={{backgroundColor: thema.palette.background.base, minHeight:"100vh", width:"100%"}}>
       <Box sx={{py:3}}>
@@ -29,9 +41,9 @@ export default function StocksDetailChart(){
               renderButton={(type) => (
                 <StocksDetailTooltip text={chartToolTipText[type]}>
                   <ToggleButton value={type}>
-                    {type === "day" && "일"}
-                    {type === "week" && "주"}
-                    {type === "month" && "월"}
+                    {type === "DAY" && "일"}
+                    {type === "WEEK" && "주"}
+                    {type === "MONTH" && "월"}
                   </ToggleButton>
                 </StocksDetailTooltip>
             )} />
@@ -50,14 +62,12 @@ export default function StocksDetailChart(){
             alignItems:"center",
             justifyContent:"center"
             }}>
-            {!loading && items.length > 0 && (
-              <CombinedChart items={items} />
-            )}
-            {!loading && items.length === 0 && (
-              <Typography color="text.secondary">
-                차트 데이터가 없습니다.
-              </Typography>
-            )}
+              {
+                loading ? (<Skeleton height={20} width={100} />) : 
+                candles.length > 0 ? (<CombinedChart candles={candles} />) : (<Typography color="text.secondary">차트 데이터가 없습니다.</Typography>)
+              }
+              
+            
           </Box>
         </Box>
           <Box sx={{ flexBasis:"30%", flexShrink:0, display:"flex", flexDirection:"column", maxWidth:400, minWidth:300, mt: 2}}>

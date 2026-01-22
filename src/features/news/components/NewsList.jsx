@@ -118,7 +118,6 @@ export default function NewsList() {
         open={open}
         onClose={closeModal}
         article={article}
-        loading={aiLoading}
       />
     </Box>
   );

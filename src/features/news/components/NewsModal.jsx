@@ -18,7 +18,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useEffect } from "react";
 
 
-export default function NewsDetailModal({ open, onClose, article, loading }) {
+export default function NewsDetailModal({ open, onClose, article }) {
 
   // 뉴스 내 AI 분석 요청
   const { analyzeRp, loading: loadingAnalyze, setNewsId, setOpen, retryAnalyze } = useNewsModalAi()
@@ -184,14 +184,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
                 원문 보기 →
               </a>
             </Box>
-            {loading ? (
-              <>
-                <Skeleton height={20} width="100%" sx={{ mb: 1 }} />
-                <Skeleton height={20} width="95%" sx={{ mb: 1 }} />
-                <Skeleton height={20} width="98%" sx={{ mb: 1 }} />
-                <Skeleton height={20} width="90%" />
-              </>
-            ) : (
+            
               <Typography 
                 sx={{ 
                   lineHeight: 1.8, 
@@ -202,7 +195,7 @@ export default function NewsDetailModal({ open, onClose, article, loading }) {
               >
                 {article?.description || article?.summary || "본문 내용이 없습니다."}
               </Typography>
-            )}
+            
           </Box>
 
       </Box>

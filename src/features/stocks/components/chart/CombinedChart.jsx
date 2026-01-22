@@ -7,7 +7,7 @@ import VolumeChipBar from "./VolumeChipBar";
 import { Button } from "@mui/material";
 
 
-export default function CombinedChart({items}){
+export default function CombinedChart({candles}){
   const [upperTimeScale, setUpperTimeScale] = useState(null);
   const [chipData, setChipData] = useState(null);
   const [volumeChipData, setVolumeChipData] = useState(null);
@@ -21,7 +21,7 @@ export default function CombinedChart({items}){
       },300)
     }
     setShowGuideButton(true)
-  },[items])
+  },[candles])
   
   const showGuide = () => {
     chartGuide()
@@ -51,7 +51,7 @@ export default function CombinedChart({items}){
       }}
     />
     <CandleChart 
-      items={items} 
+      items={candles} 
       onTimeScaleReady={(ts) => setUpperTimeScale(ts)}
       onCrosshairDataChange={setChipData}
     />
@@ -62,7 +62,7 @@ export default function CombinedChart({items}){
       }}
     />
     <VolumeChart 
-      items={items} 
+      items={candles} 
       upperTimeScale={upperTimeScale}
       onCrosshairDataChange={setVolumeChipData}
     />

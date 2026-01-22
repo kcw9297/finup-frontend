@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { createChart } from "lightweight-charts";
 import { locale } from "moment/moment";
 
-export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshairDataChange ) {
+export function useCandleChart(containerRef, candles, onTimeScaleReady, onCrosshairDataChange ) {
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
   const ma5Ref = useRef(null);
@@ -10,6 +10,7 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
 
   // Chart 생성 + 시리즈 생성
   useEffect(() => {
+
     if (!containerRef.current) return;
 
     const chart = createChart(containerRef.current, {
@@ -83,36 +84,36 @@ export function useCandleChart(containerRef, items, onTimeScaleReady, onCrosshai
 
   // 데이터 반영
   useEffect(() => {
-    if (!items || !chartRef.current) return;
+    if (!candles || !chartRef.current) return;
 
     const mapDate = (d) => `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
 
     candleSeriesRef.current.setData(
-      items.map((i) => ({
-        time: mapDate(i.stck_bsop_date),
-        open: Number(i.stck_oprc),
-        high: Number(i.stck_hgpr),
-        low: Number(i.stck_lwpr),
-        close: Number(i.stck_clpr),
+      candles.map((i) => ({
+        time: mapDate(i.tradingDate),
+        open: Number(i.openPrice),
+        high: Number(i.highPrice),
+        low: Number(i.lowPrice),
+        close: Number(i.closePrice),
       }))
     );
 
     ma5Ref.current.setData(
-      items.filter((i) => i.ma5).map((i) => ({
-        time: mapDate(i.stck_bsop_date),
+      candles.filter((i) => i.ma5).map((i) => ({
+        time: mapDate(i.tradingDate),
         value: Number(i.ma5),
       }))
     );
 
     ma20Ref.current.setData(
-      items.filter((i) => i.ma20).map((i) => ({
-        time: mapDate(i.stck_bsop_date),
+      candles.filter((i) => i.ma20).map((i) => ({
+        time: mapDate(i.tradingDate),
         value: Number(i.ma20),
       }))
     );
 
     chartRef.current.timeScale().fitContent();
-  }, [items]);
+  }, [candles]);
 
   // Crosshair Tooltip
   useEffect(() => {

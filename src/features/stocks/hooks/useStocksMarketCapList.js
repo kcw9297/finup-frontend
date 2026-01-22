@@ -14,8 +14,8 @@ export function useStockList(){
   useEffect(()=>{   
     async function fetchStockRow() {
       const rp = await api.get(
-        `/stocks/market-cap-ranking`, 
-        // { public: true }
+        `/stocks/market-cap`, 
+        { public: true }
       );        
       setStockList(rp.data);
       setLoading(false);
