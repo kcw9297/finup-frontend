@@ -1,4 +1,5 @@
 import MainLayout from "../../base/layouts/MainLayout";
+import WordLayout from "../../features/word/components/WordLayout";
 import WordSearch from "../../features/word/components/WordSearch";
 
 /**
@@ -10,7 +11,9 @@ import WordSearch from "../../features/word/components/WordSearch";
 export default function WordSearchPage() {
   return (
     <MainLayout>
-      <WordSearch />
+      <WordLayout>
+        <WordSearch />
+      </WordLayout>
     </MainLayout>
   )
 }

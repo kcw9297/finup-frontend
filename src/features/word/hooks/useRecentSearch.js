@@ -7,8 +7,6 @@ import { api } from "../../../base/utils/fetchUtils";
  * @since 2025-12-14
  */
 
-// 일부러 성공/실패/마지막 콜백 함수 안만듦(판단 여부가 필요없어 보여서)
-
 export function useRecentSearch() {
 
   // [1] 필요 함수/변수 선언

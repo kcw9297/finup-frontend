@@ -46,115 +46,7 @@ export default function WordSearch() {
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
-      {/* ================== SearchBar ================== */}
-      <Box
-        sx={{
-          maxWidth: 1120,
-          mx: 'auto',
-          mt: 4,
-          mb: 4,
-        }}
-      >
-        <Box
-          sx={{
-            maxWidth: 780,
-            mx: 'auto',
-            position: 'relative',
-          }}
-          onKeyUp={(e) => handleSearchEnter(e)}
-        >
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto',
-            columnGap: 2,
-            alignItems: 'center',
-          }}>
-            <Box sx={{ position: 'relative' }}>
-              <TextField
-                value={searchRq.keyword}
-                fullWidth
-                size="small"
-                onChange={e => handleChangeRq({ keyword: e.target.value })}
-                onFocus={() => {
-                  fetchRecent()
-                  setOpenRecent(true)
-                }}
-                onBlur={() => {
-                  // 바로 닫지 말고 약간 지연
-                  setTimeout(() => setOpenRecent(false), 150)
-                }}
-
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    height: 44,
-                    borderRadius: '10px',
-                    '& fieldset': {
-                      borderWidth: 2,
-                      borderColor: '#003FBF',
-                    },
-                  },
-                }}
-              />
-
-              {/* 최근 검색어 드롭다운 */}
-              {openRecent && recent.length > 0 && (
-                <Paper
-                  elevation={0}
-                  sx={{
-                    position: 'absolute',
-                    top: 48,        // TextField 바로 아래
-                    left: 0,
-                    right: 0,
-                    zIndex: 10,
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                    border: '1px solid'
-                  }}
-                >
-                  {recent.map((word) => (
-                    <Box
-                      key={word}
-                      onMouseDown={() => {
-                        handleChangeRq({ keyword: word })
-                        handleSearch()
-                      }}
-                      sx={{
-                        px: 2,
-                        py: 1.2,
-                        cursor: 'pointer',
-                        fontSize: 13,
-                        '&:hover': {
-                          bgcolor: '#F2F5FF',
-                        },
-                      }}
-                    >
-                      {word}
-                    </Box>
-                  ))}
-                </Paper>
-              )}
-            </Box>
-
-            <IconButton
-              onClick={handleSearch}
-              sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '10px',
-                bgcolor: '#003FBF',
-                '&:hover': {
-                  bgcolor: '#0035A5',
-                },
-              }}
-            >
-              <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-            </IconButton>
-
-          </Box>
-        </Box>
-      </Box>
-
-
+      
       {/* =================== 메인 테이블 =================== */}
       <Paper
         elevation={0}
@@ -163,7 +55,7 @@ export default function WordSearch() {
           mx: 'auto',
           borderRadius: '10px',
           overflow: 'hidden',
-          border: '1px solid #CED4E4', // 전체 윤곽선
+          border: '1px solid #CED4E4',
         }}
       >
         {/* 헤더 */}
@@ -213,7 +105,7 @@ export default function WordSearch() {
 
         {wordList.map((row, idx) => (
           <Box
-            key={(pagination?.pageNum - 1) * pagination?.pageSize + idx + 1}
+            key={row.termId}  // termId를 key로 사용
             sx={{
               display: 'grid',
               gridTemplateColumns: '80px 300px 1fr',
@@ -223,6 +115,7 @@ export default function WordSearch() {
               minHeight: 72,
               borderTop: idx === 0 ? '1px solid #CED4E4' : '1px solid #E3E7F2',
               bgcolor: '#FFFFFF',
+              cursor: 'pointer',
               '&:hover': {
                 bgcolor: '#F6F8FF',
               },
@@ -236,18 +129,9 @@ export default function WordSearch() {
               align="center"
               sx={{ fontSize: 13 }}
             >
-              {idx + 1}
+              {(pagination?.pageNum - 1) * pagination?.pageSize + idx + 1 || idx + 1}
             </Typography>
-            {/* 
-              주제 
-              <Typography
-                variant="body2"
-                align="center"
-                sx={{ fontSize: 13 }}
-              >
-                {row.category}
-              </Typography>
-              */}
+
             {/* 용어 */}
             <Typography
               variant="body2"
@@ -283,9 +167,6 @@ export default function WordSearch() {
           </Box>
         ))}
       </Paper>
-
-      {/* =================== 페이지네이션 =================== */}
-      <PageBar pagination={pagination} onChange={handlePage} />
     </Box>
 
   )

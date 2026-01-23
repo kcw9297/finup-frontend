@@ -73,10 +73,9 @@ export default function StocksDetailStock({ stockDetail }){
                   value: "데이터",
                   tooltip: "설명"
                 })
-              ).map((item, index) => (
-                <Grid
-                  item               
-                  key={index}
+              ).map((item) => (
+                <Grid            
+                  key={item.label}
                   sx={{                  
                     justifyContent: "space-between",
                     display: "flex",                  
@@ -127,22 +126,24 @@ export default function StocksDetailStock({ stockDetail }){
             </Typography>
 
             <Tooltip title="재추천">
-              <IconButton
-                size="small"
-                disabled={loadingAi}
-                sx={{
-                  border: '1px solid',
-                  borderColor: 'line.dark',
-                  borderRadius: 1,
-                  width: 32,
-                  height: 32
-                }}
-                onClick={() => {
-                  retryAnalyze()
-                }}
-              >
-                <RefreshIcon fontSize="small" />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={loadingAi}
+                  sx={{
+                    border: '1px solid',
+                    borderColor: 'line.dark',
+                    borderRadius: 1,
+                    width: 32,
+                    height: 32
+                  }}
+                  onClick={() => {
+                    retryAnalyze()
+                  }}
+                >
+                  <RefreshIcon fontSize="small" />
+                </IconButton>
+              </span>
             </Tooltip>
           </Box>
           
@@ -236,22 +237,24 @@ export default function StocksDetailStock({ stockDetail }){
             </Typography>
 
             <Tooltip title="재추천">
-              <IconButton
-                size="small"
-                disabled={loadingVideo}
-                sx={{
-                  border: '1px solid',
-                  borderColor: 'line.dark',
-                  borderRadius: 1,
-                  width: 32,
-                  height: 32
-                }}
-                onClick={() => {
-                  retryRecommend()
-                }}
-              >
-                <RefreshIcon fontSize="small" />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={loadingVideo}
+                  sx={{
+                    border: '1px solid',
+                    borderColor: 'line.dark',
+                    borderRadius: 1,
+                    width: 32,
+                    height: 32
+                  }}
+                  onClick={() => {
+                    retryRecommend()
+                  }}
+                >
+                  <RefreshIcon fontSize="small" />
+                </IconButton>
+              </span>
             </Tooltip>
           </Box>
           

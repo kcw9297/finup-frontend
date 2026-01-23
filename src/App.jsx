@@ -10,7 +10,6 @@ import { initGlobalHook } from './base/config/globalHookConfig'
 import ReboardSearchPage from './pages/reboard/ReboardSearchPage'
 import MemberListPage from './pages/admin/member/MemberListPage'
 import NewsPage from './pages/news/NewsPage'
-import ConceptListPage from './pages/concept/ConceptListPage'
 import StocksListPage from './pages/stocks/StocksListPage'
 import StocksDetailPage from './pages/stocks/StocksDetailPage'
 import StocksChartPage from './pages/stocks/StocksChartPage'
@@ -40,7 +39,6 @@ const simpleRoutes = [
   { path: '/', element: <HomePage /> }, // 모두 공개
   { path: '/login', element: <GuestRoute><AuthLoginPage /></GuestRoute> }, // 비회원 공개
   { path: '/join', element: <GuestRoute><MemberJoinPage /></GuestRoute> }, // 회원가입 페이지
-  { path: '/concept/list', element: <ConceptListPage /> }, //임시 모두공개
 ]
 
 // 자식이 있는 라우팅 리스트
