@@ -2,7 +2,8 @@ import { Box, Paper, Typography } from "@mui/material";
 import KeywordContent from "./KeywordContent";
 
 // 뉴스 리스트만 표시
-export default function KeywordNews({ newsList, onItemClick }) {
+export default function KeywordNews({ loading, newsList, onItemClick }) {
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {/* 제목 */}
@@ -24,7 +25,7 @@ export default function KeywordNews({ newsList, onItemClick }) {
 
       {/* 기사 리스트 - 전체 너비 */}
       <Box sx={{ width: "100%" }}>
-        <KeywordContent list={newsList} onItemClick={onItemClick} />
+        <KeywordContent loading={loading} list={newsList} onItemClick={onItemClick} />
       </Box>
     </Box>
   );

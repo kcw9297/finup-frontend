@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Avatar, Box, CircularProgress } from '@mui/material';
+import { Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Avatar, Box, Typography, CircularProgress } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";
 import theme from "../../../base/design/thema.js";
 import { useStockList } from "../hooks/useStocksTradingValueList.js";
@@ -79,7 +79,7 @@ export default function StocksListTradingValue() {
             )}
 
             {/* 조회된 종목 없음 */}
-            {!loading && stockList.length === 0 && (
+            {!loading && (!stockList || stockList.length === 0) && (
               <TableRow>
                 <TableCell colSpan={5} align="center" sx={{ py: 20 }}>
                   <Typography variant="body2" color="text.secondary">
@@ -90,7 +90,7 @@ export default function StocksListTradingValue() {
             )}
 
             {/* 주식 목록 표시 */}
-            {!loading && stockList.map((row) => {                    
+            {!loading && stockList?.map((row) => {                    
               return(
                 <TableRow
                   key={row.stockCode} 

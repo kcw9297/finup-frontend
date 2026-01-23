@@ -97,14 +97,15 @@ export default function NewsList() {
       {/* 뉴스 리스트 */}
       <Box sx={{ mt: 2 }}>
         {news.map(item => (<NewsCard key={item.newsId} {...item} onClick={() => handleOpenModal(item)} />))}
-      </Box>
 
-      {/* 스크롤 감지하여 로딩 처리 */}
-      {hasMore && (
-        <div ref={loadMoreRef} style={{ height: '20px' }}>
-          {loading && <CircularProgress />}
-        </div>
-      )}
+        {/* 스크롤 감지하여 로딩 처리 */}
+        {hasMore && (
+          <Box
+            ref={loadMoreRef} sx={{ display: "flex", justifyContent: "center", py: 3, }}>
+            {loading && <CircularProgress />}
+          </Box>
+        )}
+      </Box>
 
       {/* 맨 위로 버튼 */}
       <NewsScrollToTop 

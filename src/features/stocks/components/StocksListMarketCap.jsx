@@ -69,7 +69,7 @@ export default function StocksListMarketCap() {
             )}
 
             {/* 조회된 종목 없음 */}
-            {!loading && stockList.length === 0 && (
+            {!loading && (!stockList || stockList.length === 0) && (
               <TableRow>
                 <TableCell colSpan={5} align="center" sx={{ py: 20 }}>
                   <Typography variant="body2" color="text.secondary">
@@ -80,7 +80,7 @@ export default function StocksListMarketCap() {
             )}
 
             {/* 주식 목록 표시 */}
-            {!loading && stockList.map((row) => {                    
+            {!loading && stockList?.map((row) => {                    
               return(
                 <TableRow
                   key={row.stockCode} 

@@ -1,4 +1,4 @@
-import { Paper, Box, Typography, IconButton, CircularProgress } from "@mui/material"
+import { Paper, Box, Typography, IconButton, CircularProgress, Skeleton } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { useNavigate } from "react-router-dom";
@@ -48,21 +48,17 @@ export default function Notice({ noticeList, noticeCurrent, fade, showNext, load
 
         <Typography className="title">공지사항</Typography>
         <Typography className="title">|</Typography>
-        <Box 
+        <Box
           onClick={() => navigate(`/notices/detail/${currentNotice.noticeId}`)}
-          sx={{cursor: 'pointer',}}
+          sx={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            mx: 2
+          }}
         >
         {loading ? (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              mx: 2
-            }}
-          >
-            <CircularProgress size={20} />
-          </Box>
+          <Skeleton variant="text" height={24} width={500} />
         ) : (
           <Typography
             className="notice-text"
