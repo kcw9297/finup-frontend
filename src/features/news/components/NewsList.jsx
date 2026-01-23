@@ -82,7 +82,7 @@ export default function NewsList() {
 
   //(2)반환활 컴포넌트
   return (
-    <Box sx={{ maxWidth: "900px", mx: "auto", mt: 4 }}>
+    <Box sx={{ maxWidth: "1200px", mx: "auto", mt: 4 }}>
 
       {/* 제목 섹션 */}
       <Box sx={{ mb: 4 }}>

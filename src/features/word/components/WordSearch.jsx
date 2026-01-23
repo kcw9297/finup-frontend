@@ -8,17 +8,10 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useWordSearch } from '../hooks/useWordSearch';
-import theme from '../../../base/design/thema';
-import SearchBar from '../../../base/components/bar/SearchBar';
 import OrderBar from '../../../base/components/bar/OrderBar';
 import { useState } from 'react';
 import PageBar from '../../../base/components/bar/PageBar';
 import { useNavigate } from 'react-router-dom';
-
-const ORDER_OPTIONS = [
-  { value: 'name_asc', label: '가나다순' },
-  { value: 'name_desc', label: '가나다 역순' },
-];
 
 
 /**
@@ -159,23 +152,6 @@ export default function WordSearch() {
 
           </Box>
         </Box>
-      </Box>
-
-      {/* 정렬 바 */}
-      <Box
-        sx={{
-          maxWidth: 1000,
-          mx: 'auto',
-          mb: 1.5,
-          display: 'flex',
-          justifyContent: 'flex-start',
-        }}
-      >
-        <OrderBar
-          options={ORDER_OPTIONS}
-          selected={searchRq.order}
-          onChange={handleOrderChange}
-        />
       </Box>
 
 

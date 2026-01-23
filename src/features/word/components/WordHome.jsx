@@ -31,8 +31,6 @@ export default function WordHome() {
   const [openRecent, setOpenRecent] = useState(false)
   const todayWords = homeData ?? [];
 
-
-
   const {
     searchRq,
     wordList,
@@ -58,120 +56,129 @@ export default function WordHome() {
   } = useWordQuiz()
 
   return (
-    <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
+    <Box sx={{ maxWidth: "1200px", mx: "auto", mt: 4 }}>
+
+      {/* 제목 섹션 */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+          단어장
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          경제 단어로 투자 지식을 익혀봐요
+        </Typography>
+      </Box>
+
+
       {/* ================== SearchBar ================== */}
       <Box
         sx={{
-          maxWidth: 1120,
+          maxWidth: 1000,
           mx: 'auto',
-          mt: 4,
-          mb: 4,
+          position: 'relative',
         }}
       >
-        <Box
-          sx={{
-            maxWidth: 780,
-            mx: 'auto',
-            position: 'relative',
-          }}
-          onKeyUp={(e) => handleSearchEnter(e)}
-        >
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto',
-            columnGap: 2,
-            alignItems: 'center',
-          }}>
-            <Box sx={{ position: 'relative' }}>
-              <TextField
-                value={searchRq.keyword}
-                fullWidth
-                size="small"
-                onChange={e => handleChangeRq({ keyword: e.target.value })}
-                onFocus={() => {
-                  fetchRecent()
-                  setOpenRecent(true)
-                }}
-                onBlur={() => {
-                  // 바로 닫지 말고 약간 지연
-                  setTimeout(() => setOpenRecent(false), 150)
-                }}
-
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    height: 44,
-                    borderRadius: '10px',
-                    '& fieldset': {
-                      borderWidth: 2,
-                      borderColor: '#003FBF',
-                    },
-                  },
-                }}
-              />
-
-              {/* 최근 검색어 드롭다운 */}
-              {openRecent && recent.length > 0 && (
-                <Paper
-                  elevation={0}
-                  sx={{
-                    position: 'absolute',
-                    top: 48,        // TextField 바로 아래
-                    left: 0,
-                    right: 0,
-                    zIndex: 10,
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                    border: '1px solid'
-                  }}
-                >
-                  {recent.map((word) => (
-                    <Box
-                      key={word}
-                      onMouseDown={() => {
-                        handleChangeRq({ keyword: word })
-                        handleSearch()
-                      }}
-                      sx={{
-                        px: 2,
-                        py: 1.2,
-                        cursor: 'pointer',
-                        fontSize: 13,
-                        '&:hover': {
-                          bgcolor: '#F2F5FF',
-                        },
-                      }}
-                    >
-                      {word}
-                    </Box>
-                  ))}
-                </Paper>
-              )}
-            </Box>
-
-            <IconButton
-              onClick={handleSearch}
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto',
+          columnGap: 2,
+          alignItems: 'center',
+          mb: 5
+        }}>
+          <Box sx={{ position: 'relative' }}>
+            <TextField
+              value={searchRq.keyword}
+              fullWidth
+              size="small"
+              onChange={e => handleChangeRq({ keyword: e.target.value })}
+              onFocus={() => {
+                fetchRecent()
+                setOpenRecent(true)
+              }}
+              onBlur={() => {
+                setTimeout(() => setOpenRecent(false), 150)
+              }}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearchEnter(e)
+                  setOpenRecent(false)  // 엔터 시 즉시 닫기
+                }
+              }}
               sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '10px',
-                bgcolor: '#003FBF',
-                '&:hover': {
-                  bgcolor: '#0035A5',
+                '& .MuiOutlinedInput-root': {
+                  height: 44,
+                  borderRadius: '10px',
+                  '& fieldset': {
+                    borderWidth: 2,
+                    borderColor: '#003FBF',
+                  },
                 },
               }}
+            />
 
-            >
-              <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-            </IconButton>
-
+            {/* 최근 검색어 드롭다운 */}
+            {openRecent && recent.length > 0 && (
+              <Paper
+                elevation={0}
+                sx={{
+                  position: 'absolute',
+                  top: 48,
+                  left: 0,
+                  right: 0,
+                  zIndex: 10,
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: '1px solid'
+                }}
+              >
+                {recent.map((word) => (
+                  <Box
+                    key={word}
+                    onMouseDown={() => {
+                      handleChangeRq({ keyword: word })
+                      handleSearch()
+                      setOpenRecent(false)
+                    }}
+                    sx={{
+                      px: 2,
+                      py: 1.2,
+                      cursor: 'pointer',
+                      fontSize: 13,
+                      '&:hover': {
+                        bgcolor: '#F2F5FF',
+                      },
+                    }}
+                  >
+                    {word}
+                  </Box>
+                ))}
+              </Paper>
+            )}
           </Box>
+
+          <IconButton
+            onClick={() => {
+              handleSearch()
+              setOpenRecent(false)
+            }}
+            sx={{
+              width: 40,
+              height: 40,
+              borderRadius: '10px',
+              bgcolor: '#003FBF',
+              '&:hover': {
+                bgcolor: '#0035A5',
+              },
+            }}
+          >
+            <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
+          </IconButton>
         </Box>
       </Box>
 
       {/* ================== Main Grid ================== */}
       <Box
         sx={{
-          maxWidth: 1120,
+          maxWidth: 1300,
           mx: 'auto',
           position: 'relative',
           display: 'grid',

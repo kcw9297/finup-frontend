@@ -3,6 +3,7 @@ import { navigate, showSnackbar } from "../../../base/config/globalHookConfig"
 import { api } from "../../../base/utils/fetchUtils";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../../base/stores/useAuthStore";
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 
 /**
  * 단어장 검색 훅
@@ -25,6 +26,8 @@ export function useWordSearch() {
   const [wordList, setWordList] = useState([])
   const [pagination, setPagination] = useState(null)
   const [loading, setLoading] = useState(false)
+  const { showSnackbar } = useSnackbar()
+  
 
 
   const { isLogin } = useAuthStore()
@@ -34,10 +37,6 @@ export function useWordSearch() {
   // URL → 검색 조건 파싱
   const getSearchParams = () => ({
     keyword: searchParams.get("keyword") || "",
-    pageNum: Number(searchParams.get("pageNum") ?? 0),
-    pageSize: Number(searchParams.get("pageSize") ?? 10),
-    filter: searchParams.get("filter") || "name",
-    order: searchParams.get("order") || "name_asc",
   })
 
   // 검색 조건 변경
@@ -71,14 +70,13 @@ export function useWordSearch() {
   // 실제 검색 실행
   const executeSearch = () => {
     const keyword = searchRq.keyword?.trim()
-    if (!keyword) return
+    
+    if (!validateKeyword(keyword)) {
+      return
+    }
 
     const params = new URLSearchParams({
       keyword,
-      pageNum: 0,
-      pageSize: searchRq.pageSize,
-      filter: searchRq.filter || "name",
-      order: searchRq.order,
     })
 
     navigate({
@@ -88,15 +86,6 @@ export function useWordSearch() {
   }
 
 
-  // 페이지 이동
-  const handlePage = page => {
-    setLoading(true);
-    setSearchParams({
-      ...getSearchParams(),
-      pageNum: page - 1
-    })
-  }
-
   // 최근 검색어(로그인 시)
   const fetchRecent = () => {
     console.log('fetchRecent called, isLogin=', isLogin)
@@ -104,6 +93,23 @@ export function useWordSearch() {
     api.get('/words/recent-searches', {
       onSuccess: rp => setRecent(rp.data)
     })
+  }
+
+  // 검색어 유효성
+  const validateKeyword = (keyword) => {
+    if (!keyword?.trim()) {
+      showSnackbar("검색어를 입력해주세요.")
+      return false
+    }
+
+    // 영문, 한글, 공백만 허용 (특수문자, 숫자 불허)
+    const validPattern = /^[a-zA-Z가-힣\s]+$/
+    if (!validPattern.test(keyword.trim())) {
+      showSnackbar("영문 또는 한글만 입력 가능합니다.")
+      return false
+    }
+
+    return true
   }
 
 
@@ -124,9 +130,10 @@ export function useWordSearch() {
   // [4] REST API 요청 (URL 변경 감지 → 검색 실행)
   useEffect(() => {
     const params = getSearchParams();
+    if (!params.keyword) return;
     setSearchRq(params);
-
     setLoading(true);
+
     api.get("/words/search", {
       params,
       onSuccess,
@@ -144,7 +151,6 @@ export function useWordSearch() {
 
     handleChangeRq,
     handleSearch,
-    handlePage,
     handleSearchEnter,
     handleOrderChange,
 

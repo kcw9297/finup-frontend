@@ -7,6 +7,7 @@ import QuizQuestion from "./QuizQuestion";
 import QuizResult from "./QuizResult";
 import QuizLoading from "./QuizLoading";
 import { saveQuizResult } from "../util/saveQuizResult";
+import QuizError from "./QuizError";
 
 // 기본 모달 창
 
@@ -73,7 +74,7 @@ export default function QuizModal ({ open, onClose }) {
         {step === "quiz" && (
           <>
             {loading && <QuizLoading />}
-            {!loading && !quiz?.length && <div>문제가 없습니다.</div>}
+            {!loading && !quiz?.length && <QuizError onClose={handleClose} />}
             {!loading && quiz?.length > 0 && (
             <QuizQuestion onClose={handleClose} questions={quiz} onSubmit={handleSubmit}/>
             )}
