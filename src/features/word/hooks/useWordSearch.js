@@ -1,15 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { navigate, showSnackbar } from "../../../base/config/globalHookConfig"
+import { navigate } from "../../../base/config/globalHookConfig"
 import { api } from "../../../base/utils/fetchUtils";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../../base/stores/useAuthStore";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
-
-/**
- * 단어장 검색 훅
- * @author khj
- * @since 2025-12-13
- */
+import { useRecentSearchWordStore } from "../../../base/stores/useRecentSearchWordStore";
 
 const INITIAL_SEARCH_RQ = {
   keyword: "",
@@ -28,46 +22,37 @@ export function useWordSearch() {
   const [loading, setLoading] = useState(false)
   const { showSnackbar } = useSnackbar()
   
-
-
-  const { isLogin } = useAuthStore()
-  const [recent, setRecent] = useState([])
+  // Zustand store 추가
+  const { load: loadRecentKeywords } = useRecentSearchWordStore();
 
   // [2] 필요 함수 선언
-  // URL → 검색 조건 파싱
   const getSearchParams = () => ({
     keyword: searchParams.get("keyword") || "",
   })
 
-  // 검색 조건 변경
   const handleChangeRq = rq => {
     setSearchRq(prev => ({ ...prev, ...rq }))
   }
 
-  // 엔터키 입력
   const handleSearchEnter = (e) => {
     if (e.key === 'Enter') {
       executeSearch()
     }
   }
 
-  // 정렬 변경 (즉시 검색)
   const handleOrderChange = (order) => {
     setSearchParams({
       ...getSearchParams(),
       order,
-      pageNum: 0, // 정렬 변경 시 페이지 초기화
+      pageNum: 0,
     })
   }
 
-  // 검색 실행
   const handleSearch = e => {
     e?.preventDefault()
     executeSearch()
   }
 
-
-  // 실제 검색 실행
   const executeSearch = () => {
     const keyword = searchRq.keyword?.trim()
     
@@ -85,24 +70,12 @@ export function useWordSearch() {
     })
   }
 
-
-  // 최근 검색어(로그인 시)
-  const fetchRecent = () => {
-    console.log('fetchRecent called, isLogin=', isLogin)
-
-    api.get('/words/recent-searches', {
-      onSuccess: rp => setRecent(rp.data)
-    })
-  }
-
-  // 검색어 유효성
   const validateKeyword = (keyword) => {
     if (!keyword?.trim()) {
       showSnackbar("검색어를 입력해주세요.")
       return false
     }
 
-    // 영문, 한글, 공백만 허용 (특수문자, 숫자 불허)
     const validPattern = /^[a-zA-Z가-힣\s]+$/
     if (!validPattern.test(keyword.trim())) {
       showSnackbar("영문 또는 한글만 입력 가능합니다.")
@@ -112,11 +85,23 @@ export function useWordSearch() {
     return true
   }
 
+  // 최근 검색어 갱신 함수 추가
+  const refreshRecentKeywords = () => {
+    api.get("/words/recent-searches", {
+      onSuccess: (rp) => {
+        loadRecentKeywords(rp.data || []);
+      },
+      handleError: false,
+    });
+  };
 
   // [6] 성공/실패/마지막 콜백 함수
   const onSuccess = rp => {
     setWordList(rp.data)
     setPagination(rp.pagination)
+    
+    // 검색 성공 시 최근 검색어 갱신 (추가!)
+    refreshRecentKeywords();
   }
 
   const onError = rp => {
@@ -153,8 +138,5 @@ export function useWordSearch() {
     handleSearch,
     handleSearchEnter,
     handleOrderChange,
-
-    recent,
-    fetchRecent,
   }
 }

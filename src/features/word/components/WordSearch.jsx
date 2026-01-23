@@ -1,18 +1,11 @@
 import {
   Box,
   Typography,
-  TextField,
-  IconButton,
   Paper,
-  Pagination,
+  CircularProgress,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import { useWordSearch } from '../hooks/useWordSearch';
-import OrderBar from '../../../base/components/bar/OrderBar';
-import { useState } from 'react';
-import PageBar from '../../../base/components/bar/PageBar';
 import { useNavigate } from 'react-router-dom';
-
 
 /**
  * 단어장 검색 컴포넌트
@@ -21,28 +14,14 @@ import { useNavigate } from 'react-router-dom';
  */
 
 export default function WordSearch() {
-
-
-  const { searchRq,
+  const { 
+    searchRq,
     wordList,
     pagination,
     loading,
-    handleChangeRq,
-    handleSearch,
-    handlePage,
-    handleSearchEnter,
-    handleOrderChange,
+  } = useWordSearch();
 
-    recent,
-    fetchRecent,
-
-  } = useWordSearch()
-
-  /// 최근 검색어 - 컴포넌트 표현 로직
-
-  const [openRecent, setOpenRecent] = useState(false)
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
@@ -90,22 +69,34 @@ export default function WordSearch() {
           >
             설명
           </Typography>
-
         </Box>
 
-        {/* 행들 */}
+        {/* 로딩 중 */}
+        {loading && (
+          <Box sx={{ 
+            py: 8, 
+            textAlign: 'center', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center' 
+          }}>
+            <CircularProgress size={40} />
+          </Box>
+        )}
 
+        {/* 검색 결과 없음 */}
         {!loading && wordList.length === 0 && (
-          <Box sx={{ py: 8, textAlign: 'center', gridColumn: '1 / -1', }}>
+          <Box sx={{ py: 8, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
               검색 결과가 없습니다.
             </Typography>
           </Box>
         )}
 
-        {wordList.map((row, idx) => (
+        {/* 검색 결과 행들 */}
+        {!loading && wordList.map((row, idx) => (
           <Box
-            key={row.termId}  // termId를 key로 사용
+            key={row.termId}
             sx={{
               display: 'grid',
               gridTemplateColumns: '80px 300px 1fr',
@@ -122,7 +113,6 @@ export default function WordSearch() {
             }}
             onClick={() => navigate(`/words/detail/${row.termId}`)}
           >
-
             {/* No */}
             <Typography
               variant="body2"
@@ -163,11 +153,9 @@ export default function WordSearch() {
             >
               {row.description}
             </Typography>
-
           </Box>
         ))}
       </Paper>
     </Box>
-
-  )
+  );
 }

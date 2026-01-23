@@ -1,7 +1,7 @@
+// WordHome.jsx
 import React from 'react';
 import { Box, Typography, Paper, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import WordLayout from './WordLayout';
 import { useWordHome } from '../hooks/useWordHome';
 import { useWordQuiz } from '../hooks/useWordQuiz';
 
@@ -20,7 +20,12 @@ export default function WordHome() {
   } = useWordQuiz();
 
   return (
-    <>
+    <Box sx={{ 
+      maxWidth: 1000,  // 추가: WordSearch와 동일한 너비
+      mx: 'auto',      // 추가: 중앙 정렬
+      width: '100%',   // 추가: 반응형 대응
+      py: 3 
+    }}>
       {/* 오늘의 단어 */}
       <Box sx={{ mb: 4 }}>
         <Typography
@@ -165,6 +170,6 @@ export default function WordHome() {
           </Paper>
         )}
       </Box>
-    </>
+    </Box>
   );
 }

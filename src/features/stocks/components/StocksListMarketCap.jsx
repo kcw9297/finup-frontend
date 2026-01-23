@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table,Box, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar, Typography } from '@mui/material';
+import { Table,Box, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Avatar, Typography, CircularProgress } from '@mui/material';
 import defaultImg from "../../../assets/default_stock.png";
 import theme from "../../../base/design/thema.js";
 import { useStockList } from "../hooks/useStocksMarketCapList.js";
@@ -58,7 +58,29 @@ export default function StocksListMarketCap() {
             </TableRow> 
           </TableHead> 
           <TableBody>
-            {stockList.map((row) => {                    
+
+            {/* 로딩 중 */}
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={5} align="center" sx={{ py: 20 }}>
+                  <CircularProgress size={50} />
+                </TableCell>
+              </TableRow>
+            )}
+
+            {/* 조회된 종목 없음 */}
+            {!loading && stockList.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} align="center" sx={{ py: 20 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    조회된 종목이 없습니다
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {/* 주식 목록 표시 */}
+            {!loading && stockList.map((row) => {                    
               return(
                 <TableRow
                   key={row.stockCode} 

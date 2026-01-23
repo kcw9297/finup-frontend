@@ -25,7 +25,6 @@ export default function NewsList() {
     openModal,
     closeModal,
     article,
-    loading: aiLoading,
   } = useNewsModal();
 
   const { news, loading, hasMore, showTop, setShowTop, goNext } = useGenericNews();

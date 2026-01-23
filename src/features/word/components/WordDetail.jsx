@@ -40,7 +40,7 @@ export default function WordDetail() {
       {/* 메인 컨테이너 */}
       <Box
         sx={{
-          maxWidth: 940,
+          maxWidth: 1000,
           mx: 'auto',
           mb: 6,
         }}
