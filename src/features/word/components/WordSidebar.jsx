@@ -1,6 +1,5 @@
-// WordSidebar.jsx
 import React, { useState } from 'react';
-import { Box, Typography, Chip, Button, Stack, Divider, Paper } from '@mui/material';
+import { Box, Typography, Chip, Button, Stack, Divider, Paper, Skeleton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import WordbookPopup from './WordbookPopup';
 import { useRecentSearch } from '../hooks/useRecentSearch';
@@ -8,7 +7,7 @@ import { useRecentSearch } from '../hooks/useRecentSearch';
 export default function WordSidebar() {
   const [openWordbook, setOpenWordbook] = useState(false);
   const navigate = useNavigate();
-  const { recentKeywords, removeRecentWord } = useRecentSearch();
+  const { recentKeywords, loading, removeRecentWord } = useRecentSearch();
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 3 }}>
@@ -18,33 +17,46 @@ export default function WordSidebar() {
           최근 검색어
         </Typography>
 
-        <Stack direction="row" flexWrap="wrap" gap={1}>
-          {recentKeywords.map((kw) => (
-            <Chip
-              key={kw}
-              label={kw}
-              size="small"
-              onClick={() => {
-                const params = new URLSearchParams({ keyword: kw });
-                navigate({
-                  pathname: "/words/search",
-                  search: `?${params.toString()}`
-                });
-              }}
-              onDelete={(e) => {
-                e.stopPropagation();
-                removeRecentWord(kw);
-              }}
-              variant="outlined"
-              sx={{
-                borderRadius: '999px',
-                cursor: 'pointer',
-                '&:hover': { bgcolor: '#F5F5F5' },
-                '& .MuiChip-deleteIcon': { fontSize: 16 },
-              }}
-            />
-          ))}
-        </Stack>
+        {loading ? (
+          <Stack direction="row" flexWrap="wrap" gap={1}>
+            <Skeleton variant="rounded" width={60} height={24} sx={{ borderRadius: '999px' }} />
+            <Skeleton variant="rounded" width={80} height={24} sx={{ borderRadius: '999px' }} />
+            <Skeleton variant="rounded" width={70} height={24} sx={{ borderRadius: '999px' }} />
+            <Skeleton variant="rounded" width={50} height={24} sx={{ borderRadius: '999px' }} />
+          </Stack>
+        ) : recentKeywords.length === 0 ? (
+          <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+            최근 검색어가 없습니다.
+          </Typography>
+        ) : (
+          <Stack direction="row" flexWrap="wrap" gap={1}>
+            {recentKeywords.map((kw) => (
+              <Chip
+                key={kw}
+                label={kw}
+                size="small"
+                onClick={() => {
+                  const params = new URLSearchParams({ keyword: kw });
+                  navigate({
+                    pathname: "/words/search",
+                    search: `?${params.toString()}`
+                  });
+                }}
+                onDelete={(e) => {
+                  e.stopPropagation();
+                  removeRecentWord(kw);
+                }}
+                variant="outlined"
+                sx={{
+                  borderRadius: '999px',
+                  cursor: 'pointer',
+                  '&:hover': { bgcolor: '#F5F5F5' },
+                  '& .MuiChip-deleteIcon': { fontSize: 16 },
+                }}
+              />
+            ))}
+          </Stack>
+        )}
       </Box>
 
       <Divider />

@@ -1,19 +1,19 @@
-// WordHome.jsx
 import React from 'react';
-import { Box, Typography, Paper, Button, Stack } from '@mui/material';
+import { Box, Typography, Paper, Button, Stack, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useWordHome } from '../hooks/useWordHome';
 import { useWordQuiz } from '../hooks/useWordQuiz';
 
 export default function WordHome() {
   const navigate = useNavigate();
-  const { homeData, loading } = useWordHome();
+  const { homeData, loading, error } = useWordHome();
   const todayWords = homeData ?? [];
 
   const {
     quiz,
     locked,
     loading: quizLoading,
+    error: quizError,
     selected,
     result,
     submitAnswer,
@@ -21,9 +21,9 @@ export default function WordHome() {
 
   return (
     <Box sx={{ 
-      maxWidth: 1000,  // 추가: WordSearch와 동일한 너비
-      mx: 'auto',      // 추가: 중앙 정렬
-      width: '100%',   // 추가: 반응형 대응
+      maxWidth: 1000,
+      mx: 'auto',
+      width: '100%',
       py: 3 
     }}>
       {/* 오늘의 단어 */}
@@ -40,48 +40,60 @@ export default function WordHome() {
           오늘의 단어
         </Typography>
 
-        <Stack direction="row" spacing={3}>
-          {todayWords.map((words) => (
-            <Paper
-              key={words.termId}
-              variant="outlined"
-              sx={{
-                width: "360px",
-                px: 2,
-                py: 2,
-                minHeight: "190px",
-                borderRadius: 2,
-                minWidth: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-                cursor: 'pointer',
-                '&:hover': {
-                  bgcolor: '#F6F8FF',
-                },
-              }}
-              onClick={() => navigate(`/words/detail/${words.termId}`)}
-            >
-              <Typography variant="caption">키워드</Typography>
-              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                {words.name}
-              </Typography>
-              <Typography
-                variant="body2"
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : error || todayWords.length === 0 ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <Typography variant="body2" color="text.secondary">
+              단어를 불러오지 못했습니다.
+            </Typography>
+          </Box>
+        ) : (
+          <Stack direction="row" spacing={3}>
+            {todayWords.map((words) => (
+              <Paper
+                key={words.termId}
+                variant="outlined"
                 sx={{
-                  lineHeight: 1.5,
-                  display: '-webkit-box',
-                  WebkitLineClamp: 4,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  width: "360px",
+                  px: 2,
+                  py: 2,
+                  minHeight: "190px",
+                  borderRadius: 2,
+                  minWidth: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    bgcolor: '#F6F8FF',
+                  },
                 }}
+                onClick={() => navigate(`/words/detail/${words.termId}`)}
               >
-                {words.description}
-              </Typography>
-            </Paper>
-          ))}
-        </Stack>
+                <Typography variant="caption">키워드</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  {words.name}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    lineHeight: 1.5,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 4,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {words.description}
+                </Typography>
+              </Paper>
+            ))}
+          </Stack>
+        )}
       </Box>
 
       {/* 오늘의 퀴즈 */}
@@ -98,13 +110,17 @@ export default function WordHome() {
           오늘의 퀴즈
         </Typography>
 
-        {quizLoading && (
-          <Typography variant="body2" color="text.secondary">
-            퀴즈를 불러오는 중...
-          </Typography>
-        )}
-
-        {!quizLoading && quiz && (
+        {quizLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : quizError || !quiz ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <Typography variant="body2" color="text.secondary">
+              퀴즈를 불러오지 못했습니다.
+            </Typography>
+          </Box>
+        ) : (
           <Paper
             variant="outlined"
             sx={{
