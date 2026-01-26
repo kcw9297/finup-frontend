@@ -5,9 +5,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from '../../../assets/logo.png'
-import { useAuth } from '../../hooks/useAuth';
+import { useLoginMember } from '../../hooks/useLoginMember';
 import WordbookPopup from '../../../features/word/components/WordbookPopup';
-import { useMeDetail } from '../../../features/mypage/hooks/useMeDetail';
 
 
 /**
@@ -25,10 +24,9 @@ export default function Header() {
   ]
 
   const navigate = useNavigate()
-  const { handleLogout, loading, isAuthenticated, loginMember } = useAuth()
+  const { handleLogout, loading, isAuthenticated, loginMember } = useLoginMember()
   const { pathname } = useLocation()
   const [openWordbook, setOpenWordBook] = useState(false)
-  const { me } = useMeDetail();
 
   // [2] 프로필 클릭 처리 함수
   const onProfileCilck = () => {
@@ -149,7 +147,7 @@ export default function Header() {
               {/* 프로필 아이콘 */}
               <Box>
                 <Avatar
-                  src={me.profileImageUrl} // 프로필 이미지 URL
+                  src={loginMember?.profileImageUrl} // 프로필 이미지 URL
                   sx={{ width: 35, height: 35 }}
                 >
                   {/* 이미지 없을 때 Avatar 컴포넌트에서 자동으로 기본 이미지로 처리 */}
@@ -160,7 +158,7 @@ export default function Header() {
               {loading ? (
                 <p style={{ fontSize: 14, color: "text.main" }}>테스트님 환영합니다</p>
               ) : isAuthenticated ? (
-                <p style={{ fontSize: 14, color: "text.main" }}>{me.nickname}님 환영합니다</p>
+                <p style={{ fontSize: 14, color: "text.main" }}>{loginMember?.nickname}님 환영합니다</p>
               ) : (
                 <p style={{ fontSize: 14, color: "text.main" }}>로그인이 필요합니다</p>
               )}

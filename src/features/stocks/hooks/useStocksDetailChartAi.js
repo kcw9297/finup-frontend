@@ -28,9 +28,8 @@ export function useStocksDetailChartAi(code, candleType) {
   useEffect(() => {
     if (!code || !candleType) return;
 
-
     fetchAi();
   }, [code, candleType]);
 
-  return { ai, loadingAi, aiError };
+  return { fetchAi, ai, loadingAi, aiError };
 }

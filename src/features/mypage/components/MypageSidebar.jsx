@@ -22,7 +22,7 @@ export default function MypageSidebar() {
     <Box
       sx={{
         textAlign: "left",
-        width: "180px",           // 사이드바 폭
+        width: "240px",           // 사이드바 폭
         padding: "8px 0 0 0",     // 위쪽 패딩
         display: "flex",
         flexDirection: "column",

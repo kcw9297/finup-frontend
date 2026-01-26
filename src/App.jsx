@@ -2,7 +2,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom'
 import ProtectedRoute from '../src/base/routes/ProtectedRoute'
 import GuestRoute from '../src/base/routes/GuestRoute'
 import { useSnackbar } from './base/provider/SnackbarProvider'
-import { useAuth } from './base/hooks/useAuth'
+import { useLoginMember } from './base/hooks/useLoginMember'
 import { useEffect, useLayoutEffect } from 'react'
 import { initGlobalHook } from './base/config/globalHookConfig'
 import { useBookmark } from './base/hooks/useBookmark'
@@ -40,7 +40,7 @@ export default function App() {
   // [1] 전역 상태를 관리하는 Hooks
   const { // 인증 훅    
     authenticate, isAdmin, logout, isAuthenticated
-  } = useAuth()
+  } = useLoginMember()
 
   const { // 북마크 전역 상태를 관리하는 훅
     loadBookmark, clearBookmark

@@ -8,7 +8,7 @@ import { useNewsModal } from "../hooks/useNewsModal";
 import NewsScrollToTop from "./NewsScrollToTop";
 import useGenericNews from "../hooks/useGenericNews";
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../../../base/hooks/useAuth";
+import { useLoginMember } from "../../../base/hooks/useLoginMember";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 import { navigate } from "../../../base/config/globalHookConfig";
 import { CircularProgress, Typography } from "@mui/material";
@@ -17,7 +17,7 @@ import { CircularProgress, Typography } from "@mui/material";
  */
 export default function NewsList() {
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useLoginMember();
   const { showSnackbar } = useSnackbar();
 
   const {

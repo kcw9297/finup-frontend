@@ -58,9 +58,14 @@ export function useCandleChart(containerRef, candles, onTimeScaleReady, onCrossh
     ma5Ref.current = chart.addLineSeries({ 
       color: "#ef4444", //빨강
       lineWidth: 1 ,
+      priceLineVisible: false,
+      lastValueVisible: false,
     });
     ma20Ref.current = chart.addLineSeries({ 
-      color: "#3b82f6", lineWidth: 1 //파랑
+      color: "#3b82f6", 
+      lineWidth: 1, //파랑
+      priceLineVisible: false,
+      lastValueVisible: false,
     });
 
     // 리사이즈 핸들링

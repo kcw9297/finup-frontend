@@ -1,19 +1,19 @@
 import { useState } from "react"
 import { api } from "../utils/fetchUtils"
-import { useAuthStore } from "../stores/useAuthStore"
+import { useLoginMemberStore } from "../stores/useLoginMemberStore"
 import { useSnackbar } from "../provider/SnackbarProvider"
 import { useLocation, useNavigate } from "react-router-dom"
 
 /**
- * 인증 상태 검증 hook
+ * 로그인 회원 상태 hook
  * @since 2025-11-26
  * @author kcw
  */
 
-export function useAuth() {
+export function useLoginMember() {
 
   // 전역 저장소
-  const { login, logout, isAuthenticated, loginMember, loading, setLoading } = useAuthStore()
+  const { login, logout, isAuthenticated, loginMember, loading, setLoading, editLoginMember } = useLoginMemberStore()
   const { showSnackbar } = useSnackbar()
   const location = useLocation() // 현재 경로
   const navigate = useNavigate()
@@ -63,9 +63,17 @@ export function useAuth() {
     await api.post('/logout', { onSuccess, onFinally })
   }
 
+
+  // 프로필 변경 처리
+  const handleEditLoginMember = (editInfo) => {
+    editLoginMember(editInfo)
+  }
+
+
+
   // [3] 반환
   return {
     loading, isAuthenticated, loginMember, logout,
-    authenticate, handleLogout, handleLogin, isAdmin
+    authenticate, handleEditLoginMember, handleLogout, handleLogin, isAdmin
   }
 }

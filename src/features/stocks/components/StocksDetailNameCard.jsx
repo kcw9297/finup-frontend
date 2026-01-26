@@ -17,6 +17,7 @@ export default function StocksDetailNameCard({ nameCard, loadingDetail }) {
         borderRadius: 2,
         overflow: "hidden",
         width: "fit-content",
+        p: 2
       }}
     >
       {/* 이미지 */}
@@ -46,6 +47,7 @@ export default function StocksDetailNameCard({ nameCard, loadingDetail }) {
         sx={{
           background: thema.palette.background.light,
           borderRadius: 2,
+          mt: 1
         }}
       >
         <CardContent

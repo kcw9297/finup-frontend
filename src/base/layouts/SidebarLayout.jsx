@@ -6,7 +6,7 @@ export default function SidebarLayout({
   sidebar, 
   sidebarPosition = "left",
   maxWidth = 1440,
-  sidebarWidth = 100
+  sidebarWidth = 240
 }) {
   return (
     <Box
@@ -25,6 +25,7 @@ export default function SidebarLayout({
       {/* 왼쪽 사이드바 */}
       {sidebarPosition === "left" && (
         <Box sx={{ 
+          p: 2,
           width: { xs: '100%', md: sidebarWidth },
           flexShrink: 0,
           display: { xs: 'none', md: 'block' }

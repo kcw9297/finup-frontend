@@ -13,13 +13,13 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 import { useMemberNickname } from "../../member/hooks/useMemberNickname";
 import { useMemberPassword } from "../../member/hooks/useMemberPassword";
 import { useMemberProfileImage } from "../../member/hooks/useMemberProfileImage";
 import { useMypageMemberUI } from "../hooks/useMypageMemberUI";
-import { useMeDetail } from "../hooks/useMeDetail";
+import { useLoginMember } from "../../../base/hooks/useLoginMember";
 
 
 /*
@@ -60,19 +60,20 @@ const textFieldSx = {
 
 export default function MypageMember() {
 
-  const { me, refreshMe } = useMeDetail()
+  const { loading: loadingLoginMember, loginMember } = useLoginMember()
 
   const {
     nicknameRq,
     changeNicknameRq,
     submitNickname,
-    loading: nicknameLoading,
+    loading: loadingNickname
   } = useMemberNickname()
 
   const {
     passwordRq,
     changePasswordRq,
     submitPassword,
+    loading: loadingPassword
   } = useMemberPassword()
 
 
@@ -80,6 +81,8 @@ export default function MypageMember() {
     profilePreview,
     submitProfileImage,
     changeProfileImage,
+    resetProfileImage,
+    loading: loadingProfileImage
   } = useMemberProfileImage();
 
   const {
@@ -93,16 +96,18 @@ export default function MypageMember() {
     handleProfileMouseLeave,
   } = useMypageMemberUI();
 
+  const [isHoveringProfile, setIsHoveringProfile] = useState(false);
 
-  // ✅ hover로 바로 모달 열기(너무 민감하면 딜레이)
+
+  // hover로 바로 모달 열기(너무 민감하면 딜레이)
   const hoverTimerRef = useRef(null);
 
 
-  // ✅ 언마운트/모달 열릴 때 타이머 정리
+  // 언마운트/모달 열릴 때 타이머 정리
 
   // 모달 열기
   const openNicknameModal = () => {
-    changeNicknameRq({ nickname: me.nickname ?? "" });
+    changeNicknameRq({ nickname: loginMember.nickname ?? "" });
     setOpenNickname(true);
   };
 
@@ -111,6 +116,7 @@ export default function MypageMember() {
     changePasswordRq({ currentPassword: "", password: "", passwordConfirm: "" });
     setOpenPassword(true);
   };
+  
 
   // 저장 액션들
 
@@ -137,14 +143,13 @@ export default function MypageMember() {
         }}>
         <Box
           sx={{
-            width: "70%",
+            width: "100%",
             bgcolor: COLORS.pageBg,
             borderRadius: 2,
             p: 4,
             display: "flex",
             flexDirection: "column",
             gap: 3,
-            ml: 10,
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: 600, color: COLORS.title }}>
@@ -163,9 +168,9 @@ export default function MypageMember() {
               }}
             >
               <Box
-                onMouseEnter={handleProfileMouseEnter}
-                onMouseLeave={handleProfileMouseLeave}
-                onClick={() => setOpenProfile(true)} // 모바일 대비 클릭도 유지
+                onMouseEnter={() => setIsHoveringProfile(true)}
+                onMouseLeave={() => setIsHoveringProfile(false)}
+                onClick={() => setOpenProfile(true)}
                 sx={{
                   width: 220,
                   height: 220,
@@ -177,16 +182,44 @@ export default function MypageMember() {
                   justifyContent: "center",
                   bgcolor: "#E5E7EB",
                   cursor: "pointer",
+                  position: "relative",
                 }}
               >
                 <Avatar
                   src={
-                    profilePreview ||
-                    me.profileImageUrl ||
+                    loginMember?.profileImageUrl ||
                     "/assets/profile-sample.png"
                   }
-                  sx={{ width: "100%", height: "100%" }}
+                  sx={{ width: "100%", height: "100%", '& img': { objectFit: 'cover', objectPosition: 'center top'} }}
                 />
+
+                {/* 호버 오버레이 */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    bgcolor: "rgba(0, 0, 0, 0.5)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    opacity: isHoveringProfile ? 1 : 0,
+                    transition: "opacity 0.2s",
+                    pointerEvents: "none", // 클릭 이벤트가 부모로 전달되도록
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "white",
+                      fontWeight: 600,
+                      fontSize: 16,
+                    }}
+                  >
+                    이미지 수정
+                  </Typography>
+                </Box>
               </Box>
 
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
@@ -197,17 +230,17 @@ export default function MypageMember() {
                 align="center"
                 sx={{ color: COLORS.desc }}
               >
-                이미지에 마우스를 올리면 바로 수정 창이 열립니다.
+                마우스를 올려 수정할 수 있습니다.
               </Typography>
             </Box>
 
             {/* 읽기 전용 정보 */}
             <Box sx={{ flex: 1, maxWidth: 520 }}>
               <Stack spacing={2.5}>
-                <ReadOnlyRow label="이메일" value={me?.email} />
+                <ReadOnlyRow label="이메일" value={loginMember?.email} />
                 <ReadOnlyRow
                   label="닉네임"
-                  value={me?.nickname}
+                  value={loginMember?.nickname}
                   onEdit={openNicknameModal}
                 />
                 <ReadOnlyRow
@@ -243,11 +276,10 @@ export default function MypageMember() {
               }>취소</Button>
 
               <Button variant="contained"
-                disabled={nicknameLoading}
+                disabled={loadingLoginMember || loadingNickname}
                 onClick={async () => {
                   const ok = await submitNickname()
                   if (ok) {
-                    refreshMe()
                     setOpenNickname(false)
                   }
                 }}>
@@ -303,10 +335,10 @@ export default function MypageMember() {
             <DialogActions>
               <Button onClick={() => setOpenPassword(false)}>취소</Button>
               <Button variant="contained"
+                disabled={loadingLoginMember || loadingPassword}
                 onClick={async () => {
                   const ok = await submitPassword();
                   if (ok) {
-                    refreshMe()
                     setOpenPassword(false);
                   }
                 }}>
@@ -328,13 +360,16 @@ export default function MypageMember() {
                 <Avatar
                   src={
                     profilePreview ||
-                    me.profileImageUrl ||
+                    loginMember?.profileImageUrl ||
                     "/assets/profile-sample.png"
                   }
 
-                  sx={{ width: 72, height: 72 }}
+                  sx={{ width: 72, height: 72}}
                 />
-                <Button variant="outlined" component="label">
+                <Button 
+                  variant="outlined" 
+                  disabled={loadingLoginMember || loadingProfileImage}
+                  component="label">
                   파일 선택
                   <input
                     hidden
@@ -349,21 +384,25 @@ export default function MypageMember() {
               </Box>
               <Typography
                 variant="caption"
-                sx={{ display: "block", mt: 1, color: COLORS.label }}
+                sx={{ display: "block", mt: 1, mx: 0.5, color: COLORS.label }}
               >
-                권장: 1:1 비율 이미지
+                현재 이미지
               </Typography>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenProfile(false)}>취소</Button>
-              <Button variant="contained" onClick={async () => {
-                const ok = await submitProfileImage()
-                if (ok) {
-                  refreshMe()
-                  setOpenProfile(false)
+              <Button onClick={() => {
+                resetProfileImage()
+                setOpenProfile(false)}
+              }>취소</Button>
+              <Button variant="contained" 
+                disabled={loadingLoginMember || loadingProfileImage}
+                onClick={async () => {
+                  const ok = await submitProfileImage()
+                  if (ok) {
+                    setOpenProfile(false)
+                  }
                 }
-              }
-              }>
+                }>
                 저장
               </Button>
             </DialogActions>

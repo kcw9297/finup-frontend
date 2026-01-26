@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
-import { useAuth } from "../../../base/hooks/useAuth";
+import { useLoginMember } from "../../../base/hooks/useLoginMember";
 
 export function useHomeVideoList() {
 
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = useLoginMember()
   const [videoList, setVideoList] = useState([]);
   const [loading, setLoading] = useState(false);
 

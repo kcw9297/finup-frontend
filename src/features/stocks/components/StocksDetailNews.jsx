@@ -7,14 +7,14 @@ import { useStocksNews } from "../hooks/useStocksNews.js";
 import { useStocksNewsModal } from "../hooks/useStocksNewsModal.js";
 import { useEffect, useRef } from "react";
 import StocksDetailInfoTooltipIcon from "./StocksDetailInfoTooltipIcon.jsx";
-import { useAuth } from "../../../base/hooks/useAuth.js";
+import { useLoginMember } from "../../../base/hooks/useLoginMember.js";
 import { useNewsModal } from "../../news/hooks/useNewsModal.js";
 import { navigate, showSnackbar } from "../../../base/config/globalHookConfig.js";
 
 export default function StocksDetailNews({ stockDetail, loadingDetail }) {
 
   const stockCode = stockDetail?.basicHead?.code || "";
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useLoginMember();
 
   const {
       open,

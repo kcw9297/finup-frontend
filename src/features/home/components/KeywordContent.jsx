@@ -1,5 +1,6 @@
 import { Box, Typography, Avatar, CircularProgress } from "@mui/material";
 import moment from "moment";
+import ImageIcon from '@mui/icons-material/Image';
 
 // 뉴스 리스트
 export default function KeywordContent({ list, loading, onItemClick }) {
@@ -64,7 +65,12 @@ export default function KeywordContent({ list, loading, onItemClick }) {
             }}
           >
             {/* 썸네일 */}
-            <Avatar src={item.thumbnail} sx={{ width: 40, height: 40 }} />
+            <Avatar 
+              src={item?.thumbnail} 
+              sx={{ width: 40, height: 40 }}
+            >
+              {!item.thumbnail && <ImageIcon />}
+            </Avatar>
 
             {/* 제목 */}
             <Box sx={{ display: "flex", flexDirection: "column", minWidth: 0 }}>

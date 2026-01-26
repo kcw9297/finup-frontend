@@ -16,12 +16,12 @@ import { useKeywordNews } from "../hooks/useKeywordNews";
 import { useRecommendedVideo } from "../hooks/useRecommendedVideo";
 import { useStockFirm } from "../hooks/useStockFirm";
 import { useHomeNoticeList } from "../../notice/hooks/useHomeNoticeList";
-import { useAuth } from "../../../base/hooks/useAuth";
+import { useLoginMember } from "../../../base/hooks/useLoginMember";
 import { navigate, showSnackbar } from "../../../base/config/globalHookConfig";
 
 export default function Home() {
   // 공지 데이터 (custom hook)
-  const { isAdmin } = useAuth()
+  const { isAdmin } = useLoginMember()
   const { listRp, loading: loadingNotice } = useHomeNoticeList({ admin: isAdmin() })
   const listRows = listRp?.data ?? []
 
@@ -35,7 +35,7 @@ export default function Home() {
 
 
   // 뉴스 모달 상태
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useLoginMember();
   const [open, setOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
 

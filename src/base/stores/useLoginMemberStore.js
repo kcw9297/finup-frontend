@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export const useAuthStore = create(set => ({
+export const useLoginMemberStore = create(set => ({
 
   isAuthenticated: false, // 전역 상태 : 로그인
   loginMember: null,      // 전역 상태 : 로그인 회원 정보(인증 주체 정보만 저장 (memberId, email, role))
@@ -21,5 +21,12 @@ export const useAuthStore = create(set => ({
     isAuthenticated: false,
     loginMember: null,
   }),
+
+  // 회원 특정 정보 갱신
+  editLoginMember: (updates) => set((state) => ({
+    loginMember: state.loginMember 
+      ? { ...state.loginMember, ...updates }  // 기존 데이터 유지하며 업데이트
+      : null
+  })),
 
 }))
