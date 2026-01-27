@@ -28,17 +28,21 @@ export default function WordHome() {
     }}>
       {/* 오늘의 단어 */}
       <Box sx={{ mb: 4 }}>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 700,
-            mb: 2,
-            textAlign: 'left',
-            pl: 0.5,
-          }}
-        >
-          오늘의 단어
-        </Typography>
+        <Paper sx={{ display: "flex", gap: "10px", mb: 3 }}>
+          <Typography 
+            sx={{ 
+              color: "base.main", 
+              backgroundColor: "base.main",
+              fontSize: 22, 
+              fontWeight: 600 
+            }}
+          >
+            &nbsp;
+          </Typography>
+          <Typography sx={{ fontSize: 22, fontWeight: 600 }}>
+            오늘의 단어
+          </Typography>
+        </Paper>
 
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
@@ -98,17 +102,21 @@ export default function WordHome() {
 
       {/* 오늘의 퀴즈 */}
       <Box>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 700,
-            mb: 2,
-            textAlign: 'left',
-            pl: 0.5,
-          }}
-        >
-          오늘의 퀴즈
-        </Typography>
+        <Paper sx={{ display: "flex", gap: "10px", mb: 3 }}>
+          <Typography 
+            sx={{ 
+              color: "base.main", 
+              backgroundColor: "base.main",
+              fontSize: 22, 
+              fontWeight: 600 
+            }}
+          >
+            &nbsp;
+          </Typography>
+          <Typography sx={{ fontSize: 22, fontWeight: 600 }}>
+            오늘의 퀴즈
+          </Typography>
+        </Paper>
 
         {quizLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>

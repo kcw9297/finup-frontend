@@ -1,28 +1,47 @@
-import { Box, Typography, Tooltip, IconButton, Stack, Paper } from "@mui/material";
+import { Box, Typography, IconButton, RadioGroup, FormControlLabel, Radio, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import { useWordbook } from "../../wordbook/hooks/useWordbook";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useEffect, useState } from "react";
 
-export default function WordBookContent({ onClose }) {
+// 문제 제출
 
-  const { list, loading, removeWord } = useWordbook();
+export default function QuizQuestion ({ onClose, questions, onSubmit }) {
+  // 배열 생성 + 제출 버튼 활성화
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null))
+  const isAllAnswered = answers.every((a) => a !== null);
+  
+  // 원 숫자 변환 (0→①, 1→②, 2→③, 3→④)
+  const getCircledNumber = (num) => {
+    const circledNumbers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
+    return circledNumbers[num] || num;
+  };
 
-  return (
+  // 답안 선택
+  const handleSelect = (questionIndex, value) => {
+    const newAnswers = [...answers]
+    newAnswers[questionIndex] = Number(value)
+    setAnswers(newAnswers)
+  }
+
+  // 제출(답안 제출 -> 부모가 채점)
+  const finish = () => onSubmit(answers);
+
+  return(
     <>
-      {/* 헤더 */}
+      {/* 제목 */}
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent:'space-between',
           alignItems: 'center',
+          padding: '20px 10px',
           backgroundColor: 'base.dark',
           height: 60,
-          px: 3,
-          py: 2,
+          p: 3,
+          mb: -2
         }}
       >
         <Typography sx={{ fontSize: 18, fontWeight: 600, color: 'text.contrastText' }}>
-          내 단어장
+          개념 확인 (총 10문항)
         </Typography>
         <IconButton
           onClick={onClose}
@@ -30,105 +49,85 @@ export default function WordBookContent({ onClose }) {
           disableFocusRipple
           sx={{ color: 'text.contrastText', padding: '5px' }}
         >
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       </Box>
 
-      {/* 컨텐츠 영역 */}
-      <Box sx={{ px: 3, py: 3 }}>
-        {/* 로딩 */}
-        {loading && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: 400,
-            }}
-          >
-            <Typography variant="body2" color="text.secondary">
-              불러오는 중...
-            </Typography>
-          </Box>
-        )}
-
-        {/* 빈 상태 */}
-        {!loading && list.length === 0 && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: 400,
-            }}
-          >
-            <Typography variant="body2" color="text.secondary">
-              아직 담은 단어가 없습니다.
-            </Typography>
-          </Box>
-        )}
-
-        {/* 단어 리스트 */}
-        {!loading && list.length > 0 && (
-          <Box sx={{ minHeight: 400, maxHeight: 520, overflowY: 'auto' }}>
-            <Stack spacing={2}>
-              {list.map((word) => (
-                <Paper
-                  key={word.termId}
-                  variant="outlined"
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 2,
-                  }}
-                >
-                  {/* 왼쪽: 단어 정보 */}
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography fontWeight={600} noWrap>
-                      {word.name}
+      {/* 문제 */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '50px',
+          margin: '30px 20px',
+          maxHeight: '520px',
+          overflowY: 'auto',
+          p: 3
+        }}
+      >
+        {questions.map((q, idx) => (
+        <Box key={idx} sx={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+          <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
+            {idx + 1}. {q.question} 
+          </Typography>
+          <RadioGroup value={answers[idx]} onChange={(e) => handleSelect(idx, e.target.value)}>
+            {q.choices.map((opt, i) => (
+              <FormControlLabel
+                key={i}
+                value={i}
+                control={<Radio sx={{opacity: 0, padding: 0, margin: '4px 2px'}}/>}
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}>
+                    <Typography component="span" sx={{ fontSize: 16 }}>
+                      {getCircledNumber(i)}
                     </Typography>
-
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{
-                        mt: 0.5,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {word.description}
+                    <Typography component="span" sx={{ fontSize: 16, flex: 1 }}>
+                      {opt}
                     </Typography>
                   </Box>
-
-                  {/* 오른쪽: 액션 */}
-                  <Box sx={{ flexShrink: 0 }}>
-                    <Tooltip title="삭제">
-                      <IconButton
-                        size="medium"
-                        onClick={() => removeWord(word.termId)}
-                        sx={{
-                          color: "text.secondary",
-                          "&:hover": {
-                            color: "error.main",
-                            backgroundColor: "rgba(211, 47, 47, 0.08)",
-                          },
-                        }}
-                      >
-                        <DeleteOutlineIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </Paper>
-              ))}
-            </Stack>
-          </Box>
-        )}
+                }
+                sx={{
+                  '& .MuiTypography-root': { 
+                    fontSize: '16px', 
+                    color: answers[idx] === null ? 'text.main' : answers[idx] === i ? 'base.main' : 'text.light' 
+                  },
+                  '&:hover .MuiTypography-root': { color: 'base.main' },
+                }}
+              />
+            ))}
+          </RadioGroup>
+        </Box>
+        ))}
+        <Button
+          variant='contained'
+          onClick={finish}
+          disabled={!isAllAnswered}
+          sx={{
+            width: 'fit-content',
+            alignSelf: 'center',
+            backgroundColor: 'background.base',
+            color: 'base.dark',
+            padding: '10px 20px',
+            border: 2,
+            borderColor: 'base.dark',
+            borderRadius: '10px',
+            fontWeight: 600,
+            fontSize: 16,
+            mt: 3,
+            '&.Mui-disabled': {
+              backgroundColor: 'background.base',
+              color: 'text.light',
+              borderColor: 'line.dark',
+            },
+            '&:hover': {
+              backgroundColor: 'base.dark',
+              color: 'text.contrastText',
+            }
+          }}
+        >
+          제출하기
+        </Button>
       </Box>
     </>
-  );
+  )
 }

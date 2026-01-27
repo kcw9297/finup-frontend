@@ -177,7 +177,7 @@ export default function StocksDetailStock({ stockDetail }){
                   rowGap: 2, 
                   columnGap: 2,
                   alignItems: 'center',
-                  "& .MuiChip-root": { justifySelf: 'start' },
+                  "& .MuiChip-root": { justifySelf: 'start', width: '90px' },
                   "& .MuiTypography-root": { fontSize: 15, lineHeight: 1.6 }
                 }}
               >
