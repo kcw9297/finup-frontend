@@ -1,25 +1,11 @@
 import {
   Box,
   Typography,
-  TextField,
-  IconButton,
   Paper,
-  Pagination,
+  CircularProgress,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import { useWordSearch } from '../hooks/useWordSearch';
-import theme from '../../../base/design/thema';
-import SearchBar from '../../../base/components/bar/SearchBar';
-import OrderBar from '../../../base/components/bar/OrderBar';
-import { useState } from 'react';
-import PageBar from '../../../base/components/bar/PageBar';
 import { useNavigate } from 'react-router-dom';
-
-const ORDER_OPTIONS = [
-  { value: 'name_asc', label: '가나다순' },
-  { value: 'name_desc', label: '가나다 역순' },
-];
-
 
 /**
  * 단어장 검색 컴포넌트
@@ -28,157 +14,18 @@ const ORDER_OPTIONS = [
  */
 
 export default function WordSearch() {
-
-
-  const { searchRq,
+  const { 
+    searchRq,
     wordList,
     pagination,
     loading,
-    handleChangeRq,
-    handleSearch,
-    handlePage,
-    handleSearchEnter,
-    handleOrderChange,
+  } = useWordSearch();
 
-    recent,
-    fetchRecent,
-
-  } = useWordSearch()
-
-  /// 최근 검색어 - 컴포넌트 표현 로직
-
-  const [openRecent, setOpenRecent] = useState(false)
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ width: '100%', minHeight: '100%', py: 3 }}>
-      {/* ================== SearchBar ================== */}
-      <Box
-        sx={{
-          maxWidth: 1120,
-          mx: 'auto',
-          mt: 4,
-          mb: 4,
-        }}
-      >
-        <Box
-          sx={{
-            maxWidth: 780,
-            mx: 'auto',
-            position: 'relative',
-          }}
-          onKeyUp={(e) => handleSearchEnter(e)}
-        >
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto',
-            columnGap: 2,
-            alignItems: 'center',
-          }}>
-            <Box sx={{ position: 'relative' }}>
-              <TextField
-                value={searchRq.keyword}
-                fullWidth
-                size="small"
-                onChange={e => handleChangeRq({ keyword: e.target.value })}
-                onFocus={() => {
-                  fetchRecent()
-                  setOpenRecent(true)
-                }}
-                onBlur={() => {
-                  // 바로 닫지 말고 약간 지연
-                  setTimeout(() => setOpenRecent(false), 150)
-                }}
-
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    height: 44,
-                    borderRadius: '10px',
-                    '& fieldset': {
-                      borderWidth: 2,
-                      borderColor: '#003FBF',
-                    },
-                  },
-                }}
-              />
-
-              {/* 최근 검색어 드롭다운 */}
-              {openRecent && recent.length > 0 && (
-                <Paper
-                  elevation={0}
-                  sx={{
-                    position: 'absolute',
-                    top: 48,        // TextField 바로 아래
-                    left: 0,
-                    right: 0,
-                    zIndex: 10,
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                    border: '1px solid'
-                  }}
-                >
-                  {recent.map((word) => (
-                    <Box
-                      key={word}
-                      onMouseDown={() => {
-                        handleChangeRq({ keyword: word })
-                        handleSearch()
-                      }}
-                      sx={{
-                        px: 2,
-                        py: 1.2,
-                        cursor: 'pointer',
-                        fontSize: 13,
-                        '&:hover': {
-                          bgcolor: '#F2F5FF',
-                        },
-                      }}
-                    >
-                      {word}
-                    </Box>
-                  ))}
-                </Paper>
-              )}
-            </Box>
-
-            <IconButton
-              onClick={handleSearch}
-              sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '10px',
-                bgcolor: '#003FBF',
-                '&:hover': {
-                  bgcolor: '#0035A5',
-                },
-              }}
-            >
-              <SearchIcon sx={{ color: '#fff', fontSize: 22 }} />
-            </IconButton>
-
-          </Box>
-        </Box>
-      </Box>
-
-      {/* 정렬 바 */}
-      <Box
-        sx={{
-          maxWidth: 1000,
-          mx: 'auto',
-          mb: 1.5,
-          display: 'flex',
-          justifyContent: 'flex-start',
-        }}
-      >
-        <OrderBar
-          options={ORDER_OPTIONS}
-          selected={searchRq.order}
-          onChange={handleOrderChange}
-        />
-      </Box>
-
-
+      
       {/* =================== 메인 테이블 =================== */}
       <Paper
         elevation={0}
@@ -187,7 +34,7 @@ export default function WordSearch() {
           mx: 'auto',
           borderRadius: '10px',
           overflow: 'hidden',
-          border: '1px solid #CED4E4', // 전체 윤곽선
+          border: '1px solid #CED4E4',
         }}
       >
         {/* 헤더 */}
@@ -222,22 +69,34 @@ export default function WordSearch() {
           >
             설명
           </Typography>
-
         </Box>
 
-        {/* 행들 */}
+        {/* 로딩 중 */}
+        {loading && (
+          <Box sx={{ 
+            py: 8, 
+            textAlign: 'center', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center' 
+          }}>
+            <CircularProgress size={40} />
+          </Box>
+        )}
 
+        {/* 검색 결과 없음 */}
         {!loading && wordList.length === 0 && (
-          <Box sx={{ py: 8, textAlign: 'center', gridColumn: '1 / -1', }}>
+          <Box sx={{ py: 8, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
               검색 결과가 없습니다.
             </Typography>
           </Box>
         )}
 
-        {wordList.map((row, idx) => (
+        {/* 검색 결과 행들 */}
+        {!loading && wordList.map((row, idx) => (
           <Box
-            key={(pagination?.pageNum - 1) * pagination?.pageSize + idx + 1}
+            key={row.termId}
             sx={{
               display: 'grid',
               gridTemplateColumns: '80px 300px 1fr',
@@ -247,31 +106,22 @@ export default function WordSearch() {
               minHeight: 72,
               borderTop: idx === 0 ? '1px solid #CED4E4' : '1px solid #E3E7F2',
               bgcolor: '#FFFFFF',
+              cursor: 'pointer',
               '&:hover': {
                 bgcolor: '#F6F8FF',
               },
             }}
             onClick={() => navigate(`/words/detail/${row.termId}`)}
           >
-
             {/* No */}
             <Typography
               variant="body2"
               align="center"
               sx={{ fontSize: 13 }}
             >
-              {idx + 1}
+              {(pagination?.pageNum - 1) * pagination?.pageSize + idx + 1 || idx + 1}
             </Typography>
-            {/* 
-              주제 
-              <Typography
-                variant="body2"
-                align="center"
-                sx={{ fontSize: 13 }}
-              >
-                {row.category}
-              </Typography>
-              */}
+
             {/* 용어 */}
             <Typography
               variant="body2"
@@ -303,14 +153,9 @@ export default function WordSearch() {
             >
               {row.description}
             </Typography>
-
           </Box>
         ))}
       </Paper>
-
-      {/* =================== 페이지네이션 =================== */}
-      <PageBar pagination={pagination} onChange={handlePage} />
     </Box>
-
-  )
+  );
 }

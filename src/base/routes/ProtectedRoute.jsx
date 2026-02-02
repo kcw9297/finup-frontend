@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import Loading from '../components/layout/Loading'
-import { useAuth } from "../hooks/useAuth";
+import { useLoginMember } from "../hooks/useLoginMember";
 
 /**
  * 인증 및 권한 확인이 필요한 컴포넌트 라우팅 
@@ -12,7 +12,7 @@ import { useAuth } from "../hooks/useAuth";
 export default function ProtectedRoute({ children, allowedRoles = null }) {
 
   // [1] 사용 Hook
-  const { isAuthenticated, loginMember, loading } = useAuth() // 로그인 상태
+  const { isAuthenticated, loginMember, loading } = useLoginMember() // 로그인 상태
   const location = useLocation() // 현재 경로
 
   // 만약 로딩 중이면, 로딩 페이지 렌더링

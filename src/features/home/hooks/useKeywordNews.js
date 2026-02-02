@@ -4,7 +4,7 @@ import { api } from "../../../base/utils/fetchUtils";
 // 개념 키워드 + 뉴스 미리보기
 
 export function useKeywordNews() {
-  // 최신 뉴스 10개 조회
+  // 최신 뉴스 조회
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const fetchedRef = useRef(false);
@@ -17,8 +17,8 @@ export function useKeywordNews() {
       setLoading(true);
       try {
         const res = await api.get(
-          "/news/latest",
-          { public: true, params: { category: "date", limit: 10 } }
+          "/news/main",
+          { public: true, params: { pageNum: 1, pageSize: 30 } }
         );
         if (res?.success) {
           setNewsList(res.data ?? []);

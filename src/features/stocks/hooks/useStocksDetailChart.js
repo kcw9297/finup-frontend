@@ -2,18 +2,15 @@ import { useEffect, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 
 export function useStocksDetailChart(code){
-  const [items, setItems ] = useState([]);
-  const [candleType, setCandleType] = useState("day")
+
+  const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null)
   
   const fetchChart = async () => { 
     try{
-        const res = await api.get("/stocks/chart",{
-          params:{ code, candleType },
-        })
-        console.log(res.data.output);
-        setItems(res.data.output);
+        const res = await api.get(`/stocks/${code}/chart`)
+        setItems(res.data);
       }
       catch(err){
         console.error("차트 불러오기 오류:", err)
@@ -26,18 +23,14 @@ export function useStocksDetailChart(code){
   }
 
   useEffect(()=>{
-    if(!code || !candleType) return;
-    
+    if (!code) return;
     setLoading(true)
     setError(null)
-
-    fetchChart();
-  },[code, candleType])
+    fetchChart()
+  },[code])
 
   return {
     items,
-    candleType,
-    setCandleType,
     loading,
     error
   }

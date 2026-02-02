@@ -1,99 +1,91 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 
-/**
- * 범용 뉴스 훅
- * @param {string} fetchUrl - 요청할 API URL (예: "/news/list")
- * @param {object} params - API에 전달할 파라미터 (예: { category, stockName })
- * @param {boolean} isModalOpen - 모달 열림 여부 (열리면 자동 refresh 중단)
- */
-export default function useGenericNews(fetchUrl, params = {}, isModalOpen = false){
-  const [news, setNews] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(10);
-  const [loading, setLoading] = useState(true);
-  const [showTop, setShowTop] = useState(false);
 
-  const category = params.category ?? "date";
+export default function useGenericNews() {
+
+
+  // [1] 필요 데이터 선언
+  const [ news, setNews ] = useState([])
+  const [hasMore, setHasMore] = useState(true)
+  const [ loading, setLoading ] = useState(true)
+  const [ showTop, setShowTop ] = useState(false)
+  const { showSnackbar } = useSnackbar()
+  
+  const pageRef = useRef(1);  // 페이지 번호 관리
   const loadingRef = useRef(false);
-
   const lastRequestRef = useRef(null);
 
-  const fetchNews = useCallback(async () => {
-    if (!fetchUrl) return;
-    if (loadingRef.current) return; // 중복 방지
-    loadingRef.current = true;
-    setLoading(true);
 
-    try {
-      const reqKey = fetchUrl + JSON.stringify(params);
-      lastRequestRef.current = reqKey;
-
-      const res = await api.get(fetchUrl, {
-        params: { ...params },
-        public: true,
-      });
-
-      // 최신 요청만 반영
-      if (lastRequestRef.current === reqKey) {
-        setNews(res.data);
-      }
-    } catch (err) {
-      console.error("[News] fetch error:", err);
-    } finally {
-      loadingRef.current = false;
-      setLoading(false);
+  // [2] API 요청 함수 정의
+  const onSuccess = useCallback((rp, isInitial) => {
+    if (isInitial) {
+      setNews(rp.data);
+    } else {
+      setNews(prev => [...prev, ...rp.data]);
     }
-  }, [fetchUrl, params.category, params.stockName]);
-
-  useEffect(() => {
-    fetchNews();
-    setVisibleCount(10);
-  }, [fetchNews]);
-
-  useEffect(() => {
-    if (isModalOpen) return;
-  }, [isModalOpen]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0].isIntersecting &&
-          !loadingRef.current &&
-          visibleCount < news.length
-        ) {
-          setVisibleCount((prev) => prev + 10);
-        }
-      },
-      { threshold: 1 }
-    );
-    const target = document.querySelector("#bottom-observer");
-    if (target) observer.observe(target);
-
-    return () => observer.disconnect();
-  }, [visibleCount, news]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowTop(window.scrollY > 200);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    pageRef.current += 1;
+    setHasMore(!rp.pagination.isEndPage);
   }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const onError = useCallback((rp) => {
+    //showSnackbar("뉴스를 불러오는데 실패했습니다.");
+  }, []);
 
-  const refreshNews = async () => {
-    await fetchNews();
-  };
+  const onFinally = useCallback(() => {
+    loadingRef.current = false;
+    setLoading(false);
+  }, []);
 
+  const fetchNews = useCallback(async (isInitial = false) => {
+    
+    // 뉴스 조회 전 확인
+    if (loadingRef.current) return; // 중복 방지
+    if (!hasMore && !isInitial) return; // 더 이상 데이터 없으면 중단
+
+    // 로딩 상태
+    loadingRef.current = true
+    setLoading(true)
+
+    // 페이지 값
+    const currentPage = isInitial ? 1 : pageRef.current
+
+    // 요청 키 생성
+    const reqKey = `news-${currentPage}-${Date.now()}`;
+    lastRequestRef.current = reqKey;
+
+    // 조회 수행
+    const res = await api.get("/news/main", { onFinally, public: true, params: { pageNum: currentPage, pageSize: 30 } });
+    
+    // 최신 요청만 반영
+    if (res.success && lastRequestRef.current === reqKey)
+      onSuccess(res, isInitial);
+    
+    
+  }, [hasMore, onSuccess, onError, onFinally]);
+
+  
+  // [3] 필요 함수 정의
+  // 다음 스크롤로 이동
+  const goNext = useCallback(() => {
+    if (!hasMore || loadingRef.current) return;
+    fetchNews(false);
+  }, [fetchNews, hasMore]);
+
+  // [4] 초기화 로직 선언
+  useEffect(() => {
+    pageRef.current = 1;
+    setHasMore(true);
+    setNews([]);
+    fetchNews(true);
+  }, []);
+
+
+  // [5] 반환
   return {
-    news,
-    loading,
-    visibleCount,
-    setVisibleCount,
-    showTop,
-    scrollToTop,
-    refreshNews,
+    news, loading, hasMore, showTop,
+    setShowTop, goNext
   };
+
 }

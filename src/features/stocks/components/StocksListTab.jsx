@@ -5,7 +5,6 @@ import StocksListTradingValue from "./StocksListTradingValue";
 
 /* 종목+ 카테고리 공통 탭 (Chip 버전) */
 export default function StocksListTab() {
-  console.log("StocksListTab 렌더됨");
 
   const [value, setValue] = useState(0);
 

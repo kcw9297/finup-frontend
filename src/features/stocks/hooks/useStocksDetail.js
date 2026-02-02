@@ -7,8 +7,8 @@ import { navigate, showSnackbar } from "../../../base/config/globalHookConfig";
 export function useStockDetail(code) {
 
   // [1] 필요 데이터 선언 
-  const [nameCard, setNameCard] = useState([]);
-  const [detailStock, setDetailStock] = useState([]);
+  const [nameCard, setNameCard] = useState(null);
+  const [stockDetail, setStockDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,7 +25,7 @@ export function useStockDetail(code) {
 
   const fetchDetail = async () => {
     try{     
-      const rp = await api.get(`/stocks/detail/${code}`);
+      const rp = await api.get(`/stocks/${code}/detail`);
       
       if (!rp.success) {
         showSnackbar(rp.message || "종목 조회 중 오류가 발생했습니다.");
@@ -37,36 +37,36 @@ export function useStockDetail(code) {
 
       /* 네임 카드  */
       setNameCard({
-        stockName: detail.htsKorIsnm,
-        code: code,
-        price: Number(detail.stckPrpr).toLocaleString() + "원"     
+        stockName: detail.stockName,
+        stockCode: detail.stockCode,
+        stockPrice: Number(detail.currentPrice).toLocaleString() + "원"     
       });
 
       /* 종목상세 */    
-      setDetailStock({
+      setStockDetail({
         /* 기본정보 */
         //기본정보 헤더
         basicHead: {
-          stockName: detail.htsKorIsnm,
-          code: code,
-          marketName: detail.rprsMrktKorName
+          stockName: detail.stockName,
+          code: detail.stockCode,
+          marketName: detail.marketIndexName
         },
         
         //기본정보 카드
         basic: [
-          { label: "업종", value: detail.bstpKorIsnm, tooltip: stockToolTipText.bstpKorIsnm },
-          { label: "액면가", value: Number(detail.stckFcam).toLocaleString() + "원", tooltip: stockToolTipText.stckFcam },
-          { label: "시가총액", value: Number(detail.htsAvls).toLocaleString() + "원", tooltip: stockToolTipText.htsAvls },
-          { label: "상장주수", value: Number(detail.lstnStcn).toLocaleString() + "주", tooltip: stockToolTipText.lstnStcn },
+          { label: "업종", value: detail.sectorName, tooltip: stockToolTipText.bstpKorIsnm },
+          { label: "액면가", value: Number(detail.faceValue).toLocaleString() + "원", tooltip: stockToolTipText.stckFcam },
+          { label: "시가총액", value: Number(detail.marketCap).toLocaleString() + "원", tooltip: stockToolTipText.htsAvls },
+          { label: "상장주수", value: Number(detail.listedShares).toLocaleString() + "주", tooltip: stockToolTipText.lstnStcn },
         ],
 
         /* 투자지표 */
         // 가격
         price: [
-          { label: "52주 최고가", value: Number(detail.w52Hgpr).toLocaleString() + "원", color: theme.palette.stock.rise, tooltip: stockToolTipText.w52Hgpr },
-          { label: "52주 최저가", value: Number(detail.w52Lwpr).toLocaleString() + "원", color: theme.palette.stock.fall, tooltip: stockToolTipText.w52Lwpr },
-          { label: "250일 최고가", value: Number(detail.d250Hgpr).toLocaleString() + "원", color: theme.palette.stock.rise, tooltip: stockToolTipText.d250Hgpr },
-          { label: "250일 최저가", value: Number(detail.d250Lwpr).toLocaleString() + "원", color: theme.palette.stock.fall, tooltip: stockToolTipText.d250Lwpr },
+          { label: "52주 최고가", value: Number(detail.week52High).toLocaleString() + "원", color: theme.palette.stock.rise, tooltip: stockToolTipText.w52Hgpr },
+          { label: "52주 최저가", value: Number(detail.week52Low).toLocaleString() + "원", color: theme.palette.stock.fall, tooltip: stockToolTipText.w52Lwpr },
+          { label: "250일 최고가", value: Number(detail.days250High).toLocaleString() + "원", color: theme.palette.stock.rise, tooltip: stockToolTipText.d250Hgpr },
+          { label: "250일 최저가", value: Number(detail.days250Low).toLocaleString() + "원", color: theme.palette.stock.fall, tooltip: stockToolTipText.d250Lwpr },
         ],
         //가치평가
         valuation: [
@@ -77,17 +77,17 @@ export function useStockDetail(code) {
         ],
         //수급 거래
         flow: [
-          { label: "외국인 순매수", value: detail.frgnNtbyQty + "주", tooltip: stockToolTipText.frgnNtbyQty },
-          { label: "프로그램매매 순매수", value: Number(detail.pgtrNtbyQty).toLocaleString() + "주", tooltip: stockToolTipText.pgtrNtbyQty },
-          { label: "HTS 외국인 소진율", value: `${detail.htsFrgnEhrt}%`, tooltip: stockToolTipText.htsFrgnEhrt },
-          { label: "거래량 회전율", value: `${detail.volTnrt}%`, tooltip: stockToolTipText.volTnrt },
+          { label: "외국인 순매수", value: Number(detail.foreignNetBuyQty).toLocaleString() + "주", tooltip: stockToolTipText.frgnNtbyQty },
+          { label: "프로그램매매 순매수", value: Number(detail.programNetBuyQty).toLocaleString() + "주", tooltip: stockToolTipText.pgtrNtbyQty },
+          { label: "HTS 외국인 소진율", value: `${detail.foreignOwnershipRate}%`, tooltip: stockToolTipText.htsFrgnEhrt },
+          { label: "거래량 회전율", value: `${detail.volumeTurnoverRate}%`, tooltip: stockToolTipText.volTnrt },
         ],
         //리스크 상태
         risk: [
-          { label: "임시 정지 여부", value: detail.tempStopYn, tooltip: stockToolTipText.tempStopYn },
-          { label: "투자유의 여부", value: detail.invtCafulYn, tooltip: stockToolTipText.invtCafulYn },
-          { label: "단기 과열 여부", value: detail.shortOverYn, tooltip: stockToolTipText.shortOverYn },
-          { label: "관리종목 여부", value: detail.mangIssuClsCode, tooltip: stockToolTipText.mangIssuClsCode },
+          { label: "임시 정지 여부", value: detail.tempStop ? "Y" : "N", tooltip: stockToolTipText.tempStopYn },
+          { label: "투자유의 여부", value: detail.investmentCaution ? "Y" : "N", tooltip: stockToolTipText.invtCafulYn },
+          { label: "단기 과열 여부", value: detail.shortOver ? "Y" : "N", tooltip: stockToolTipText.shortOverYn },
+          { label: "관리종목 여부", value: detail.managementIssueCode ? "Y" : "N", tooltip: stockToolTipText.mangIssuClsCode },
         ]
       });
     } catch (err) {
@@ -97,5 +97,5 @@ export function useStockDetail(code) {
     }    
   }
   // [5] 반환
-  return { nameCard, detailStock, loading, error };
+  return { nameCard, stockDetail, loading, error };
 }

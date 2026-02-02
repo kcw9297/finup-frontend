@@ -16,7 +16,6 @@ import ConfirmModal from "../../../base/components/modal/ConfirmModal";
 import { useNavigate } from "react-router-dom"
 import { useNoticeList } from "../hooks/useNoticeList";
 import { formatListDate, SORT_OPTIONS } from "../constants/noticeConstant";
-import { useNoticeWrite } from "../../admin/notices/hooks/useNoticeWrite";
 import { useNoticeWriteModal } from "../hooks/useNoticeWriteModal";
 import { useNoticeEditModal } from "../hooks/useNoticeEditModal";
 import { useNoticeRemoveModal } from "../hooks/useNoticeRemoveModal";

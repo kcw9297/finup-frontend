@@ -2,27 +2,14 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { api } from "../../../base/utils/fetchUtils";
 
 // 환율 데이터 생성
-export function makeData(title, today, yesterday) {
-  if (!yesterday) {
+function transformExchangeRate(item) {
     return {
-      title,
-      today,
-      yesterday,
-      diff: 0,
-      rate: 0,
-      isUp: true,
+      indexName: item.indexName,
+      todayValue: item.todayValue,
+      todayFluctuationRate: item.todayFluctuationRate,
+      updatedAt: item.updatedAt,
+      isUp: item.todayFluctuationRate >= 0,
     };
-  }
-
-  const diff = today - yesterday;
-  return {
-    title,
-    today,
-    yesterday,
-    diff: +diff.toFixed(2),
-    rate: +((diff / yesterday) * 100).toFixed(2),
-    isUp: diff >= 0,
-  };
 }
 
 export function useExchangeRate() {
@@ -36,27 +23,11 @@ export function useExchangeRate() {
 
     setLoading(true);
     try {
-      const res = await api.get(
-        "/home/exchange-rates/latest",
-        { public: true }
-      );
+      const res = await api.get("/indicators/index/financial", { public: true });
 
       if (lastRequestRef.current !== requestId) return;
-
       const payload = res.data ?? [];
-
-      // 백엔드 응답 구조에 맞게 변환
-      const mapped = payload.map((item) => {
-        const today = Number(item.today);
-        const yesterday = Number(item.yesterday);
-
-        return makeData(
-          item.curUnit === "JPY(100)" ? "JPY/KRW" : `${item.curUnit}/KRW`,
-          today,
-          yesterday
-        );
-      });
-
+      const mapped = payload.map(transformExchangeRate);
       setQuotation(mapped);
     } catch (err) {
       console.error("환율 불러오기 오류:", err);
@@ -80,15 +51,13 @@ export function useExchangeRate() {
 }
 
 // 지수 전용 데이터 생성
-export function makeIndexData(title, today, rate) {
-  const diff = +((today * rate) / 100).toFixed(2);
-
+function transformMarketIndex(item) {
   return {
-    title,
-    today,
-    diff,
-    rate: +rate.toFixed(2),
-    isUp: rate >= 0,
+    indexName: item.indexName,
+    todayValue: item.todayValue,
+    todayFluctuationRate: item.todayFluctuationRate,
+    updatedAt: item.updatedAt,
+    isUp: item.todayFluctuationRate >= 0,
   };
 }
 
@@ -103,23 +72,11 @@ export function useMarketIndex() {
 
     setLoading(true);
     try {
-      const res = await api.get(
-        "/home/index-market/latest",
-        { public: true }
-      );
-
+      const res = await api.get("/indicators/index/market",{ public: true });
       if (lastRequestRef.current !== requestId) return;
 
       const payload = res.data ?? [];
-
-      const mapped = payload.map((item) =>
-        makeIndexData(
-          item.idxNm,
-          Number(item.today),
-          Number(item.rate)
-        )
-      );
-
+      const mapped = payload.map(transformMarketIndex);
       setIndexes(mapped);
     } catch (err) {
       console.error("지수 불러오기 오류:", err);

@@ -9,6 +9,12 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
   const [answers, setAnswers] = useState(Array(questions.length).fill(null))
   const isAllAnswered = answers.every((a) => a !== null);
   
+  // 원 숫자 변환 (0→①, 1→②, 2→③, 3→④)
+  const getCircledNumber = (num) => {
+    const circledNumbers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
+    return circledNumbers[num] || num;
+  };
+
   // 답안 선택
   const handleSelect = (questionIndex, value) => {
     const newAnswers = [...answers]
@@ -28,7 +34,10 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
           justifyContent:'space-between',
           alignItems: 'center',
           padding: '20px 10px',
-          backgroundColor: 'base.dark'
+          backgroundColor: 'base.dark',
+          height: 60,
+          p: 3,
+          mb: -2
         }}
       >
         <Typography sx={{ fontSize: 18, fontWeight: 600, color: 'text.contrastText' }}>
@@ -49,10 +58,11 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '30px',
+          gap: '50px',
           margin: '30px 20px',
           maxHeight: '520px',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          p: 3
         }}
       >
         {questions.map((q, idx) => (
@@ -66,9 +76,21 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
                 key={i}
                 value={i}
                 control={<Radio sx={{opacity: 0, padding: 0, margin: '4px 2px'}}/>}
-                label={opt}
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}>
+                    <Typography component="span" sx={{ fontSize: 16 }}>
+                      {getCircledNumber(i)}
+                    </Typography>
+                    <Typography component="span" sx={{ fontSize: 16, flex: 1 }}>
+                      {opt}
+                    </Typography>
+                  </Box>
+                }
                 sx={{
-                  '& .MuiTypography-root': { fontSize: '16px', color: answers[idx] === null ? 'text.main' : answers[idx] === i ? 'base.main' : 'text.light' },
+                  '& .MuiTypography-root': { 
+                    fontSize: '16px', 
+                    color: answers[idx] === null ? 'text.main' : answers[idx] === i ? 'base.main' : 'text.light' 
+                  },
                   '&:hover .MuiTypography-root': { color: 'base.main' },
                 }}
               />
@@ -91,6 +113,7 @@ export default function QuizQuestion ({ onClose, questions, onSubmit }) {
             borderRadius: '10px',
             fontWeight: 600,
             fontSize: 16,
+            mt: 3,
             '&.Mui-disabled': {
               backgroundColor: 'background.base',
               color: 'text.light',

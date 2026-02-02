@@ -19,7 +19,6 @@ export default function VideoLinks({ videos = [], admin = false }) {
 
   // 페이지 상태
   const [currentPage, setCurrentPage] = useState(0);
-  const { ListRp, loading, refresh } = useVideoLists()
   const pageCount = Math.max(1, Math.ceil(videos.length / 4));
 
   // 렌더링
