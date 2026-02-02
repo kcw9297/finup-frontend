@@ -62,7 +62,7 @@ export default function StudyList({ admin = false }) {
 
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ maxWidth: "1200px", mx: "auto", mt: 4 }}>
 
       {/* 제목 섹션 */}
       <Box sx={{ mb: 4 }}>

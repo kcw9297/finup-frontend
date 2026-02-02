@@ -1,89 +1,88 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../../base/utils/fetchUtils";
+import { useParams } from "react-router-dom";
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
 
-export function useStocksNews(stockName){
-  const [category, setCategory] = useState("date");
-  const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(10);
-  const [showTop, setShowTop] = useState(false);
-  const lastRequestRef = useRef(0);
-  const CATEGORY_LIST = [
-    { label: "최신뉴스", value: "date" }
-  ];
+export function useStocksNews(){
 
-  // 카테고리 변경 함수
-  const changeCategory = (newCat) => {
-    setCategory(newCat);
-  };
+  const { code } = useParams(null)
+  const [ news, setNews ] = useState([])
+  const [hasMore, setHasMore] = useState(true)
+  const [ loading, setLoading ] = useState(true)
+  const [ showTop, setShowTop ] = useState(false)
+  const { showSnackbar } = useSnackbar()
+  
+  const pageRef = useRef(1);  // 페이지 번호 관리
+  const loadingRef = useRef(false);
+  const lastRequestRef = useRef(null);
 
-  const fetchNews = useCallback(async () => {
-    const requestId = Date.now();
-    lastRequestRef.current = requestId;
-
-    setLoading(true);
-    try {
-      const res = await api.get("/stocks/news", {
-        params: { stockName }, 
-        // public: true,
-      });
-      if (lastRequestRef.current != requestId) {
-        return;
-      }
-      setNews(res.data);
-    } catch (err) {
-      console.error("뉴스 불러오기 오류:", err);
-    } finally {
-      if (lastRequestRef.current === requestId) {
-        setLoading(false);
-      }
+// [2] API 요청 함수 정의
+  const onSuccess = useCallback((rp, isInitial) => {
+    if (isInitial) {
+      setNews(rp.data);
+    } else {
+      setNews(prev => [...prev, ...rp.data]);
     }
-  }, [stockName]);
+    pageRef.current += 1;
+    setHasMore(!rp.pagination.isEndPage);
+  }, []);
 
-  const MoveToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const onError = useCallback((rp) => {
+    //showSnackbar("뉴스를 불러오는데 실패했습니다.");
+  }, []);
 
-  const intervalRef = useRef(null);
+  const onFinally = useCallback(() => {
+    loadingRef.current = false;
+    setLoading(false);
+  }, []);
 
-  //무한 스크롤처럼
+  const fetchNews = useCallback(async (isInitial = false) => {
+    
+    // 뉴스 조회 전 확인
+    if (loadingRef.current) return; // 중복 방지
+    if (!hasMore && !isInitial) return; // 더 이상 데이터 없으면 중단
+
+    // 로딩 상태
+    loadingRef.current = true
+    setLoading(true)
+
+    // 페이지 값
+    const currentPage = isInitial ? 1 : pageRef.current
+
+    // 요청 키 생성
+    const reqKey = `news-${currentPage}-${Date.now()}`;
+    lastRequestRef.current = reqKey;
+
+    // 조회 수행
+    const res = await api.get("/news/stock", { onFinally, params: { stockCode: code, pageNum: currentPage, pageSize: 30 } });
+    
+    // 최신 요청만 반영
+    if (res.success && lastRequestRef.current === reqKey)
+      onSuccess(res, isInitial);
+    
+    
+  }, [hasMore, code]);
+
+  
+  // [3] 필요 함수 정의
+  // 다음 스크롤로 이동
+  const goNext = useCallback(() => {
+    if (!hasMore || loadingRef.current) return;
+    fetchNews(false);
+  }, [fetchNews, hasMore]);
+
+  // [4] 초기화 로직 선언
   useEffect(() => {
-    const onScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        setVisibleCount((prev) => Math.min(prev + 10, news.length));
-      }
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [news]);
-
-  // 카테고리 바뀔 때 1번만 API 호출
-  useEffect(() => {
-    fetchNews();
-  }, [stockName]);
+    pageRef.current = 1;
+    setHasMore(true);
+    setNews([]);
+    fetchNews(true);
+  }, []);
 
 
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY > 300) setShowTop(true);
-      else setShowTop(false);
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  });
-
+  // [5] 반환
   return {
-    category,
-    setCategory: changeCategory,
-    news,
-    loading,
-    visibleCount,
-    CATEGORY_LIST,
-    showTop,
-    MoveToTop,
-    refreshNews: fetchNews,
+    news, loading, hasMore, showTop,
+    setShowTop, goNext
   };
 }

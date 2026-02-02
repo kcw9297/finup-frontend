@@ -1,14 +1,13 @@
 import { createChart } from "lightweight-charts";
 import { useEffect, useRef } from "react";
 
-export function useVolumeChart(containerRef, items, upperTimeScale, onCrosshairDataChange){
+export function useVolumeChart(containerRef, candles, upperTimeScale, onCrosshairDataChange){
   const chartRef = useRef(null)
   const volumeSeriesRef = useRef(null)
   const volMARef = useRef(null)
 
   useEffect(() => {
       if (!containerRef.current) return;
-  
       const width = containerRef.current.clientWidth;
   
       const chart = createChart(containerRef.current, {
@@ -49,29 +48,29 @@ export function useVolumeChart(containerRef, items, upperTimeScale, onCrosshairD
     },[]);
 
     useEffect(()=>{
-    if (!volumeSeriesRef.current || !chartRef.current) return;
-    
-    const mapDate = (d) => `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
-    
-    volumeSeriesRef.current.setData(
-      items.map((i) => ({
-        time: mapDate(i.stck_bsop_date),
-        value: Number(i.acml_vol),
-        color: Number(i.stck_clpr) >= Number(i.stck_oprc) ? "#ef5350" : "#3b82f6",
-      }))
+      if (!volumeSeriesRef.current || !chartRef.current) return;
+      
+      const mapDate = (d) => `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
+      
+      volumeSeriesRef.current.setData(
+        candles.map((i) => ({
+          time: mapDate(i.tradingDate),
+          value: Number(i.accumulatedVolume),
+          color: Number(i.closePrice) >= Number(i.openPrice) ? "#ef5350" : "#3b82f6",
+        }))
     );
 
     volMARef.current.setData(
-      items
+      candles
         .filter(i => i.volumeMa20 !== null)
         .map(i => ({
-          time: mapDate(i.stck_bsop_date),
-          value: Number(i.volumeMa20)
+          time: mapDate(i.tradingDate),
+          value: Number(i.ma20)
         }))
     );
 
     chartRef.current.timeScale().fitContent();
-  }, [items]);
+  }, [candles]);
   
   useEffect(()=>{
     if(!chartRef.current || !volumeSeriesRef.current) return;

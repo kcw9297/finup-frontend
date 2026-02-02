@@ -32,6 +32,7 @@ async function fetchInner(endpoint, options = {}, body = {}) {
   const hasBody = method !== 'GET' && method !== 'HEAD' // Body 포함가능 여부
   const csrfToken = await getCsrf() // CSRF 공격 방지 토큰 값
 
+
   // [3] REST API 요청 수행
   const headers = { // header
     'Content-Type': 'application/json',

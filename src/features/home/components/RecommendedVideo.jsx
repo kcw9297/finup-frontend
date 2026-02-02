@@ -5,7 +5,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useHomeVideoList } from "../../videolink/hooks/useHomeVideoList";
 import HomeVideoCard from "./HomeVideoCard";
-import { useAuth } from "../../../base/hooks/useAuth";
+import { useLoginMember } from "../../../base/hooks/useLoginMember";
 
 export default function RecommendedVideo() {
 
@@ -13,7 +13,7 @@ export default function RecommendedVideo() {
     size: 20
   })
 
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = useLoginMember()
 
   // 페이지 상태 + 계산 (4개씩 보여주기)
   const [page, setPage] = useState(0);
@@ -98,13 +98,7 @@ export default function RecommendedVideo() {
           </IconButton>
         </Box>
       </Box>
-      {/* ✅ 내용 영역만 분기 */}
-      {loading && (
-        <Box sx={{ py: 6, textAlign: 'center', color: 'text.light' }}>
-          추천 영상을 불러오는 중입니다.
-        </Box>
-      )}
-
+      {/* 내용 영역만 분기 */}
       {!loading && !videoList.length && (
         <Box sx={{ py: 6, textAlign: 'center', color: 'text.light' }}>
           추천 영상이 없습니다.

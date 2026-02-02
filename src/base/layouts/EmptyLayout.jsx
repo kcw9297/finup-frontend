@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
 
 /**
  * Header / Footer 가 없는 빈 레이아웃 (중앙 정렬)
  */
-export default function EmptyLayout({ children }) {
+export default function EmptyLayout() {
 
   return (
     // 외부 박스 영역 (높이 결정 가능)
@@ -27,9 +28,8 @@ export default function EmptyLayout({ children }) {
           alignItems: 'center',
         }}
       >
-        {children}
+        <Outlet />
       </Box>
-
     </Box>
   )
 }

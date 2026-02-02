@@ -36,13 +36,12 @@ export default function WordDetail() {
 
 
   return (
-    <Box sx={{ width: '100%', minHeight: '100%', py: 4 }}>
+    <Box sx={{ width: '100%', minHeight: '100%', py: 4, p: 2 }}>
       {/* 메인 컨테이너 */}
       <Box
         sx={{
-          maxWidth: 940,     // ★★★ 폭 줄임
+          maxWidth: 1000,
           mx: 'auto',
-          mt: 4,             // ★ 여백 줄여 전체 높이 축소
           mb: 6,
         }}
       >
@@ -51,7 +50,7 @@ export default function WordDetail() {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            mb: 1,
+            mb: 2,
           }}
         >
           <Typography

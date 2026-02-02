@@ -1,51 +1,55 @@
+// SidebarLayout.jsx
 import { Box } from "@mui/material";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
+import { Outlet } from "react-router-dom";
 
-/**
- * 상단 Header, 하단 Footer 공통 사용 + 가운데 사이드바 레이아웃
- */
-export default function SidebarLayout({ sidebar, children }) {
+export default function SidebarLayout({ 
+  sidebar, 
+  sidebarPosition = "left",
+  maxWidth = 1440,
+  sidebarWidth = 240
+}) {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        maxWidth,
+        width: "100%",
+        mx: "auto",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: { xs: 'column', md: 'row' },
+        alignItems: "flex-start",
+        gap: 4,
+        pt: 4,
+        pb: 4,
       }}
     >
-      {/* 상단 헤더 */}
-      <Header />
-
-      {/* 가운데 영역 : 사이드바 + 내용 */}
-      <Box
-        component="main"
-        sx={{
-          flex: 1,
-          maxWidth: 1530,
-          width: "100%",
-          mx: "auto",
-          px: { xs: 2, sm: 3, md: 4 },
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 10,
-          pt: 4,
-          pb: 4,
-        }}
-      >
-        {/* 왼쪽 사이드바 */}
-        <Box sx={{ width: 100, flexShrink: 0 }}>
+      {/* 왼쪽 사이드바 */}
+      {sidebarPosition === "left" && (
+        <Box sx={{ 
+          p: 2,
+          width: { xs: '100%', md: sidebarWidth },
+          flexShrink: 0,
+          display: { xs: 'none', md: 'block' }
+        }}>
           {sidebar}
         </Box>
+      )}
 
-        {/* 오른쪽 콘텐츠 */}
-        <Box sx={{ flex: 1 }}>
-          {children}
-        </Box>
+      {/* 메인 콘텐츠 */}
+      <Box sx={{ flex: 1, width: '100%' }}>
+        <Outlet />
       </Box>
 
-      {/* 하단 푸터 */}
-      <Footer />
+      {/* 오른쪽 사이드바 */}
+      {sidebarPosition === "right" && (
+        <Box sx={{ 
+          width: { xs: '100%', md: sidebarWidth },
+          flexShrink: 0,
+          display: { xs: 'none', lg: 'block' },
+          order: { xs: -1, lg: 0 }
+        }}>
+          {sidebar}
+        </Box>
+      )}
     </Box>
   );
 }

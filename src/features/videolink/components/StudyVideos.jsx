@@ -1,6 +1,7 @@
 import {
   Box, Typography, Paper, Button, IconButton,
   Tooltip,
+  CircularProgress,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -107,9 +108,7 @@ export default function StudyVideos({ admin = false }) {
 
         {loading && (
           <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              추천 영상을 불러오는 중입니다...
-            </Typography>
+            <CircularProgress />
           </Box>
         )}
 

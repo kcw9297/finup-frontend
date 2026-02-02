@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../../../base/hooks/useAuth";
+import { useLoginMember } from "../../../base/hooks/useLoginMember";
 import { showSnackbar } from "../../../base/config/globalHookConfig";
 import { api } from "../../../base/utils/fetchUtils";
 
@@ -13,7 +13,7 @@ export function useAuthLogin() {
   const [ loginRq, setLoginRq ] = useState(INITIAL_AUTH_LOGIN_RQ) // 로그인 데이터
   const [ searchParams, setSearchParams ] = useSearchParams() // 검색 파라미터
   const [ loading, setLoading ] = useState(false) // 로그인 로딩 상태
-  const { handleLogin: login } = useAuth()
+  const { handleLogin: login } = useLoginMember()
   const navigate = useNavigate() // 리다이렉트를 위한 navigate hook
 
 

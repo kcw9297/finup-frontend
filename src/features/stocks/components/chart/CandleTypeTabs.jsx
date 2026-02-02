@@ -19,7 +19,7 @@ export default function CandleTypeTabs({value, onChange, renderButton}){
           },
         }}
       >
-        {["day", "week", "month"].map((type) => (
+        {["DAY", "WEEK", "MONTH"].map((type) => (
           renderButton(type)
         ))}
       </ToggleButtonGroup>

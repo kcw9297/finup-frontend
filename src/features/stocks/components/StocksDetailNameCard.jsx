@@ -1,12 +1,11 @@
-import { Card, CardContent, Box, Typography } from "@mui/material";
+import { Card, CardContent, Box, Typography, Skeleton } from "@mui/material";
 import thema from "../../../base/design/thema.js"
 import { useContext } from "react";
-import { StockDetailContext } from "../context/StockDetailContext";
 import defaultImg from "../../../assets/default_stock.png";
+import { useParams } from "react-router-dom";
+import { useStockDetail } from "../hooks/useStocksDetail.js";
 
-export default function StocksDetailNameCard() {
-
-  const { nameCard } = useContext(StockDetailContext); 
+export default function StocksDetailNameCard({ nameCard, loadingDetail }) {
 
   return (
     <Card
@@ -18,31 +17,37 @@ export default function StocksDetailNameCard() {
         borderRadius: 2,
         overflow: "hidden",
         width: "fit-content",
+        p: 2
       }}
     >
       {/* 이미지 */}
-      <Box sx={{ width: 80, height: 80, position: "relative" }}>
-        <Box
-          component="img"
-          src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${nameCard.code}.png`}        
-          onError={(e) => { e.currentTarget.src = defaultImg; }}         
-          sx={{
-            width: 70,
-            height: 70,
-            position: "absolute",
-            top: 5,
-            left: 5,
-            borderRadius: 2,
-          }}
-        />
-      </Box>
+        {
+          loadingDetail ? <Skeleton height={20} width={100} /> : 
+          <Box sx={{ width: 80, height: 80, position: "relative" }}>
+          <Box
+            component="img"
+            src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${nameCard?.stockCode || ''}.png`}        
+            onError={(e) => { e.currentTarget.src = defaultImg; }}         
+            sx={{
+              width: 70,
+              height: 70,
+              position: "absolute",
+              top: 5,
+              left: 5,
+              borderRadius: 2,
+            }}
+          />
+        </Box>
+        }
 
+        
       {/* 오른쪽 텍스트 카드 */}
       <Card
         elevation={0}
         sx={{
           background: thema.palette.background.light,
           borderRadius: 2,
+          mt: 1
         }}
       >
         <CardContent
@@ -56,14 +61,14 @@ export default function StocksDetailNameCard() {
         >
           <Box sx={{ display: "flex", gap: 1 }}>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              { nameCard.stockName }{/* 종목명 */}
+              { loadingDetail ? <Skeleton height={20} width={100} /> : nameCard?.stockName }
             </Typography>
             <Typography sx={{ fontSize: 16, fontWeight: 500, color: thema.palette.text.light }}>
-              { nameCard.code }{/* 종목코드 */}
+              { loadingDetail ? <Skeleton height={20} width={60} /> : nameCard?.stockCode }
             </Typography>
           </Box>
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            { nameCard.price }{/* 가격 */}    
+            { loadingDetail ? <Skeleton height={20} width={80} /> : `${nameCard?.stockPrice}` }
           </Typography>
         </CardContent>
       </Card>

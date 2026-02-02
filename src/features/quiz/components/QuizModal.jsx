@@ -7,18 +7,35 @@ import QuizQuestion from "./QuizQuestion";
 import QuizResult from "./QuizResult";
 import QuizLoading from "./QuizLoading";
 import { saveQuizResult } from "../util/saveQuizResult";
+import QuizError from "./QuizError";
+import { useLoginMember } from "../../../base/hooks/useLoginMember"
+import { replace, useNavigate } from 'react-router-dom';
+import { useSnackbar } from "../../../base/provider/SnackbarProvider";
+import { navigate } from "../../../base/config/globalHookConfig";
 
 // 기본 모달 창
 
 export default function QuizModal ({ open, onClose }) {
+
   // 화면 관리
+  const { isAuthenticated } = useLoginMember()
   const [step, setStep] = useState("intro");
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(0);
+  const { showSnackbar } = useSnackbar()
 
   //quiz 데이터
-  const { quiz, loading } = useQuiz(open);
-  const handleStart = () => setStep("quiz"); 
+  const { quiz, loading } = useQuiz(open, step);
+  
+  const handleStart = () => {
+  if (!isAuthenticated) {
+    showSnackbar('로그인이 필요한 서비스입니다.');
+    navigate('/login', {replace : true});
+    return;
+  }
+  
+  setStep("quiz");
+};
 
   // questions가 준비되면 answers 배열 초기화
   useEffect(() => {
@@ -73,7 +90,7 @@ export default function QuizModal ({ open, onClose }) {
         {step === "quiz" && (
           <>
             {loading && <QuizLoading />}
-            {!loading && !quiz?.length && <div>문제가 없습니다.</div>}
+            {!loading && !quiz?.length && <QuizError onClose={handleClose} />}
             {!loading && quiz?.length > 0 && (
             <QuizQuestion onClose={handleClose} questions={quiz} onSubmit={handleSubmit}/>
             )}
