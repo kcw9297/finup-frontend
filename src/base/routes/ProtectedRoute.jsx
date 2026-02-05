@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import Loading from '../components/layout/Loading'
 import { useLoginMember } from "../hooks/useLoginMember";
+import { useSnackbar } from "../provider/SnackbarProvider";
 
 /**
  * 인증 및 권한 확인이 필요한 컴포넌트 라우팅 
@@ -23,13 +24,13 @@ export default function ProtectedRoute({ children, allowedRoles = null }) {
   if (!isAuthenticated) {
     const currentPath = location.pathname + location.search
     const loginUrl = `/login?returnUrl=${encodeURIComponent(currentPath)}`
-    return <Navigate to={loginUrl} replace />
+    return <Navigate to={loginUrl} state={{ message: "로그인이 필요한 서비스입니다." }} replace />
   }
 
   // [3] 권한 인증 
   // 만약 허용할 role을 설정한 경우 (null 이 아닌 경우) 권한 검증
   if (allowedRoles && !allowedRoles.includes(loginMember?.role))
-    return <Navigate to="/forbidden" replace />
+    return <Navigate to="/" replace />
 
   // [4] 위 권한 인증을 모두 통과한 경우, 자식 컴포넌트를 그대로 반환
   return children

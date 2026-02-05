@@ -99,8 +99,8 @@ export default function App() {
 
         {/* 마이페이지 - 왼쪽 사이드바 */}
         <Route element={<SidebarLayout sidebar={<MypageSidebar />} />}>
-          <Route path="/mypage" element={<ProtectedRoute><MypageMember /></ProtectedRoute>} />
-          <Route path="/mypage/bookmarks" element={<ProtectedRoute><BookmarkListPageUnit /></ProtectedRoute>} />
+          <Route path="/mypage" element={<MypageMember />} />
+          <Route path="/mypage/bookmarks" element={<BookmarkListPageUnit />} />
         </Route>
 
         {/* 단어장 - 오른쪽 사이드바 + 추가 헤더 */}
@@ -113,12 +113,12 @@ export default function App() {
         </Route>
 
         {/* 관리자 - 왼쪽 사이드바 */}
-        <Route element={<SidebarLayout sidebar={<AdminSidebar />} />}>
-          <Route path="/admin/notices" element={<ProtectedRoute allowedRoles="ADMIN"><NoticeList admin={isAdmin()} /></ProtectedRoute>} />
-          <Route path="/admin/members" element={<ProtectedRoute allowedRoles="ADMIN"><MemberList /></ProtectedRoute>} />
-          <Route path="/admin/studies" element={<ProtectedRoute allowedRoles="ADMIN"><AdminStudyList /></ProtectedRoute>} />
-          <Route path="/admin/study-words" element={<ProtectedRoute allowedRoles="ADMIN"><StudyWordList admin={isAdmin()} /></ProtectedRoute>} />
-          <Route path="/admin/video-links" element={<ProtectedRoute allowedRoles="ADMIN"><VideoLinkList admin={isAdmin()} /></ProtectedRoute>} />
+        <Route element={<SidebarLayout allowedRoles="ADMIN" sidebar={<AdminSidebar />} />}>
+          <Route path="/admin/notices" element={<NoticeList admin={isAdmin()} />} />
+          <Route path="/admin/members" element={<MemberList />} />
+          <Route path="/admin/studies" element={<AdminStudyList />} />
+          <Route path="/admin/study-words" element={<StudyWordList admin={isAdmin()} />} />
+          <Route path="/admin/video-links" element={<VideoLinkList admin={isAdmin()} />} />
         </Route>
       </Route>
     </Routes>
