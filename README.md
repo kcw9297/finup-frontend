@@ -1,6 +1,4 @@
 >### FinUp (주식 경제 공부 플랫폼)
-#### 천재IT교육센터 Java 풀스택 과정 12기 3차 팀 프로젝트 gif 자료
-
 
 ![홈페이지 전경](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80.gif)
 
