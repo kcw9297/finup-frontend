@@ -105,6 +105,7 @@ export default function StocksDetailNews({ stockDetail, loadingDetail }) {
           open={open}
           onClose={closeModal}
           article={article}
+          analyzeWord={false}
         />
         <div id="bottom-observer" />
       </Box>

@@ -1,13 +1,37 @@
 // SidebarLayout.jsx
 import { Box } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useLoginMember } from "../hooks/useLoginMember";
+import Loading from "../components/layout/Loading";
 
 export default function SidebarLayout({ 
+  allowedAnonymous = false,
+  allowedRoles = null,
   sidebar, 
   sidebarPosition = "left",
   maxWidth = 1440,
   sidebarWidth = 240
 }) {
+
+  
+  // [1] 사용 Hook
+  const { isAuthenticated, loginMember, loading } = useLoginMember() // 로그인 상태
+
+  // 만약 로딩 중이면, 로딩 페이지 렌더링
+  if (loading) return (<Loading />)
+
+  // 만약 권한이 없는 경우 혹은 로그인이 필요한 경우
+  if (!isAuthenticated && !allowedAnonymous) {
+    const currentPath = location.pathname + location.search
+    const loginUrl = `/login?returnUrl=${encodeURIComponent(currentPath)}`
+    return <Navigate to={loginUrl} state={{ message: "로그인이 필요한 서비스입니다." }} replace />
+  }
+
+  // 만약 허용할 role을 설정한 경우 (null 이 아닌 경우) 권한 검증
+  if (allowedRoles && !allowedRoles.includes(loginMember?.role))
+    return <Navigate to="/" replace />
+
+
   return (
     <Box
       sx={{

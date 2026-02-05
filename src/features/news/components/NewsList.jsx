@@ -118,6 +118,7 @@ export default function NewsList() {
         open={open}
         onClose={closeModal}
         article={article}
+        analyzeWord={true}
       />
     </Box>
   );

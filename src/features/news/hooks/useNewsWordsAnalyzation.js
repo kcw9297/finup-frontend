@@ -9,18 +9,17 @@ import { useReloadStore } from "../../../base/stores/useReloadStore";
  * @author kcw
  * @since 2026-01-27
  */
-export function useNewsWordsRecommendation() {
+export function useNewsWordsAnalyzation(analyzeWord) {
 
   // [1] 필요 데이터 선언
   const [ newsId, setNewsId ] = useState(null);
   const [ open, setOpen ] = useState(false);
   const [ loading, setLoading ] = useState(true) // 로딩 상태
-  const [ recommendation, setRecommendation ] = useState(null) // AI 분석 결과
-  const { showSnackbar } = useSnackbar()
+  const [ analysisWords, setAnalysisWords ] = useState(null) // AI 분석 결과
 
   // [2] 성공/실패/마지막 콜백 정의
   const onSuccess = (rp) => {
-    setRecommendation(rp.data)
+    setAnalysisWords(rp.data)
   }
 
   const onFinally = () => {
@@ -28,27 +27,30 @@ export function useNewsWordsRecommendation() {
   }
 
   // [4] API 요청 함수 정의
-  const fetchRecommendation = () => {
+  const fetchAnalysisWords = () => {
     setLoading(true);
-    api.get(`/words/recommendation/news/${newsId}`, { onSuccess, onFinally, params: { retry: false } })
+    api.get(`/news/${newsId}/analysis/words`, { onSuccess, onFinally, params: { retry: false } })
   }
 
-  const retryRecommendation = () => {
+  const retryAnalysisWords = () => {
     setLoading(true);
-    api.get(`/words/recommendation/news/${newsId}`, { onSuccess, onFinally, params: { retry: true } })
+    api.get(`/news/${newsId}/analysis/words`, { onSuccess, onFinally, params: { retry: true } })
   }
 
 
   // URL 변경 시 입력 필드 동기화
   useEffect(() => {
+
+    if (!analyzeWord) return
+
     if (open && newsId) {
       setLoading(true);  // 명시적으로 true 설정
-      fetchRecommendation()
+      fetchAnalysisWords()
 
     } else if (!open) {
       // 모달 닫힐 때 상태 초기화
       setLoading(false);
-      setRecommendation(null);
+      setAnalysisWords(null);
     }
 
 
@@ -57,7 +59,7 @@ export function useNewsWordsRecommendation() {
   
   // [5] 반환
   return {
-    recommendation, loading,
-    setNewsId, setOpen, retryRecommendation
+    analysisWords, loading,
+    setNewsId, setOpen, retryAnalysisWords
   }
 }

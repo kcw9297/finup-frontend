@@ -98,7 +98,7 @@ export default function Home() {
         open={open}
         onClose={closeModal}
         article={selectedArticle}
-        loading={false}
+        analyzeWord={true}
       />
     </>
   )
