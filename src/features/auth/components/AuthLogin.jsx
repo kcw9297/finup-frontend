@@ -4,8 +4,10 @@ import { GoogleIcon } from '../../../base/components/icon/icon.jsx';
 import { useAuthLogin } from '../hooks/useAuthLogin.js';
 import logo from '../../../assets/logo.png'
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { navigate } from '../../../base/config/globalHookConfig.js';
+import { useEffect } from 'react';
+import { useSnackbar } from '../../../base/provider/SnackbarProvider.jsx';
 
 /**
  * 로그인 페이지 컴포넌트
@@ -18,6 +20,16 @@ export default function AuthLogin() {
     loginRq, loading,// 상태 (1번째 줄)
     handleChangeLoginRq, handleLogin // 함수 (2번째 줄)
   } = useAuthLogin()
+
+  const location = useLocation()
+  const { showSnackbar } = useSnackbar()
+
+  useEffect(() => {
+    if (location.state?.message) {
+      showSnackbar(location.state.message)
+    }
+  }, [location.state])
+
 
   // [2] 반환할 컴포넌트
   return (
