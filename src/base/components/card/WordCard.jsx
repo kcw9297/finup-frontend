@@ -19,6 +19,7 @@ export default function WordCard({ word, functions, admin }) {
 
   // 카드에 담을 정보
   const { id, name, meaning, imageUrl } = word
+  const showImageArea = admin || imageUrl;
 
   // 카드 버튼 클릭 이벤트
   const { 
@@ -72,21 +73,17 @@ export default function WordCard({ word, functions, admin }) {
         flexDirection: 'column'
       }}
     >
-
       {/* 숨겨진 파일 input */}
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
         style={{ display: 'none' }}
-        onChange={(e) => handleOnChangeFile(e)
-        }
+        onChange={(e) => handleOnChangeFile(e)}
       />
 
       {/* 이미지 상단 헤드 */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
-
-        {/* 단어 카드 제목 */}
         <Typography 
           variant="h6" 
           sx={{ 
@@ -104,79 +101,77 @@ export default function WordCard({ word, functions, admin }) {
         </Typography>
       </Box>
 
-      {/* 이미지 영역 */}
-      <Box
-        sx={{
-          position: "relative",
-          width: "100%",
-          height: 180,
-          bgcolor: "grey.200",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          // 이 Box에 hover 시 자식 버튼들이 나타남
-          "&:hover .image-buttons": {
-            opacity: 1,
-          }
-        }}
-      >
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              backgroundColor: "#f9f7f7ff"
-            }}
-          />
-        ) : (
-          <ImageIcon sx={{ fontSize: 100, color: "grey.400" }} />
-        )}
-
-        {/* 이미지 수정/삭제 버튼 (관리자) */}
-        {admin && (
-          <Box
-            className="image-buttons" // hover 타겟용 클래스
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              display: "flex",
-              gap: 1,
-              opacity: 0, // 기본은 숨김
-              transition: "opacity 0.2s",
-            }}
-          >
-            {/* 단어 이미지 수정 아이콘 */}
-            <IconButton
-              size="small"
-              sx={{
-                bgcolor: "rgba(255,255,255,0.9)",
-                "&:hover": { bgcolor: "white" }
+      {/* 이미지 영역 - 관리자이거나 이미지가 있을 때만 표시 */}
+      {showImageArea && (
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            height: 180,
+            bgcolor: "grey.200",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            "&:hover .image-buttons": {
+              opacity: 1,
+            }
+          }}
+        >
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                backgroundColor: "#f9f7f7ff"
               }}
-              onClick={(e) => handleImageUploadClick()}
-            >
-              <AddPhotoAlternateIcon fontSize="small" />
-            </IconButton>
+            />
+          ) : (
+            <ImageIcon sx={{ fontSize: 100, color: "grey.400" }} />
+          )}
 
-            {/* 단어 이미지 삭제 아이콘 */}
-            <IconButton
-              size="small"
+          {/* 이미지 수정/삭제 버튼 (관리자) */}
+          {admin && (
+            <Box
+              className="image-buttons"
               sx={{
-                bgcolor: "rgba(255,255,255,0.9)",
-                "&:hover": { bgcolor: "white" }
+                position: "absolute",
+                top: 8,
+                right: 8,
+                display: "flex",
+                gap: 1,
+                opacity: 0,
+                transition: "opacity 0.2s",
               }}
-              onClick={(e) => onClickRemoveImage()}
             >
-              <DeleteIcon fontSize="small" color="error" />
-            </IconButton>
-            
-          </Box>
-        )}
-      </Box>
+              <IconButton
+                size="small"
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.9)",
+                  "&:hover": { bgcolor: "white" }
+                }}
+                onClick={(e) => handleImageUploadClick()}
+              >
+                <AddPhotoAlternateIcon fontSize="small" />
+              </IconButton>
+
+              <IconButton
+                size="small"
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.9)",
+                  "&:hover": { bgcolor: "white" }
+                }}
+                onClick={(e) => onClickRemoveImage()}
+              >
+                <DeleteIcon fontSize="small" color="error" />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
+      )}
 
       {/* 단어 카드 본문 */}
       <Typography 
@@ -188,15 +183,13 @@ export default function WordCard({ word, functions, admin }) {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           display: '-webkit-box',
-          WebkitLineClamp: 6,
+          WebkitLineClamp: showImageArea ? 6 : 4,  // 이미지 없으면 줄 수 조정
           WebkitBoxOrient: 'vertical',
           whiteSpace: 'pre-wrap',
         }}
       >
         {meaning}
       </Typography>
-
-
 
       {admin && (
         <Box sx={{ 
@@ -205,12 +198,9 @@ export default function WordCard({ word, functions, admin }) {
           justifyContent: 'flex-end',
           p: 1
         }}>
-          {/* 단어 수정 아이콘 */}
           <IconButton onClick={onClickEdit} size="small" sx={{ p: 0.5 }}>
             <EditIcon fontSize="small" />
           </IconButton>
-
-          {/* 단어 삭제 아이콘 */}
           <IconButton onClick={onClickRemove} size="small" sx={{ p: 0.5 }}>
             <DeleteIcon fontSize="small" color="error" />
           </IconButton>
