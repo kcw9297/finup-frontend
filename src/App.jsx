@@ -33,6 +33,7 @@ import WordHome from './features/word/components/WordHome'
 import WordDetail from './features/word/components/WordDetail'
 import Home from './features/home/components/Home'
 import WordSidebar from './features/word/components/WordSidebar'
+import Error404 from './base/components/error/Error404.jsx'
 
 
 export default function App() {
@@ -120,6 +121,9 @@ export default function App() {
           <Route path="/admin/study-words" element={<StudyWordList admin={isAdmin()} />} />
           <Route path="/admin/video-links" element={<VideoLinkList admin={isAdmin()} />} />
         </Route>
+
+        {/* 404 페이지 - 정의되지 않은 모든 경로 처리 */}
+        <Route path="*" element={<Error404 />} />
       </Route>
     </Routes>
   )
