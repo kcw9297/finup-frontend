@@ -4,7 +4,7 @@ export default function StocksDetailChartAi({ai}){
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1.5 }}>
 
-      {/* 종합 요약 */}
+      {/* 최근 추세 분석 */}
       <Paper
         elevation={0}
         sx={{
@@ -15,7 +15,7 @@ export default function StocksDetailChartAi({ai}){
         }}
       >
         <Chip
-          label="종합 요약"
+          label="최근 추세"
           color="secondary"
           variant="outlined"
           sx={{ mb: 1 }}
@@ -27,11 +27,11 @@ export default function StocksDetailChartAi({ai}){
             lineHeight: 1.6,
           }}
         >
-          {ai.summary}
+          {ai.recentTrend}
         </Typography>
       </Paper>
 
-      {/* 추세 분석 */}
+      {/* 이전과의 차이 분석 */}
       <Paper
         elevation={0}
         sx={{
@@ -41,13 +41,13 @@ export default function StocksDetailChartAi({ai}){
           background: "#fff",
         }}
       >
-        <Chip label="추세 분석" color="primary" variant="outlined" sx={{ mb: 1 }} />
+        <Chip label="이전과의 차이" color="primary" variant="outlined" sx={{ mb: 1 }} />
         <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-          {ai.trend}
+          {ai.comparisonWithPast}
         </Typography>
       </Paper>
 
-      {/* 변동성 분석 */}
+      {/* 투자 포인트 분석 */}
       <Paper
         elevation={0}
         sx={{
@@ -57,32 +57,12 @@ export default function StocksDetailChartAi({ai}){
           background: "#fff",
         }}
       >
-        <Chip label="변동성" color="warning" variant="outlined" sx={{ mb: 1 }} />
+        <Chip label="투자 포인트" color="warning" variant="outlined" sx={{ mb: 1 }} />
         <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-          {ai.volatility}
+          {ai.investorNote}
         </Typography>
       </Paper>
 
-      {/* 거래량 해석 */}
-      <Paper
-        elevation={0}
-        sx={{
-          p: 2,
-          border: "1px solid #e0e0e0",
-          borderRadius: 2,
-          background: "#fff",
-        }}
-      >
-        <Chip
-          label="거래량 해석"
-          color="success"
-          variant="outlined"
-          sx={{ mb: 1 }}
-        />
-        <Typography sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-          {ai.volumeAnalysis}
-        </Typography>
-      </Paper>
     </Box>
   );
 }

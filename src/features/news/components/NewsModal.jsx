@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import { useNewsWordsAnalyzation } from "../hooks/useNewsWordsAnalyzation.js";
 
 
-export default function NewsDetailModal({ open, onClose, article, analyzeWord }) {
+export default function NewsModal({ open, onClose, article, analyzeWord }) {
 
   // 뉴스 내 AI 분석 요청
   const { 
@@ -171,22 +171,22 @@ export default function NewsDetailModal({ open, onClose, article, analyzeWord })
                 <Skeleton height={20} width="80%" />
               </>
             ) : (
-              <Typography color="text.secondary" fontSize={14}>
+              <Typography color="text.secondary" fontSize={14} sx={{lineHeight: 1.8}}>
                 {analysis || "AI 해설이 제공되지 않았습니다." }
               </Typography>
             )}
           </Box>
 
-          {/* AI 뉴스단어 분석 */}
+          {/* AI 뉴스 키워드 분석 */}
           {analyzeWord && <Box sx={{ mb: 3 }}>
             <Box sx={{  
               gap: 2,
               display: 'flex', 
               alignItems: 'center' 
             }}>
-              <h3>AI 뉴스단어 분석</h3>
+              <h3>AI 뉴스 키워드 분석</h3>
               
-              {/* AI 뉴스단어 분석 재추천 버튼 */}
+              {/* AI 뉴스 키워드 분석 재추천 버튼 */}
               <Tooltip title="재추천">
                 <span>
                   <IconButton
@@ -209,14 +209,28 @@ export default function NewsDetailModal({ open, onClose, article, analyzeWord })
 
             {analyzeWord && loadingAnalysisWords ? (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-                {[...Array(5)].map((_, idx) => (
-                  <Box key={idx} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Skeleton variant="rectangular" width={200} height={20} sx={{ borderRadius: 2 }} />
-                    <Skeleton width="90%" height={20} />
+                {[...Array(4)].map((_, idx) => (
+                  <Box key={idx} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                    {/* 왼쪽: 두꺼운 한 줄 */}
+                    <Box sx={{ minWidth: 130, display: 'flex', justifyContent: 'flex-start' }}>
+                      <Skeleton 
+                        variant="rectangular" 
+                        width={100} 
+                        height={36} 
+                        sx={{ borderRadius: 5 }} 
+                      />
+                    </Box>
+                    
+                    {/* 오른쪽: 얇은 3줄 */}
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                      <Skeleton height={14} width="95%" />
+                      <Skeleton height={14} width="85%" />
+                      <Skeleton height={14} width="70%" />
+                    </Box>
                   </Box>
                 ))}
               </Box>
-              ) : (
+            ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                   {analysisWords && analysisWords.length > 0 ? (
                     analysisWords.map((word, idx) => (
@@ -226,7 +240,7 @@ export default function NewsDetailModal({ open, onClose, article, analyzeWord })
                           display: 'flex', 
                           gap: 2, 
                           alignItems: 'center',
-                          p: 1,
+                          p: 0.75,
                           borderRadius: 2,
                           transition: 'background-color 0.2s',
                           '&:hover': {
@@ -235,19 +249,15 @@ export default function NewsDetailModal({ open, onClose, article, analyzeWord })
                         }}
                       >
                         {/* 칩 영역 - 고정 너비 */}
-                        <Box sx={{ minWidth: 220, display: 'flex', justifyContent: 'flex-start' }}>
+                        <Box sx={{ minWidth: 130, display: 'flex', justifyContent: 'flex-start' }}>
                           <Chip
                             label={word.name}
-                            size="small"
+                            size="medium"
                             variant="outlined"
-                            onClick={() => {
-                              const newWindow = window.open(`/words/search?keyword=${word.name}`, '_blank')
-                              newWindow.location.href = `/words/search?keyword=${word.name}`
-                            }}
                             sx={{
                               borderRadius: '999px',
-                              cursor: 'pointer',
                               fontWeight: 600,
+                              fontSize: 12,
                               '&:hover': { 
                                 bgcolor: '#E7F5FF',
                                 borderColor: '#3B5BDB'
@@ -260,20 +270,20 @@ export default function NewsDetailModal({ open, onClose, article, analyzeWord })
                         <Box sx={{ flex: 1 }}>
                           <Typography 
                             sx={{ 
-                              fontSize: 12, 
+                              fontSize: 11, 
                               color: 'text.secondary',
-                              lineHeight: 1.6
+                              lineHeight: 1.7,
+                              '& > span:first-of-type': {
+                                fontWeight: 600,
+                                color: 'text.primary',
+                                display: 'block',
+                                marginBottom: 0.5,
+                              }
                             }}
                           >
-                            {word.meaning.split('.').map((part, i, arr) => (
+                            {word.meaning.split('.').filter(part => part.trim()).map((part, i, arr) => (
                               <span key={i}>
-                                {part.trim()}
-                                {i < arr.length - 1 && (
-                                  <>
-                                    .
-                                    <br />
-                                  </>
-                                )}
+                                {part.trim()}.{i < arr.length - 1 && ' '}
                               </span>
                             ))}
                           </Typography>

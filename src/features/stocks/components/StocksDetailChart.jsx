@@ -129,6 +129,9 @@ export default function StocksDetailChart(){
                   <Skeleton variant="text" width="80%" height={24} />
                   <Skeleton variant="text" width="75%" height={24} />
                   <Skeleton variant="text" width="75%" height={24} />
+                  <Skeleton variant="text" width="85%" height={24} />
+                  <Skeleton variant="text" width="90%" height={24} />
+                  <Skeleton variant="text" width="80%" height={24} />
                 </Box>
               )}
 
