@@ -89,9 +89,18 @@ export default function StocksDetailNews({ stockDetail, loadingDetail }) {
   
         {/* 스크롤 감지하여 로딩 처리 */}
         {hasMore && (
-          <div ref={loadMoreRef} style={{ height: '20px' }}>
+          <Box 
+            ref={loadMoreRef} 
+            sx={{ 
+              height: '80px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%'
+            }}
+          >
             {loading && <CircularProgress />}
-          </div>
+          </Box>
         )}
   
         {/* 맨 위로 버튼 */}
