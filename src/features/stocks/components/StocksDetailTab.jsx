@@ -27,7 +27,8 @@ export default function StocksDetailTab({ stockDetail, loadingDetail }) {
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center',
-            minHeight: '400px'
+            minHeight: '400px',
+            backgroundColor: (theme) => theme.palette.background.light,
           }}
         >
           <CircularProgress size={60} />

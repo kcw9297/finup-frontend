@@ -12,7 +12,7 @@ export default function StocksDetailNameCard({ nameCard, loadingDetail }) {
       sx={{
         display: "flex",
         alignItems: "center",
-        backgroundColor: thema.palette.background.light,
+        backgroundColor: (theme) => theme.palette.background.light,
         paddingBottom: 2,
         borderRadius: 2,
         overflow: "hidden",
@@ -21,9 +21,9 @@ export default function StocksDetailNameCard({ nameCard, loadingDetail }) {
       }}
     >
       {/* 이미지 */}
-        {
-          loadingDetail ? <Skeleton height={20} width={100} /> : 
-          <Box sx={{ width: 80, height: 80, position: "relative" }}>
+      {
+        loadingDetail ? <Skeleton height={20} width={100} /> : 
+        <Box sx={{ width: 80, height: 80, position: "relative" }}>
           <Box
             component="img"
             src={`https://static.toss.im/png-icons/securities/icn-sec-fill-${nameCard?.stockCode || ''}.png`}        
@@ -38,40 +38,31 @@ export default function StocksDetailNameCard({ nameCard, loadingDetail }) {
             }}
           />
         </Box>
-        }
+      }
 
-        
-      {/* 오른쪽 텍스트 카드 */}
-      <Card
-        elevation={0}
+      {/* 오른쪽 텍스트 영역 - Card 제거하고 Box로 변경 */}
+      <Box
         sx={{
-          background: thema.palette.background.light,
-          borderRadius: 2,
-          mt: 1
+          mt: 1,
+          padding: "16px 10px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 1.5,
+          alignItems: "flex-start", 
         }}
       >
-        <CardContent
-          sx={{
-            padding: "16px 10px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 1.5,
-            alignItems: "flex-start", 
-          }}
-        >
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              { loadingDetail ? <Skeleton height={20} width={100} /> : nameCard?.stockName }
-            </Typography>
-            <Typography sx={{ fontSize: 16, fontWeight: 500, color: thema.palette.text.light }}>
-              { loadingDetail ? <Skeleton height={20} width={60} /> : nameCard?.stockCode }
-            </Typography>
-          </Box>
-          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            { loadingDetail ? <Skeleton height={20} width={80} /> : `${nameCard?.stockPrice}` }
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
+            { loadingDetail ? <Skeleton height={20} width={100} /> : nameCard?.stockName }
           </Typography>
-        </CardContent>
-      </Card>
+          <Typography sx={{ fontSize: 16, fontWeight: 500, color: thema.palette.text.light }}>
+            { loadingDetail ? <Skeleton height={20} width={60} /> : nameCard?.stockCode }
+          </Typography>
+        </Box>
+        <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+          { loadingDetail ? <Skeleton height={20} width={80} /> : `${nameCard?.stockPrice}` }
+        </Typography>
+      </Box>
     </Card>
   );
 }
