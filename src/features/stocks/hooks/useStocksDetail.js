@@ -56,7 +56,7 @@ export function useStockDetail(code) {
         basic: [
           { label: "업종", value: detail.sectorName, tooltip: stockToolTipText.bstpKorIsnm },
           { label: "액면가", value: Number(detail.faceValue).toLocaleString() + "원", tooltip: stockToolTipText.stckFcam },
-          { label: "시가총액", value: Number(detail.marketCap).toLocaleString() + "원", tooltip: stockToolTipText.htsAvls },
+          { label: "시가총액", value: Number(detail.marketCap).toLocaleString() + "억원", tooltip: stockToolTipText.htsAvls },
           { label: "상장주수", value: Number(detail.listedShares).toLocaleString() + "주", tooltip: stockToolTipText.lstnStcn },
         ],
 
