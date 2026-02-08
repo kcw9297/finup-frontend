@@ -23,6 +23,12 @@ export default function StocksDetailStock({ stockDetail }){
     50% { opacity: 1; transform: scale(1.15); }
     100% { opacity: 0.4; transform: scale(1); }
   `;
+
+  // 숫자 뒤 마침표가 아닌, 문장 끝 마침표만 분리
+  const splitSentences = (text) => {
+    // 마침표 뒤에 공백+대문자 또는 공백+한글 또는 문자열 끝이 오는 경우만 분리
+    return text.split(/\.(?=\s+[A-Z가-힣]|$)/).filter(part => part.trim());
+  };
   
 
   return (
@@ -183,8 +189,8 @@ export default function StocksDetailStock({ stockDetail }){
               >
                 {loadingAi ? (
                   <>
-                    {/* 스켈레톤 6개 영역 */}
-                    {[1, 2, 3, 4, 5, 6].map((item) => (
+                    {/* 스켈레톤 영역 */}
+                    {[1, 2, 3].map((item) => (
                       <React.Fragment key={item}>
                         <Skeleton variant="rounded" width={100} height={32} />
                         <Skeleton variant="text" sx={{ fontSize: 15 }} />
@@ -193,29 +199,60 @@ export default function StocksDetailStock({ stockDetail }){
                   </>
                 ) : detailStockAi ? (
                   <>
-                    {/* 종합 요약 */}
-                    <Chip label="종합 요약" color="secondary" variant="outlined" />
-                    <Typography>{detailStockAi.summary}</Typography>
-
-                    {/* 투자 포인트 */}
-                    <Chip label="투자 포인트" color="primary" variant="outlined" />
-                    <Typography>{detailStockAi.investmentPoint}</Typography>
-
-                    {/* 가격 */}
-                    <Chip label="가격" color="success" variant="outlined" />
-                    <Typography>{detailStockAi.price}</Typography>
+                    {/* 종목 특성 */}
+                    <Chip label="종목 특성" color="secondary" variant="outlined" />
+                    <Typography sx={{ 
+                      fontSize: 14, 
+                      lineHeight: 1.7,
+                      '& > span:first-of-type': {
+                        fontWeight: 600,
+                        display: 'block',
+                        marginBottom: 0.5,
+                      }
+                    }}>
+                      {splitSentences(detailStockAi?.profile).map((part, i, arr) => (
+                        <span key={i}>
+                          {part.trim()}.{i < arr.length - 1 && ' '}
+                        </span>
+                      ))}
+                    </Typography>
 
                     {/* 가치평가 */}
                     <Chip label="가치평가" color="info" variant="outlined" />
-                    <Typography>{detailStockAi.valuation}</Typography>
+                    <Typography sx={{ 
+                      fontSize: 14, 
+                      lineHeight: 1.7,
+                      '& > span:first-of-type': {
+                        fontWeight: 600,
+                        display: 'block',
+                        marginBottom: 0.5,
+                      }
+                    }}>
+                      {splitSentences(detailStockAi?.valuation).map((part, i, arr) => (
+                        <span key={i}>
+                          {part.trim()}.{i < arr.length - 1 && ' '}
+                        </span>
+                      ))}
+                    </Typography>
 
                     {/* 수급·거래 */}
                     <Chip label="수급·거래" color="warning" variant="outlined" />
-                    <Typography>{detailStockAi.flow}</Typography>
+                    <Typography sx={{ 
+                      fontSize: 14, 
+                      lineHeight: 1.7,
+                      '& > span:first-of-type': {
+                        fontWeight: 600,
+                        display: 'block',
+                        marginBottom: 0.5,
+                      }
+                    }}>
+                      {splitSentences(detailStockAi?.flow).map((part, i, arr) => (
+                        <span key={i}>
+                          {part.trim()}.{i < arr.length - 1 && ' '}
+                        </span>
+                      ))}
+                    </Typography>
 
-                    {/* 리스크·상태 */}
-                    <Chip label="리스크·상태" color="error" variant="outlined" />
-                    <Typography>{detailStockAi.risk}</Typography>
                   </>
                 ) : (
                   <Typography sx={{ gridColumn: '1 / -1', textAlign: 'center', py: 3 }}>
