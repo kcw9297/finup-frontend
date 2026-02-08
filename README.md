@@ -1,6 +1,6 @@
 >### FinUp (주식 경제 공부 플랫폼)
 
-![홈페이지 전경](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80.gif)
+![홈페이지 전경](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/05a52905cd2573af27ba65f37066f9ba4cb383ea/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%ED%99%88%ED%99%94%EB%A9%B4%20%ED%99%98%EC%9C%A8%20%EA%B4%80%EB%A0%A8%20%EC%A0%95%EB%B3%B4%20%ED%91%9C%EC%8B%9C.gif)
 
 ---
 
@@ -16,7 +16,7 @@
             → 저장된 Redis Key 기반 인증 번호 유효 및 만료여부를 판단
 
 > 1. 인증 코드 전송 및 확인 
-![인증코드](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%20%EC%9D%B8%EC%A6%9D%EC%BD%94%EB%93%9C.gif)
+![인증코드](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/05a52905cd2573af27ba65f37066f9ba4cb383ea/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%20%EC%9D%B8%EC%A6%9D%EC%BD%94%EB%93%9C.gif)
 ***
 > 1-1. 발송된 인증코드
 <img src="https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EC%9D%B4%EB%A9%94%EC%9D%BC%20%EC%9D%B8%EC%A6%9D%EC%BD%94%EB%93%9C%20%EC%A1%B0%ED%9A%8C.jpg"
@@ -27,8 +27,10 @@
 ![비밀번호 유효성 검사](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%20%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8%20%EC%9C%A0%ED%9A%A8%EC%84%B1%20%EA%B2%80%EC%82%AC.gif)
 ***
 > 3. 로그인
-![로그인](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%A1%9C%EA%B7%B8%EC%9D%B8.gif)
-
+![로그인](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/927f519690d9403eca0196dde5cc57160d7e6b9d/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EB%A1%9C%EA%B7%B8%EC%9D%B8.gif)
+***
+> 4. 로그인 요구 기능 진입 시 반응
+![로그인 요구 기능 진입]()
 ***
 
 ## 회원 정보 관련
@@ -62,10 +64,10 @@
 - 퀴즈 문제 및 보기 : 후보 중에서 AI 기반 선별 
 
 > 1. 수준 테스트
-![개념 테스트](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B0%9C%EB%85%90%20%ED%85%8C%EC%8A%A4%ED%8A%B8.gif)
+![개념 테스트](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/927f519690d9403eca0196dde5cc57160d7e6b9d/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B0%9C%EB%85%90%20%ED%85%8C%EC%8A%A4%ED%8A%B8.gif)
 ***
 > 2. 개념 학습 (개념 정리) 페이지
-![개념 학습 페이지](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B0%9C%EB%85%90%20%ED%95%99%EC%8A%B5.gif)
+![개념 학습 페이지](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/927f519690d9403eca0196dde5cc57160d7e6b9d/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B0%9C%EB%85%90%20%ED%95%99%EC%8A%B5%20%EC%A7%84%EC%9E%85%20%ED%9B%84%20%ED%99%94%EB%A9%B4.gif)
 ***
 > 3. 개념 학습 진척도 반영
 ![개념 학습 진척도 반영](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B0%9C%EB%85%90%20%ED%95%99%EC%8A%B5%20%EC%A7%84%EC%B2%99%EB%8F%84%20%EB%B0%98%EC%98%81.gif)
@@ -101,19 +103,16 @@
 ***
 
 >
-1. 뉴스 단어 재추천 및 단어 바로가기
-![뉴스 단어 재추천 및 단어 바로가기](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EB%8B%A8%EC%96%B4%20%EC%9E%AC%EC%B6%94%EC%B2%9C%20%EB%B0%8F%20%EB%B0%94%EB%A1%9C%EA%B0%80%EA%B8%B0.gif)
+1. 뉴스 키워드 재추천 및 단어 바로가기
+![뉴스 단어 재추천](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/1bae16a536e5aa2296eeff32db3ce0a372c6314e/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20AI%20%EB%89%B4%EC%8A%A4%20%ED%82%A4%EC%9B%8C%EB%93%9C%20%EC%B6%94%EC%B2%9C.gif)
 ***
-2. 그 외 재추천 항목들
-![그 외 재추천 항목들](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EC%9E%AC%EC%B6%94%EC%B2%9C%20%EA%B4%80%EB%A0%A8%20%ED%95%AD%EB%AA%A9%EB%93%A4.gif)
+2. 뉴스 원문 바로가기
+![뉴스 원문 바로가기](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/927f519690d9403eca0196dde5cc57160d7e6b9d/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EC%9B%90%EB%AC%B8%20%EB%B0%94%EB%A1%9C%EA%B0%80%EA%B8%B0.gif)
 ***
-3. 뉴스 원문 바로가기
-![뉴스 원문 바로가기](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EC%9B%90%EB%AC%B8%20%EB%B0%94%EB%A1%9C%EA%B0%80%EA%B8%B0.gif)
+3. 뉴스 살펴보기
+![뉴스 살펴보기](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/927f519690d9403eca0196dde5cc57160d7e6b9d/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20AI%20%EB%B6%84%EC%84%9D%20%EA%B8%B0%EB%8A%A5.gif)
 ***
-4. 뉴스 탭 진입 후 뉴스 살펴보기
-![뉴스 탭 진입 후 뉴스 살펴보기](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%ED%83%AD%20%EB%B0%8F%20%EB%89%B4%EC%8A%A4%20%ED%95%AD%EB%AA%A9.gif)
-***
-5. 뉴스 무한 스크롤 구현
+4. 뉴스 무한 스크롤 구현
 ![뉴스 무한 스크롤 구현](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EB%AC%B4%ED%95%9C%20%EC%8A%A4%ED%81%AC%EB%A1%A4%20%EA%B5%AC%ED%98%84.gif)
 
 * * *
@@ -141,7 +140,7 @@
 - AI 분석 : 현재 차트 기반 종합적, 추세, 리스크, 거래량 분석 정보
 
 >
-![종목별 차트 확인](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EC%A2%85%EB%AA%A9%20%EC%B0%A8%ED%8A%B8%20%ED%99%95%EC%9D%B8.gif)
+![종목별 차트 확인](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/1bae16a536e5aa2296eeff32db3ce0a372c6314e/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EC%A2%85%EB%AA%A9%20%EC%B0%A8%ED%8A%B8%20%ED%99%95%EC%9D%B8.gif)
 
 ***
 
@@ -159,8 +158,7 @@
 - 현재 종목에 특화된 종목과 연계하여 학습하기 적절한 뉴스 목록을 제공합니다.
 제공 방식은 상단의 "뉴스 본문" 과 동일합니다.
 
->![종목별 뉴스](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EC%A2%85%EB%AA%A9%EB%B3%84%20%EB%89%B4%EC%8A%A4.gif)
-
+>![종목별 뉴스](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/1bae16a536e5aa2296eeff32db3ce0a372c6314e/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EC%A2%85%EB%AA%A9%EB%B3%84%20%EB%89%B4%EC%8A%A42.gif)
 
 ---
 ### 단어 학습 (개념 테스트 전용 단어들)
@@ -219,7 +217,7 @@
 
 >
 - 회원 목록 일부 글자 마스킹 기능
-![회원 목록 일부 글자 마스킹 기능](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B4%80%EB%A6%AC%EC%9E%90%20%ED%9A%8C%EC%9B%90%20%EB%AA%A9%EB%A1%9D%20%EA%B4%80%EB%A6%AC%20%EB%A7%88%EC%8A%A4%ED%82%B9.gif)
+![회원 목록 일부 글자 마스킹 기능](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/cf1c0237f8ce04541a51602c21c34d0f09d598d2/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B4%80%EB%A6%AC%EC%9E%90%20%ED%9A%8C%EC%9B%90%20%EB%AA%A9%EB%A1%9D%20%EA%B4%80%EB%A6%AC%20%EB%A7%88%EC%8A%A4%ED%82%B9.gif)
 ***
 - 회원 목록 pdf, xlsx 파일 다운로드
 ![회원 목록 pdf, xlsx 파일 다운로드](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%ED%9A%8C%EC%9B%90%20%EB%AA%A9%EB%A1%9D%20pdf%2C%20xlsx%20%ED%8C%8C%EC%9D%BC%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.gif)
@@ -234,7 +232,7 @@
 ![공지사항 검색](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD%20%EA%B2%80%EC%83%89.gif)
 ***
 - 공지사항 등록
-![공지사항 등록](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/main/gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD%20%EB%93%B1%EB%A1%9D.gif)
+![공지사항 등록](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/cf1c0237f8ce04541a51602c21c34d0f09d598d2/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD%20%EB%93%B1%EB%A1%9D.gif)
 
 
 #### 개념 학습 관리
@@ -283,10 +281,10 @@
 AI 분석, 추천 항목들은 재추천 버튼을 클릭하면 다시 AI 분석을 통한 재추천 조회 결과가 제공됩니다.
 
 > - 뉴스 해설 AI 재추천 등
-![뉴스 해설 AI 재추천](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EC%9E%AC%EC%B6%94%EC%B2%9C%20%EA%B4%80%EB%A0%A8%20%ED%95%AD%EB%AA%A9%EB%93%A4.gif)
+![뉴스 해설 AI 재추천](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/1bae16a536e5aa2296eeff32db3ce0a372c6314e/finup%20gif%20%EC%9E%90%EB%A3%8C/gif/%EC%A2%85%EB%AA%A9%20%EB%89%B4%EC%8A%A4%20%EC%9E%AC%EC%B6%94%EC%B2%9C.gif)
 ***
-- AI 학습 단어 추천 등
-![AI 학습 단어 추천](https://raw.githubusercontent.com/DarkLight0418/finup-markdown-test/2ec7664ef0a63bbc4a802cb8481267df809b339a/gif%20%EC%9E%90%EB%A3%8C/gif/%EB%89%B4%EC%8A%A4%20%EC%9E%AC%EC%B6%94%EC%B2%9C%20%EA%B4%80%EB%A0%A8%20%ED%95%AD%EB%AA%A9%EB%93%A4.gif)
+- AI 뉴스 키워드 재추천 등
+![AI 뉴스 키워드 재추천](https://raw.githubusercontent.com/DarkLight0418/Project_GIF_Files/c87f72dfa9f0863d195b62cf047460ea06d523a2/finup%20gif%20%EC%9E%90%EB%A3%8C/%EB%89%B4%EC%8A%A4%20AI%20%ED%82%A4%EC%9B%8C%EB%93%9C%20%EC%B6%94%EC%B2%9C.gif)
 
 ---
-Ver 0.2 - 2026.02.02.
+Ver 0.3 - 2026.02.06.
